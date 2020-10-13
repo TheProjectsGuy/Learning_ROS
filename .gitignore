@@ -1,2 +1,7 @@
 # Ignore the vscode settings folder
 .vscode/
+
+# Ignore the build, devel and .catkin_workspace files
+devel/
+build/
+.catkin_workspace
