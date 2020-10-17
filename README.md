@@ -12,7 +12,8 @@ This repository strives to serve as a starting point towards the journey of lear
         - [Repository structure](#repository-structure)
     - [Content](#content)
         - [Setting up workspace](#setting-up-workspace)
-        - [Crux](#crux)
+        - [Tutorial](#tutorial)
+        - [Main content](#main-content)
     - [References](#references)
 
 ## Prerequisites
@@ -72,7 +73,13 @@ This section describes the main contents of this repository. Let's first start w
 
 > _roswiki_: The official tutorial can be found on [roswiki][roswiki-iac].
 
-### Crux
+### Tutorial
+
+A simple practical tutorial can be found in the file [tutorial1.md](./tutorial1.md). This includes basic keywords and an activity for getting started.
+
+> Check out [tutorial1.md](./tutorial1.md) for the first tutorial.
+
+### Main content
 
 The main code of this repository is divided into packages and presented in the `./src/` folder. You are strongly suggested to go through the README of the [src](./src/README.md) as well as individual packages first, before trying anything out.
 
