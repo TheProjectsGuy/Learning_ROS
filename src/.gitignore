@@ -1,2 +1,5 @@
 # Ignore the CMakeLists.txt in this folder
 CMakeLists.txt
+
+# Ignore the test folders
+test_*/
