@@ -10,6 +10,7 @@ A ROS workspace contains several packages. The source code of all those packages
         - [Sourcing](#sourcing)
         - [Creating a package](#creating-a-package)
     - [Packages](#packages)
+        - [Beginner](#beginner)
     - [Contents](#contents)
 
 ## Prerequisites
@@ -65,6 +66,12 @@ To create a package (say `cpp_basic_nodes`), do the following:
 ## Packages
 
 Information about all the packages in this folder. The packages are divided into sections based on the difficulty level. Click on their name to go to their folder (which contains a README for the specific package).
+
+### Beginner
+
+| S. No. | Name | Programming Language | Notes |
+| :---: | :---- | :-----: | :----- |
+| 1 | [cpp_basic_nodes](./cpp_basic_nodes/) | C++ | A package consisting of basic nodes to get started and understanding core concepts |
 
 ## Contents
 
