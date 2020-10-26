@@ -11,7 +11,7 @@ This repository strives to serve as a starting point towards the journey of lear
     - [Prerequisites](#prerequisites)
         - [Repository structure](#repository-structure)
     - [Content](#content)
-        - [Setting up workspace](#setting-up-workspace)
+        - [Setting up the workspace](#setting-up-the-workspace)
         - [Tutorial](#tutorial)
         - [Main content](#main-content)
     - [References](#references)
@@ -43,7 +43,7 @@ The following points can be kept in mind:
 
 This section describes the main contents of this repository. Let's first start with creating the workspace and sourcing it.
 
-### Setting up workspace
+### Setting up the workspace
 
 1. The workspace is created by first creating a folder (with an `src` folder in it)
 
@@ -51,7 +51,7 @@ This section describes the main contents of this repository. Let's first start w
     mkdir -p ~/ros_workspaces/learning_ws/src/
     ```
 
-    The folder `~/ros_workspaces/learning_ws` will be called our **workspace directory** (you can use any folder). This folder (this repository folder) is actually the workspace folder.
+    The folder `~/ros_workspaces/learning_ws` will be called our **workspace directory** (you can use any folder). This folder (this repository folder) is actually the workspace directory.
 2. After creating folders, you have to build an empty workspace. That is done by going into the workspace directory and then running `catkin_make`.
 
     ```bash
@@ -81,7 +81,7 @@ A simple practical tutorial can be found in the file [tutorial1.md](./tutorial1.
 
 ### Main content
 
-The main code of this repository is divided into packages and presented in the `./src/` folder. You are strongly suggested to go through the README of the [src](./src/README.md) as well as individual packages first, before trying anything out.
+The main code of this repository is divided into packages and presented in the `./src/` folder. You are strongly suggested to go through the README of the [src](./src/README.md) as well as individual packages first, before trying them out.
 
 > Go to the [src/README.md](./src/README.md) file.
 
