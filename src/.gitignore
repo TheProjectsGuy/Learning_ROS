@@ -3,3 +3,6 @@ CMakeLists.txt
 
 # Ignore the test folders
 test_*/
+
+# Ignore the test files
+test_*
