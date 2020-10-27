@@ -24,7 +24,12 @@ Before getting started, it is important to get a few things set up. Make sure yo
     > If you intend to dual boot, you can check [this][ubuntu-dualboot] out.
 2. A successful installation of ROS. This repository focuses on **ROS Noetic Ninjemys**.
     > Read [this][ros-installation] for knowing how to install ROS on Ubuntu. Make sure that you have sourced `/opt/ros/noetic/setup.bash` file in the `~/.bashrc` (to initialize ROS in terminals).
-3. A useable editor. This repository uses **VSCode** (extensions and intellisense is great). Get it from [here][vscode-website].
+3. A useable editor.
+
+    For C++: This repository uses **KDevelop**. Get it from [here](https://www.kdevelop.org/). More about it [here](http://wiki.ros.org/IDEs#KDevelop).
+    > Install [kdevelop-python](https://apps.kde.org/en/kdev-python) if you plan to use it for Python as well.
+
+    For Python (and others): This repository uses **VSCode** (extensions and intellisense is great). Get it from [here][vscode-website].
     > Useful VSCode extensions: [C++][vscode-ext-cpp], [Python][vscode-ext-python] and [ROS][vscode-ext-ros].
 
 ### Repository structure
