@@ -88,7 +88,7 @@ A simple practical tutorial can be found in the file [tutorial1.md](./tutorial1.
 
 The main code of this repository is divided into packages and presented in the `./src/` folder. You are strongly suggested to go through the README of the [src](./src/README.md) as well as individual packages first, before trying them out.
 
-> Go to the [src/README.md](./src/README.md) file.
+> Go to the [src/README.md](./src/README.md) file in the [src](./src/) directory.
 
 ## References
 
