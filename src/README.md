@@ -9,6 +9,7 @@ A ROS workspace contains several packages. The source code of all those packages
     - [Prerequisites](#prerequisites)
         - [Sourcing](#sourcing)
         - [Creating a package](#creating-a-package)
+        - [Running a node](#running-a-node)
     - [Packages](#packages)
         - [Beginner](#beginner)
     - [Contents](#contents)
@@ -62,6 +63,22 @@ To create a package (say `cpp_basic_nodes`), do the following:
     ```
 
     You could also use the `--pkg PKG [PKG ...]` argument to build specific packages only. More about options can be found by running `catkin_make --help`. Note that after the build, you can see a folder representing the cmake files used for the package in the `devel/share` folder of the workspace.
+
+### Running a node
+
+To run a node, make sure the `roscore` is running first (unless there are multiple nodes being launched at the same time using a convenient mechanism called roslaunch, which handles the server initialization).
+
+Use `rosrun` to run a node. As an example, to run the node `cpp_basic_args_out` of package `cpp_basic_nodes`, run the following command
+
+```bash
+rosrun cpp_basic_nodes cpp_basic_args_out arg1 arg2 arg3
+```
+
+The output is as follows
+
+![Running a node using rosrun](media/running_using_rosrun.png)
+
+Another ros command that is very useful in handling nodes is the `rosnode` command. You can find more about it [here](http://wiki.ros.org/rosnode).
 
 ## Packages
 
