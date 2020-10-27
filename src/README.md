@@ -88,7 +88,8 @@ Information about all the packages in this folder. The packages are divided into
 
 | S. No. | Name | Programming Language | Notes |
 | :---: | :---- | :-----: | :----- |
-| 1 | [cpp_basic_nodes](./cpp_basic_nodes/) | C++ | A package consisting of basic nodes to get started and understanding core concepts |
+| 1 | [cpp_basic_nodes](./cpp_basic_nodes/) | C++ | A package consisting of basic nodes to get started and understand core concepts |
+| 2 | [py_basic_nodes](./py_basic_nodes/) | Python 3 | A package consisting of basic nodes to get started and understand core concepts |
 
 ## Contents
 
