@@ -12,7 +12,6 @@ A ROS workspace contains several packages. The source code of all those packages
         - [Running a node](#running-a-node)
     - [Packages](#packages)
         - [Beginner](#beginner)
-    - [Contents](#contents)
 
 ## Prerequisites
 
@@ -90,7 +89,3 @@ Information about all the packages in this folder. The packages are divided into
 | :---: | :---- | :-----: | :----- |
 | 1 | [cpp_basic_nodes](./cpp_basic_nodes/) | C++ | A package consisting of basic nodes to get started and understand core concepts |
 | 2 | [py_basic_nodes](./py_basic_nodes/) | Python 3 | A package consisting of basic nodes to get started and understand core concepts |
-
-## Contents
-
-The contents of this folder are as follows
