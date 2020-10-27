@@ -1,6 +1,10 @@
 # Ignore the vscode settings folder
 .vscode/
 
+# Ignore KDevelop files
+.kdev4/
+*.kdev4
+
 # Ignore the build, devel and .catkin_workspace files
 devel/
 build/
