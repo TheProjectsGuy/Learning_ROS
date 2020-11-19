@@ -9,3 +9,7 @@
 devel/
 build/
 .catkin_workspace
+
+# Ignore previous and archive files
+prev_*
+ARCHIVE/
