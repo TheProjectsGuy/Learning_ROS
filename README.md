@@ -46,7 +46,7 @@ Contents in the order of traversal
 
 | S. No. | Name | Description |
 | :---- | :---- | :------ |
-| 1 | [I0_Basic_Terminology.md](./tutorials/I0_Basic_Terminology.md) | Information file containing description about various terms used in ROS |
+| 1 | [I0_Basic_Terminology.md](./tutorials/I0_Basic_Terminology.md) | **Basic Terminology**: Description about various terms and concepts used in ROS |
 
 ## Credits
 
