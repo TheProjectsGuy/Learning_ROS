@@ -13,7 +13,8 @@ This repository is for learning Robot Operating System (ROS) through a hands on 
         - [Prerequisites](#prerequisites)
         - [About the contents](#about-the-contents)
     - [Contents](#contents)
-    - [Credits](#credits)
+        - [Folders](#folders)
+    - [References and Credits](#references-and-credits)
 
 ## Foreword
 
@@ -48,7 +49,16 @@ Contents in the order of traversal
 | :---- | :---- | :------ |
 | 1 | [I0_Basic_Terminology.md](./tutorials/I0_Basic_Terminology.md) | **Basic Terminology**: Description about various terms and concepts used in ROS |
 
-## Credits
+### Folders
+
+Description of folders present
+
+| S. No. | Name | Description |
+| :--- | :---- | :----- |
+| 1 | [src](./src/) | Packages for the workspace. They contain the code |
+| 2 | [tutorials](./tutorials/) | Contains tutorial and some information files |
+
+## References and Credits
 
 [![Developer: TheProjectsGuy][dev-shield]][dev-link]
 
