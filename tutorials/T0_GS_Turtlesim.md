@@ -5,18 +5,18 @@ This tutorial explores basic concepts of ROS, without needing to write a single 
 ## Table of contents
 
 - [Tutorial 0: Getting Started using TurtleSim](#tutorial-0-getting-started-using-turtlesim)
-    - [Table of contents](#table-of-contents)
-    - [Foreword](#foreword)
-    - [Turtlesim Tutorial](#turtlesim-tutorial)
-        - [Starting everything](#starting-everything)
-        - [Teleoperation](#teleoperation)
-            - [visualizing the ROS Graph](#visualizing-the-ros-graph)
-            - [Using Raw Messages](#using-raw-messages)
-        - [Services](#services)
-        - [Multiple turtles](#multiple-turtles)
-            - [Remapping Arguments](#remapping-arguments)
-    - [Conclusion](#conclusion)
-    - [Reference](#reference)
+  - [Table of contents](#table-of-contents)
+  - [Foreword](#foreword)
+  - [Turtlesim Tutorial](#turtlesim-tutorial)
+    - [Starting everything](#starting-everything)
+    - [Teleoperation](#teleoperation)
+      - [visualizing the ROS Graph](#visualizing-the-ros-graph)
+      - [Using Raw Messages](#using-raw-messages)
+    - [Services](#services)
+    - [Multiple turtles](#multiple-turtles)
+      - [Remapping Arguments](#remapping-arguments)
+  - [Conclusion](#conclusion)
+  - [Reference](#reference)
 
 ## Foreword
 
@@ -253,7 +253,7 @@ Now, the node `/teleop_turtle` should be publishing messages to `/turtle_1/cmd_v
 
 ## Conclusion
 
-In this tutorial, the following was covered
+This concludes the tutorial, you may now close the `/turtlesim` node (use `rosnode kill`) and then close the ROS Master (use `Ctrl + C` here). In this tutorial, the following was covered
 
 - Starting the ROS Master (`roscore`)
 - Running nodes
