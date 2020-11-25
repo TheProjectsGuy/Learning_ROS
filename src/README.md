@@ -9,6 +9,7 @@ All the packages in this repository.
     - [Foreword](#foreword)
     - [Basic Packages](#basic-packages)
         - [Code](#code)
+    - [References](#references)
 
 ## Foreword
 
@@ -27,3 +28,7 @@ These packages have traditional coding involved
 | S. No. | Title | C++ Package Name | Python Package Name | Description |
 | :--- | :---: | :----- | :------ | :----- |
 | 1 | Basic Nodes | [cpp_basic_nodes](./cpp_basic_nodes/README.md) | N/A | Hello world nodes |
+
+## References
+
+- roscpp API documentation [here](https://docs.ros.org/en/api/roscpp/html/)
