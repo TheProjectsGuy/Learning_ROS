@@ -25,7 +25,8 @@ Things to keep in mind before getting started
 Before proceeding further, the following is needed:
 
 - It is assumed that you have basic knowledge of shell scripting and linux concepts. Skim through [this][terminal-beginners] anyways.
-- A ROS [installation][roswiki-install]: This repository uses ROS Noetic, on Ubuntu 20.04 (Focal). Installation procedure can be found [here][roswiki-default-install].
+- A ROS installation: This repository uses ROS Noetic, on Ubuntu 20.04 (Focal). Installation procedure can be found [here][roswiki-default-install].
+    > ROS installation page [here][roswiki-install]
 
 Knowledge about the following is a plus:
 
@@ -33,7 +34,7 @@ Knowledge about the following is a plus:
 
 ### About the contents
 
-The contents of this repository are organized as a *tree*. If one traverses in the mentioned order of links, then they shall cover the entire repository well (which is suited for beginners). However, if one is looking for something specific, they can straightaway search and explore randomly.
+The contents of this repository are organized as a *tree*. If one traverses in the mentioned order of links, then they shall cover the entire repository well (which is suggested for beginners). However, if one is looking for something specific, they can straightaway search and explore randomly.
 
 This repository is actually a ROS Workspace which you can directly clone and build (more about these terms later). However, for beginners, it may be better to code and build everything on their own after understanding the material (rather than cloning, building and then running)
 
@@ -49,6 +50,7 @@ Contents in the order of traversal
 | :---- | :---- | :------ |
 | 1 | [I0_Basic_Terminology.md](./tutorials/I0_Basic_Terminology.md) | **Basic Terminology**: Description about various terms and concepts used in ROS |
 | 2 | [T0_GS_Turtlesim.md](./tutorials/T0_GS_Turtlesim.md) | **Understanding ROS concepts without code**: Basic ROS concepts demonstrated using `turtlesim` |
+| 3 | [T1_Workspace_Package.md](./tutorials/T1_Workspace_Package.md) | **Workspace and Package**: Create your own workspace and packages |
 
 ### Folders
 
