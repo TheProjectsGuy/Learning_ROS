@@ -13,7 +13,7 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
     - [Nodes](#nodes)
         - [Simple Hello World](#simple-hello-world)
             - [Building a C++ Node](#building-a-c-node)
-            - [Running a Node](#running-a-node)
+            - [Running the Node](#running-the-node)
 
 ## Creating this package
 
@@ -45,6 +45,8 @@ Node prints `Hello, World!` and different levels of logging messages. After runn
 
 - The debug messages do not appear, but information level and above messages do appear. We'll later see how to make them appear.
 - Proper logging etiquette is observed. Do not use `cout` to log things.
+- The first argument passed to any executable is the full path of the executable, followed by arguments passed during the call.
+- The second debug message was visible.
 - You have successfully run your first C++ ROS node.
 
 #### Building a C++ Node
@@ -77,7 +79,7 @@ After that, build the package by running `catkin_make` in the workspace director
 
 A similar procedure shall be followed for other nodes, so only the function names shall be mentioned hereon.
 
-#### Running a Node
+#### Running the Node
 
 First, make sure that `roscore` is running and that the package has been built successfully and can be found using `rospack find`
 
@@ -100,3 +102,15 @@ rosnode list
 This shall show the node as `/hello_world_simple`, that is the name used in `ros::init` function in the source code. This means that the name of the node during runtime can be different from the name of the executable.
 
 Hereon, only the `rosrun` command (the bare minimum) shall be described.
+
+After that, try running the node as
+
+```bash
+rosrun cpp_basic_nodes simple_hello_world arg1 arg2 arg3
+```
+
+You may kill the node using
+
+```bash
+rosnode kill /hello_world_simple
+```

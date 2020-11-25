@@ -3,6 +3,7 @@
  *      1. Prints "Hello, World!"
  *      2. Demonstrates different types of logging messages
  *      3. Print the arguments passed to the executable using an INFO message
+ *      4. Demonstrates how to change logger level using code
  */ 
 
 // Include the header file to include everything ROS
@@ -49,7 +50,7 @@ int main(int argc, char **argv) {
      * - WARN: Warning level messages. Usually for handled exceptions. Higher priority than INFO
      * - ERROR: Error level messages. Exception will cause some aspect of the program to fail or malfunction. But the program at large can run.
      * - FATAL: Fatal level messages. Fatal error has occurred and the program cannot run.
-     *
+     * 
      * Macro definitions can be found in: /opt/ros/noetic/include/rosconsole/macros_generated.h
      * Link: http://wiki.ros.org/roscpp/Overview/Logging
      */
@@ -59,6 +60,29 @@ int main(int argc, char **argv) {
     ROS_ERROR("This is an ERROR message");
     ROS_FATAL("This is a FATAL message");
     
+    // Display the arguments passed as INFO parameters
+    ROS_INFO("The following arguments were passed: ");
+    for (int i = 0; i < argc; i++) {
+        ROS_INFO_STREAM("Argument " << (i+1) << ": " << argv[i]);
+    }
+
+    // Changing the verbosity level using only source code
+    /*
+     * Use function set_logger_level to set a logger level
+     * Main source code: https://docs.ros.org/en/api/rosconsole/html/namespaceros_1_1console.html#a7510136ca626d1b27655ddabfaef685a
+     * 
+     * Link: http://wiki.ros.org/roscpp/Overview/Logging#Setting_Verbosity_Levels
+     */
+    if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug)) {
+        // Notify the ROS system that a logger level has been changed
+        /*
+         * Link: https://docs.ros.org/en/api/rosconsole/html/namespaceros_1_1console.html#a7d8d9c277994cb315961ddbee540f1e1
+         */
+        ros::console::notifyLoggerLevelsChanged();
+    }
+    // Print a visible debug message
+    ROS_DEBUG("This debug message must be visible");
+
     // Hold execution and prevent the node from automatically closing
     /*
      * There are lot of background processes happening by roscpp (including function callbacks if the node is a subscriber)
