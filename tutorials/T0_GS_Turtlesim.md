@@ -275,3 +275,4 @@ This concludes the tutorial, you may now close the `/turtlesim` node (use `rosno
     - [rossrv](http://wiki.ros.org/action/show/rosmsg?action=show&redirect=rossrv#rossrv): Service information
 - All geometry_msgs through [roswiki](http://wiki.ros.org/geometry_msgs)
 - Main turtlesim [roswiki](http://wiki.ros.org/turtlesim)
+- Understanding Topics tutorial on roswiki [here](http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics)
