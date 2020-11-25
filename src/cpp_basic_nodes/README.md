@@ -41,13 +41,7 @@ Nodes declared in this package
 | Node name | `simple_hello_world` |
 | Code | [src/simple_hello_world.cpp](./src/simple_hello_world.cpp) |
 
-Node prints `Hello, World!` and different levels of logging messages. After running the node (see the build and run sections later), a few observations can be made:
-
-- The debug messages do not appear, but information level and above messages do appear. We'll later see how to make them appear.
-- Proper logging etiquette is observed. Do not use `cout` to log things.
-- The first argument passed to any executable is the full path of the executable, followed by arguments passed during the call.
-- The second debug message was visible.
-- You have successfully run your first C++ ROS node.
+Node prints `Hello, World!` and different levels of logging messages.
 
 #### Building a C++ Node
 
@@ -114,3 +108,11 @@ You may kill the node using
 ```bash
 rosnode kill /hello_world_simple
 ```
+
+After running the node, a few observations can be made:
+
+- The debug messages do not appear, but information level and above messages do appear. We'll later see how to make them appear.
+- Proper logging etiquette is observed. Do not use `cout` to log things.
+- The first argument passed to any executable is the full path of the executable, followed by arguments passed during the call.
+- The second debug message was visible.
+- You have successfully run your first C++ ROS node.
