@@ -21,12 +21,12 @@ This package was created using the following commands
 
 ```bash
 cd ~/ros_workspaces/learning_ws/src
-catkin_create_pkg cpp_basic_nodes roscpp -n
+catkin_create_pkg cpp_basic_nodes roscpp
 ```
 
 ## Foreword
 
-This is the first package and hence things are described in a little more detail here. The source code has comments describing the contents.
+This is the first package and hence things are described in a little more detail here. The source code has comments describing the contents that are new.
 
 Make sure you know how to build a package before proceeding.
 
@@ -50,7 +50,7 @@ To build the node, add the following in the `CMakeLists.txt` file in the package
 1. Go to the `Build` section (it must be decorated with "Build" heading)
     1. Scroll to the `add_executable` function
 
-        Add the following lines immediately after
+        Add the following lines immediately after the comment block
 
         ```txt
         add_executable(simple_hello_world src/simple_hello_world.cpp)
@@ -111,8 +111,8 @@ rosnode kill /hello_world_simple
 
 After running the node, a few observations can be made:
 
-- The debug messages do not appear, but information level and above messages do appear. We'll later see how to make them appear.
+- The debug messages do not appear, but information level and above messages do appear.
 - Proper logging etiquette is observed. Do not use `cout` to log things.
 - The first argument passed to any executable is the full path of the executable, followed by arguments passed during the call.
-- The second debug message was visible.
+- The second debug message was visible (changed logger level in code).
 - You have successfully run your first C++ ROS node.
