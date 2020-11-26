@@ -14,6 +14,7 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
         - [Simple Hello World](#simple-hello-world)
             - [Building a C++ Node](#building-a-c-node)
             - [Running the Node](#running-the-node)
+        - [Simple Publisher](#simple-publisher)
 
 ## Creating this package
 
@@ -116,3 +117,54 @@ After running the node, a few observations can be made:
 - The first argument passed to any executable is the full path of the executable, followed by arguments passed during the call.
 - The second debug message was visible (changed logger level in code).
 - You have successfully run your first C++ ROS node.
+
+### Simple Publisher
+
+| Field | Value |
+| :--- | :--- |
+| Node name | `simple_cpp_publisher` |
+| Code | [src/simple_publisher.cpp](./src/simple_publisher.cpp) |
+
+Node publishes a message on a topic named `/simple_cpp_publisher/hello_str`. Demonstrates publishing messages on a topic and name scoping.
+
+**Building**
+
+In the `CMakeLists.txt`, add the following
+
+```txt
+add_executable(simple_cpp_publisher src/simple_publisher.cpp)
+```
+
+and
+
+```txt
+target_link_libraries(simple_cpp_publisher ${catkin_LIBRARIES})
+```
+
+Then, run `catkin_make` in the workspace folder.
+
+**Running**
+
+To run the node, first run `roscore`, then
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_publisher
+```
+
+Now, run
+
+```bash
+rostopic list
+```
+
+You must see `/simple_cpp_publisher/hello_str` in the output. This is because the node handle was passed the `~` in the source code (namespace has become local to the node). If you rebuild the node after removing `~`, the name would then become `/hello_str` (that is, use `ros::NodeHandle nh;` instead of `ros::NodeHandle nh("~");`).
+
+You can inspect the contents of the messages being published by running
+
+```bash
+rostopic echo /simple_cpp_publisher/hello_str
+```
+
+This would echo messages from the point where the command was called. You are encouraged to experiment and understand things before proceeding further (same is true for everything hereon).
+
+Kill the nodes using `rosnode kill` commands.

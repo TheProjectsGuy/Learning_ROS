@@ -133,6 +133,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/cpp_basic_nodes_node.cpp)
 add_executable(simple_hello_world src/simple_hello_world.cpp)
+add_executable(simple_cpp_publisher src/simple_publisher.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -149,6 +150,7 @@ add_executable(simple_hello_world src/simple_hello_world.cpp)
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(simple_hello_world ${catkin_LIBRARIES})
+target_link_libraries(simple_cpp_publisher ${catkin_LIBRARIES})
 
 #############
 ## Install ##
