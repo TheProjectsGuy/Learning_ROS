@@ -59,6 +59,8 @@ To create an executable, add the following to the `CMakeLists.txt` file
 
         This is necessary to create an executable file for your python script.
 
+        > More about the `catkin_install_python` function in `CMakeLists.txt` [here](http://wiki.ros.org/catkin/CMakeLists.txt#Installing_Python_Executable_Scripts) and in [catkin manual](http://docs.ros.org/en/api/catkin/html/howto/format2/installing_python.html)
+
 After that, build the package by running `catkin_make` in the workspace directory. After a successful build process, you must see and executable named `simple_hello_world.py` in the directory `devel/lib/py_basic_nodes` (inside the workspace). This means that the workspace stores all the executables in the `devel` folder.
 
 A similar procedure shall be followed for other nodes, so only the function names shall be mentioned hereon.
