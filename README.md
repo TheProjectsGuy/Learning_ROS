@@ -38,9 +38,12 @@ The contents of this repository are organized as a *tree*. If one traverses in t
 
 This repository is actually a ROS Workspace which you can directly clone and build (more about these terms later). However, for beginners, it may be better to code and build everything on their own after understanding the material (rather than cloning, building and then running)
 
-The following editors are used extensively for the purpose of this repository:
+The following editors and IDEs are used extensively for the purpose of this repository:
 
 - [VSCode](https://code.visualstudio.com/), you may want to bookmark the [keyboard shortcuts page](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf)
+- [KDevelop](https://www.kdevelop.org/) IDE for C++ programming
+
+> IDEs for ROS [here](http://wiki.ros.org/IDEs)
 
 ## Contents
 
