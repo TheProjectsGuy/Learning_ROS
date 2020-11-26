@@ -27,7 +27,7 @@ These packages have traditional coding involved
 
 | S. No. | Title | C++ Package Name | Python Package Name | Description |
 | :--- | :---: | :----- | :------ | :----- |
-| 1 | Basic Nodes | [cpp_basic_nodes](./cpp_basic_nodes/README.md) | [py_basic_nodes](./py_basic_nodes/README.md) | Hello world nodes |
+| 1 | Basic Nodes | [cpp_basic_nodes](./cpp_basic_nodes/README.md) | [py_basic_nodes](./py_basic_nodes/README.md) | Hello world, Publisher nodes |
 
 ## References
 
