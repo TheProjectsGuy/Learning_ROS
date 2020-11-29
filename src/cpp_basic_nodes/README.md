@@ -15,6 +15,7 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
             - [Building a C++ Node](#building-a-c-node)
             - [Running the Node](#running-the-node)
         - [Simple Publisher](#simple-publisher)
+    - [Reference](#reference)
 
 ## Creating this package
 
@@ -168,3 +169,8 @@ rostopic echo /simple_cpp_publisher/hello_str
 This would echo messages from the point where the command was called. You are encouraged to experiment and understand things before proceeding further (same is true for everything hereon).
 
 Kill the nodes using `rosnode kill` commands.
+
+## Reference
+
+- roswiki
+    - [Remapping Arguments](http://wiki.ros.org/Remapping%20Arguments)
