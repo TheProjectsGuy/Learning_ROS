@@ -61,6 +61,8 @@ def main():
     """
         is_shutdown is used to cause a delay until the node is shut down
         The code below is equivalent to rospy.spin()
+
+        Link: http://docs.ros.org/en/melodic/api/rospy/html/rospy-module.html#is_shutdown
     """
     while not rospy.is_shutdown():
         pass
