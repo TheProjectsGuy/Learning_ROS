@@ -12,6 +12,8 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Hello World](#simple-hello-world)
             - [Creating executable](#creating-executable)
             - [Running a python node](#running-a-python-node)
+        - [Simple Publisher](#simple-publisher)
+    - [Reference](#reference)
 
 ## Creating this package
 
@@ -106,3 +108,53 @@ After running the node, a few observations can be made:
 - You have successfully run your first Python ROS node.
 - The first argument passed to any executable is the full path of the executable, followed by arguments passed during the call.
 - Proper logging etiquette is observed. Do not use `print` to log things.
+
+### Simple Publisher
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `simple_publisher.py` |
+| Code | [scripts/simple_publisher.py](./scripts/simple_publisher.py) |
+
+Node publishes a message on a topic named `/simple_py_publisher/hello_str`. Demonstrates publishing messages on a topic, name scoping and rate control.
+
+**Building**
+
+In the `CMakeLists.txt`, add the following to the `catkin_install_python` function
+
+```bash
+    scripts/simple_publisher.py
+```
+
+before the `DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}`. Then run `catkin_make` in the workspace folder.
+
+**Running**
+
+To run the node, run `roscore` first, then
+
+```bash
+rosrun py_basic_nodes simple_publisher.py
+```
+
+Now, run
+
+```bash
+rostopic list
+```
+
+You must see `/simple_py_publisher/hello_str` in the list. This is because the node was named as such in the `Publisher` initialization call. If you change `"{0}/hello_str".format(rospy.get_name())` to `hello_str`, the output would have `/hello_str` instead.
+
+You can inspect the contents of the messages being published by running
+
+```bash
+rostopic echo /simple_py_publisher/hello_str
+```
+
+This would echo messages from the point where the command was called. You are encouraged to experiment and understand things before proceeding further (same is true for everything hereon).
+
+Kill the nodes using rosnode kill commands.
+
+## Reference
+
+- roswiki
+    - [Remapping Arguments](http://wiki.ros.org/Remapping%20Arguments)

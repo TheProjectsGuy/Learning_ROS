@@ -163,6 +163,7 @@ include_directories(
 # )
 catkin_install_python(PROGRAMS
     scripts/simple_hello_world.py
+    scripts/simple_publisher.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
