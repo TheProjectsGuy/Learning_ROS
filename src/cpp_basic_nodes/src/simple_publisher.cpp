@@ -38,8 +38,10 @@ int main(int argc, char **argv) {
      * We will use this object to publish messages
      * The template parameter (in <>) is the class of the message type
      * The first parameter is the topic name and the second parameter is the queue size
+     * The call returns a Publisher class object
      * 
      * Link: http://docs.ros.org/en/latest/api/roscpp/html/classros_1_1NodeHandle.html#a6b655c04f32c4c967d49799ff9312ac6
+     * Link (Publisher class): http://docs.ros.org/en/latest/api/roscpp/html/classros_1_1Publisher.html
      */
     ros::Publisher str_publisher = nh.advertise<std_msgs::String>("hello_str", 1000);
     

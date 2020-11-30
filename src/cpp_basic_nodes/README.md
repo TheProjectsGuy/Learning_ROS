@@ -15,6 +15,8 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
             - [Building a C++ Node](#building-a-c-node)
             - [Running the Node](#running-the-node)
         - [Simple Publisher](#simple-publisher)
+            - [Building](#building)
+            - [Running](#running)
         - [Simple Subscriber](#simple-subscriber)
             - [Building](#building-1)
             - [Running](#running-1)
@@ -131,7 +133,7 @@ After running the node, a few observations can be made:
 
 Node publishes a message on a topic named `/simple_cpp_publisher/hello_str`. Demonstrates publishing messages on a topic and name scoping.
 
-**Building**
+#### Building
 
 In the `CMakeLists.txt`, add the following
 
@@ -147,7 +149,7 @@ target_link_libraries(simple_cpp_publisher ${catkin_LIBRARIES})
 
 Then, run `catkin_make` in the workspace folder.
 
-**Running**
+#### Running
 
 To run the node, first run `roscore`, then
 
