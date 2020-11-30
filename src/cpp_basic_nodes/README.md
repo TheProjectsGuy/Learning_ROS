@@ -35,6 +35,8 @@ catkin_create_pkg cpp_basic_nodes roscpp
 
 This is the first package and hence things are described in a little more detail here. The source code has comments describing the contents that are new.
 
+When reading this file, you may either traverse from top to bottom (recommended for beginners) or navigate through [table of contents](#table-of-contents).
+
 Make sure you know how to build a package before proceeding.
 
 ## Nodes

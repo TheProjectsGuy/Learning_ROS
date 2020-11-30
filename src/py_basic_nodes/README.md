@@ -13,6 +13,8 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
             - [Creating executable](#creating-executable)
             - [Running a python node](#running-a-python-node)
         - [Simple Publisher](#simple-publisher)
+            - [Building](#building)
+            - [Running](#running)
     - [Reference](#reference)
 
 ## Creating this package
@@ -27,6 +29,8 @@ catkin_create_pkg py_basic_nodes rospy
 ## Foreword
 
 This is teh first package and hence things are described in a little more detail here. The source code has comments describing the contents that are new.
+
+When reading this file, you may either traverse from top to bottom (recommended for beginners) or navigate through [table of contents](#table-of-contents).
 
 Make sure you know how to build a package before proceeding.
 
@@ -118,7 +122,7 @@ After running the node, a few observations can be made:
 
 Node publishes a message on a topic named `/simple_py_publisher/hello_str`. Demonstrates publishing messages on a topic, name scoping and rate control.
 
-**Building**
+#### Building
 
 In the `CMakeLists.txt`, add the following to the `catkin_install_python` function
 
@@ -128,7 +132,7 @@ In the `CMakeLists.txt`, add the following to the `catkin_install_python` functi
 
 before the `DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}`. Then run `catkin_make` in the workspace folder.
 
-**Running**
+#### Running
 
 To run the node, run `roscore` first, then
 
