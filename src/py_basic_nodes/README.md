@@ -15,6 +15,9 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Publisher](#simple-publisher)
             - [Building](#building)
             - [Running](#running)
+        - [Simple Subscriber](#simple-subscriber)
+            - [Building](#building-1)
+            - [Running](#running-1)
     - [Reference](#reference)
 
 ## Creating this package
@@ -156,7 +159,70 @@ rostopic echo /simple_py_publisher/hello_str
 
 This would echo messages from the point where the command was called. You are encouraged to experiment and understand things before proceeding further (same is true for everything hereon).
 
-Kill the nodes using rosnode kill commands.
+Kill the nodes using `rosnode kill` commands.
+
+### Simple Subscriber
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `simple_py_subscriber` |
+| Code | [scripts/simple_subscriber.py](./scripts/simple_subscriber.py) |
+
+Node subscribes to topic named `/simple_py_subscriber/subs_str`. Demonstrates subscribing to messages received on a topic.
+
+#### Building
+
+In the `CMakeLists.txt`, add the following in the `catkin_install_python` function
+
+```txt
+    scripts/simple_subscriber.py
+```
+
+before the `DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}`. Then run `catkin_make` in the workspace folder.
+
+#### Running
+
+To run the node, first run `roscore`, then
+
+```bash
+rosrun py_basic_nodes simple_subscriber.py
+```
+
+Now, after running
+
+```bash
+rostopic list
+```
+
+You must see a topic named `/simple_py_subscriber/subs_str` has been created. Get more information about it using `rostopic info`.
+
+To publish a message on that topic at a particular frequency, run
+
+```bash
+rostopic pub /simple_py_subscriber/subs_str std_msgs/String "data: 'Hello World'" -r 0.2
+```
+
+This would publish a message with data as `Hello World` every 5 seconds (0.2 Hz is the rate passed).
+
+You may even experiment with remapping arguments to make the publisher that we had created earlier to publish messages to `/simple_py_subscriber/subs_str` instead of its default programmed publishing topic `/simple_py_publisher/hello_str`. To do that, run the following command
+
+```bash
+rosrun py_basic_nodes simple_publisher.py /simple_py_publisher/hello_str:=/simple_py_subscriber/subs_str
+```
+
+Remember that the publisher actually publishes at a programmed rate of 0.5 Hz. If you have the previous `rostopic pub` node still running, there actually are two nodes publishing and one node subscribing to the topic. Run the following command
+
+```bash
+rosrun rqt_graph rqt_graph
+```
+
+Would produce the following output
+
+![rqt_graph subscriber output](./media/pic1.png)
+
+You may further experiment with the code to see how the output changes. Most notably, you can do the following
+
+1. Try creating a large enough delay in the subscriber callback that messages accumulate. Then see what happens. More about creating a delay in Python [here](https://realpython.com/python-sleep/#adding-a-python-sleep-call-with-timesleep). You can further experiment here with different queue sizes.
 
 ## Reference
 
