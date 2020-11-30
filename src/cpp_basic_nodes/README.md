@@ -15,6 +15,9 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
             - [Building a C++ Node](#building-a-c-node)
             - [Running the Node](#running-the-node)
         - [Simple Publisher](#simple-publisher)
+        - [Simple Subscriber](#simple-subscriber)
+            - [Building](#building-1)
+            - [Running](#running-1)
     - [Reference](#reference)
 
 ## Creating this package
@@ -169,6 +172,73 @@ rostopic echo /simple_cpp_publisher/hello_str
 This would echo messages from the point where the command was called. You are encouraged to experiment and understand things before proceeding further (same is true for everything hereon).
 
 Kill the nodes using `rosnode kill` commands.
+
+### Simple Subscriber
+
+| Field | Value |
+| :--- | :--- |
+| Node name | `simple_cpp_subscriber` |
+| Code | [src/simple_subscriber.cpp](./src/simple_subscriber.cpp) |
+
+Node subscribes to a topic named `/simple_cpp_subscriber/subs_str`. Demonstrates subscribing to messages received on a topic.
+
+#### Building
+
+In the `CMakeLists.txt`, add the following lines at appropriate places
+
+```txt
+add_executable(simple_cpp_subscriber src/simple_subscriber.cpp)
+```
+
+```txt
+target_link_libraries(simple_cpp_subscriber ${catkin_LIBRARIES})
+```
+
+Then run `catkin_make` in the workspace folder.
+
+#### Running
+
+To run the node, first run `roscore`, then
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_subscriber
+```
+
+Now, after running
+
+```bash
+rostopic list
+```
+
+You must see a topic named `/simple_cpp_subscriber/subs_str` has been created. Get more information about it using `rostopic info`.
+
+To publish a message on that topic at a particular frequency, run
+
+```bash
+rostopic pub /simple_cpp_subscriber/subs_str std_msgs/String "data: 'Hello World'" -r 0.2
+```
+
+This would publish a message with data as `Hello World` every 5 seconds (0.2 Hz is the rate passed).
+
+You may even experiment with remapping arguments to make the publisher that we had created earlier to publish messages to `/simple_cpp_subscriber/subs_str` instead of its default programmed publishing topic `/simple_cpp_publisher/hello_str`. To do that, run the following command
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_publisher /simple_cpp_publisher/hello_str:=/simple_cpp_subscriber/subs_str
+```
+
+Remember that the publisher actually publishes at a programmed rate of 0.5 Hz. If you have the previous `rostopic pub` node still running, there actually are two nodes publishing and one node subscribing to the topic. Run the following command
+
+```bash
+rosrun rqt_graph rqt_graph
+```
+
+Would produce the following output
+
+![rqt_graph subscriber output](./media/pic1.png)
+
+You may further experiment with the code to see how the output changes. Most notably, you can do the following
+
+1. Try creating a large enough delay in the subscriber callback that messages accumulate. Then see what happens. More about a standard way of creating a delay on the current thread [here](http://www.cplusplus.com/reference/thread/this_thread/sleep_for/). You can further experiment here with different queue sizes.
 
 ## Reference
 
