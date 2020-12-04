@@ -5,6 +5,9 @@
 .kdev4/
 *.kdev4
 
+# Ignore PyCharm files
+.idea/
+
 # Ignore the build, devel and .catkin_workspace files
 devel/
 build/
