@@ -20,6 +20,14 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
         - [Simple Subscriber](#simple-subscriber)
             - [Building](#building-1)
             - [Running](#running-1)
+        - [Simple Service Server](#simple-service-server)
+            - [Building](#building-2)
+            - [Running](#running-2)
+    - [Services](#services)
+        - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
+            - [Building messages, services and messages](#building-messages-services-and-messages)
+                - [Package.xml](#packagexml)
+                - [CMakeLists.txt](#cmakeliststxt)
     - [Reference](#reference)
 
 ## Creating this package
@@ -243,6 +251,182 @@ Would produce the following output
 You may further experiment with the code to see how the output changes. Most notably, you can do the following
 
 1. Try creating a large enough delay in the subscriber callback that messages accumulate. Then see what happens. More about a standard way of creating a delay on the current thread [here](http://www.cplusplus.com/reference/thread/this_thread/sleep_for/). You can further experiment here with different queue sizes.
+
+### Simple Service Server
+
+| Field | Value |
+| :--- | :--- |
+| Node name | `simple_cpp_service_server` |
+| Code | [src/simple_service_server.cpp](./src/simple_service_server.cpp) |
+| Service | [AddAllFloat64Numbers_cpp.srv](./srv/AddAllFloat64Numbers_cpp.srv) |
+
+Before this node, you have to understand declaring and building services. Check [AddAllFloat64Numbers_cpp section](#addallfloat64numbers_cpp) for that. This node demonstrates how to create a service server.
+
+#### Building
+
+In the `CMakeLists.txt`, add the following lines at appropriate places
+
+1. Add the `add_executable` function
+
+    ```txt
+    add_executable(simple_cpp_service_server src/simple_service_server.cpp)
+    ```
+
+2. Add the `add_dependencies` function
+
+    ```txt
+    add_dependencies(simple_cpp_service_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+    ```
+
+    Notice the `${${PROJECT_NAME}_EXPORTED_TARGETS}` dependency, which is required for the dependency on the package messages, services and actions declared. This means that you actually do not even need to build those messages before you use them in the nodes of the same package. The dependency order will be automatically set to build messages and underlying headers before using them to build the nodes.
+
+    > Check out [this example](http://wiki.ros.org/catkin/CMakeLists.txt#Example) on roswiki for more
+
+3. Add the `target_link_libraries` function
+
+    ```txt
+    target_link_libraries(simple_cpp_service_server ${catkin_LIBRARIES})
+    ```
+
+Then run `catkin_make` in the workspace folder.
+
+#### Running
+
+To run this node, run `roscore` first. To run the node, run
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_service_server
+```
+
+After this, the `rosservice` tool can be used to find if the service is running
+
+```bash
+rosservice list
+```
+
+To call the service, a service client could be used or the call can also be made through the command line. Try running
+
+```bash
+rosservice call /simple_cpp_service_server/add_numbers "data:
+- 12.5
+- 37.25
+- 100.75
+- -20.3"
+```
+
+When you used tab completion, the first data value would be filled with 0. Just remove the ending `"` and continue on by typing an enter (or even `Ctrl-V Ctrl-J` would do). Usually after pressing enter, another prompt shows up to indicate completing the string, that is stored in `$PS2` (usually a `>`). After pressing enter upon completing the string with `"`, an output like this must appear
+
+```txt
+sum: 130.2
+```
+
+## Services
+
+Services declared in this package
+
+### AddAllFloat64Numbers_cpp
+
+| Field | Value |
+| :---- | :---- |
+| Name | `AddAllFloat64Numbers_cpp` |
+| File | [srv/AddAllFloat64Numbers_cpp.srv](./srv/AddAllFloat64Numbers_cpp.srv) |
+| Service Request | `float64[] data` |
+| Service Response | `float64 sum` |
+
+A service that adds all the numbers sent in the _request_ and sends the result as a _response_.
+
+#### Building messages, services and messages
+
+The file description is actually just created a service description file. We need to build the files (header and source files) so that this and other packages can use this service.
+
+##### Package.xml
+
+To do that, open `package.xml` file and add the following lines at appropriate places:
+
+1. Add a `build_depend` to `message_generation`. This will allow building messages, services and actions at compile time.
+
+    Go to the part where `<build_depend>` tags are located and add the following tags to the list
+
+    ```xml
+    <build_depend>message_generation</build_depend>
+    <build_depend>std_msgs</build_depend>
+    ```
+
+    This would tell that the package depends on `message_generation` package for building. The package `message_generation` is used for building the messages, services and actions. The second package, `std_msgs`, is needed for the messages.
+2. Add an `exec_depend` to `message_runtime`.
+
+    Go to the part where `<exec_depend>` tags are located and add the following tag to the list
+
+    ```xml
+    <exec_depend>message_runtime</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    ```
+
+    This is used to tell that we need the `message_runtime` package at runtime. The second package, `std_msgs`, is needed for the messages.
+
+##### CMakeLists.txt
+
+As the `package.xml` file is [just a manifesto file](http://wiki.ros.org/catkin/package.xml), we need to make the following changes to the `CMakeLists.txt` file (as that is the file which is [used to actually build the package](http://wiki.ros.org/catkin/CMakeLists.txt))
+
+1. In the `find_package` function, add `message_generation` to `catkin REQUIRED COMPONENTS` in a new line (after the end of already declared packages)
+
+    After adding `message_generation` (and adding `std_msgs` for standard messages), the function must look somewhat like this
+
+    ```txt
+    find_package(catkin REQUIRED COMPONENTS
+      roscpp
+      message_generation
+      std_msgs
+    )
+    ```
+
+    > More about the `find_package` function [here](http://wiki.ros.org/catkin/CMakeLists.txt#Finding_Dependent_CMake_Packages)
+
+2. Under `catkin specific configuration` heading (just before the `Build` heading), add `message_runtime` as `CATKIN_DEPENDS`.
+
+    After adding `message_runtime` (and `std_msgs` for standard messages), the function must look somewhat like this
+
+    ```txt
+    catkin_package(
+    #  INCLUDE_DIRS include
+    #  LIBRARIES cpp_basic_nodes
+    CATKIN_DEPENDS roscpp message_runtime std_msgs
+    #  DEPENDS system_lib
+    )
+    ```
+
+    > More about the `catkin_package` function [here](http://wiki.ros.org/catkin/CMakeLists.txt#catkin_package.28.29)
+
+3. Go to the `Declare ROS messages, services and actions` heading. You shall also find the whole procedure as comments in this section.
+    1. Add the `add_action_files` (you could uncomment the existing code, or write a new one under it).
+
+        Include the `.srv` files declared in the `srv` folder here. After adding the function, it would look like this
+
+        ```txt
+        add_service_files(
+            FILES
+            AddAllFloat64Numbers_cpp.srv
+        )
+        ```
+
+    2. Add the `generate_messages` function to the macro. This is to invoke code generation for the source code.
+
+        Add the `std_msgs` dependency. After everything, the function must look like this
+
+        ```txt
+        generate_messages(
+            DEPENDENCIES
+            std_msgs    # Float64
+        )
+        ```
+
+    > There is an [example on roswiki](http://wiki.ros.org/catkin/CMakeLists.txt#Example) to demonstrate changes to the CMakeLists.txt file for adding custom messages, services and actions
+
+After all this, run the `catkin_make` command in the workspace directory. You must see the header files for C++ nodes in the `devel/include/cpp_basic_nodes` directory of the workspace. The main header file, request file and response file are present here. Everything is stored in a namespace bearing the same name as the package name (that is `cpp_basic_nodes`).
+
+For python, the library source files are present in the `devel/lib/python3/dist-packages/cpp_basic_nodes` directory (inside the workspace directory).
+
+For any IDE, you may want to include the `devel/include` directory (for auto completion features).
 
 ## Reference
 

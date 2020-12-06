@@ -9,6 +9,8 @@ project(cpp_basic_nodes)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  message_generation
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -57,6 +59,10 @@ find_package(catkin REQUIRED COMPONENTS
 #   Service1.srv
 #   Service2.srv
 # )
+add_service_files(
+    FILES
+    AddAllFloat64Numbers_cpp.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -70,6 +76,10 @@ find_package(catkin REQUIRED COMPONENTS
 #   DEPENDENCIES
 #   std_msgs  # Or other packages containing msgs
 # )
+generate_messages(
+    DEPENDENCIES
+    std_msgs    # Float64
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -103,7 +113,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES cpp_basic_nodes
-#  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp message_runtime std_msgs
 #  DEPENDS system_lib
 )
 
@@ -135,6 +145,7 @@ include_directories(
 add_executable(simple_hello_world src/simple_hello_world.cpp)
 add_executable(simple_cpp_publisher src/simple_publisher.cpp)
 add_executable(simple_cpp_subscriber src/simple_subscriber.cpp)
+add_executable(simple_cpp_service_server src/simple_service_server.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -145,6 +156,7 @@ add_executable(simple_cpp_subscriber src/simple_subscriber.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(simple_cpp_service_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -153,6 +165,7 @@ add_executable(simple_cpp_subscriber src/simple_subscriber.cpp)
 target_link_libraries(simple_hello_world ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_publisher ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_subscriber ${catkin_LIBRARIES})
+target_link_libraries(simple_cpp_service_server ${catkin_LIBRARIES})
 
 #############
 ## Install ##
