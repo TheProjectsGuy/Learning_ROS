@@ -40,10 +40,11 @@ This repository is actually a ROS Workspace which you can directly clone and bui
 
 The following editors and IDEs are used extensively for the purpose of this repository:
 
-- [VSCode](https://code.visualstudio.com/), you may want to bookmark the [keyboard shortcuts page](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf)
-- [KDevelop](https://www.kdevelop.org/) IDE for C++ programming
+- [VSCode](https://code.visualstudio.com/), you may want to bookmark the [keyboard shortcuts page](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf). Check [this](http://wiki.ros.org/IDEs#Visual_Studio_Code_.28VSCode.29) out for using it with ROS.
+- [KDevelop](https://www.kdevelop.org/) IDE for C++ programming. Check [this](http://wiki.ros.org/IDEs#KDevelop) out for using it with ROS.
+- [PyCharm](https://www.jetbrains.com/pycharm/) IDE for Python Programming (suggested to install using [toolbox app](https://www.jetbrains.com/toolbox-app/)). Check [this](http://wiki.ros.org/IDEs#PyCharm_.28community_edition.29) out for using it with ROS.
 
-> IDEs for ROS [here](http://wiki.ros.org/IDEs)
+> More about IDEs suggested for ROS [here](http://wiki.ros.org/IDEs)
 
 ## Contents
 
