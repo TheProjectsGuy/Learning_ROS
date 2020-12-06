@@ -2,6 +2,8 @@
 
 Basic Python Nodes to understand essential concepts and the build procedure for a python package.
 
+> Link to the README of the `src` folder [here](../README.md)
+
 ## Table of contents
 
 - [Basic Nodes (Python)](#basic-nodes-python)
