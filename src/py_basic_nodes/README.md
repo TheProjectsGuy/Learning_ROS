@@ -18,6 +18,14 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Subscriber](#simple-subscriber)
             - [Building](#building-1)
             - [Running](#running-1)
+        - [Simple Service Server](#simple-service-server)
+            - [Building](#building-2)
+            - [Running](#running-2)
+    - [Services](#services)
+        - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
+            - [Building messages, services and messages](#building-messages-services-and-messages)
+                - [Package.xml](#packagexml)
+                - [CMakeLists.txt](#cmakeliststxt)
     - [Reference](#reference)
 
 ## Creating this package
@@ -223,6 +231,172 @@ Would produce the following output
 You may further experiment with the code to see how the output changes. Most notably, you can do the following
 
 1. Try creating a large enough delay in the subscriber callback that messages accumulate. Then see what happens. More about creating a delay in Python [here](https://realpython.com/python-sleep/#adding-a-python-sleep-call-with-timesleep). You can further experiment here with different queue sizes.
+
+### Simple Service Server
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `simple_py_service_server` |
+| Code | [scripts/simple_service_server.py](./scripts/simple_service_server.py) |
+| Service | [AddAllFloat64Numbers_py.srv](./srv/AddAllFloat64Numbers_py.srv) |
+
+Before this node, you have to understand declaring and building services. Check [AddAllFloat64Numbers_py](#addallfloat64numbers_py) for that. This node demonstrates how to create a service server.
+
+#### Building
+
+In the `CMakeLists.txt`, add the following lines at appropriate places
+
+1. Add the script to `catkin_install_python` function
+
+    Add the line
+
+    ```txt
+        scripts/simple_service_server.py
+    ```
+
+    before the `DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}` line.
+
+Then, run `catkin_make` in the workspace folder.
+
+#### Running
+
+To run this node, run `roscore` first. To run the node, run
+
+```bash
+rosrun py_basic_nodes simple_service_server.py
+```
+
+After this, the `rosservice` tool can be used to find if the service is running
+
+```bash
+rosservice list
+```
+
+To call the service, a service client could be used or the call can also be made through the command line. Try running
+
+```bash
+rosservice call /simple_py_service_server/add_numbers "data:
+- 12.5
+- 37.25
+- 100.75
+- -20.3"
+```
+
+When you used tab completion, the first data value would be filled with 0. Just remove the ending `"` and continue on by typing an enter (or even `Ctrl-V Ctrl-J` would do). Usually after pressing enter, another prompt shows up to indicate completing the string, that is stored in `$PS2` environment variable (usually a `>`). After pressing enter upon completing the string with `"`, an output like this must appear
+
+```txt
+sum: 130.2
+```
+
+## Services
+
+Services declared in this package
+
+### AddAllFloat64Numbers_py
+
+| Field | Value |
+| :---- | :---- |
+| Name | `AddAllFloat64Numbers_py` |
+| File | [srv/AddAllFloat64Numbers_py.srv](./srv/AddAllFloat64Numbers_py.srv) |
+| Service Request | `float64[] data` |
+| Service Response | `float64 sum` |
+
+A service that adds all the numbers sent in the _request_ and sends the result as a _response_.
+
+#### Building messages, services and messages
+
+The file description is actually just created a service description file. We need to build the files (header and source files) so that this and other packages can use this service.
+
+##### Package.xml
+
+To do that, open `package.xml` file and add the following lines at appropriate places:
+
+1. Add a `build_depend` to `message_generation`. This will allow building messages, services and actions at compile time.
+
+    Go to the part where `<build_depend>` tags are located and add the following tags to the list
+
+    ```xml
+    <build_depend>message_generation</build_depend>
+    <build_depend>std_msgs</build_depend>
+    ```
+
+    This would tell that the package depends on `message_generation` package for building. The package `message_generation` is used for building the messages, services and actions. The second package, `std_msgs`, is needed for the messages.
+2. Add an `exec_depend` to `message_runtime`.
+
+    Go to the part where `<exec_depend>` tags are located and add the following tag to the list
+
+    ```xml
+    <exec_depend>message_runtime</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    ```
+
+    This is used to tell that we need the `message_runtime` package at runtime. The second package, `std_msgs`, is needed for the messages.
+
+##### CMakeLists.txt
+
+As the `package.xml` file is [just a manifesto file](http://wiki.ros.org/catkin/package.xml), we need to make the following changes to the `CMakeLists.txt` file (as that is the file which is [used to actually build the package](http://wiki.ros.org/catkin/CMakeLists.txt))
+
+1. In the `find_package` function, add `message_generation` to `catkin REQUIRED COMPONENTS` in a new line (after the end of already declared packages)
+
+    After adding `message_generation` (and adding `std_msgs` for standard messages), the function must look somewhat like this
+
+    ```txt
+    find_package(catkin REQUIRED COMPONENTS
+      rospy
+      message_generation
+      std_msgs
+    )
+    ```
+
+    > More about the `find_package` function [here](http://wiki.ros.org/catkin/CMakeLists.txt#Finding_Dependent_CMake_Packages)
+
+2. Under `catkin specific configuration` heading (just before the `Build` heading), add `message_runtime` as `CATKIN_DEPENDS`.
+
+    After adding `message_runtime` (and `std_msgs` for standard messages), the function must look somewhat like this
+
+    ```txt
+    catkin_package(
+    #  INCLUDE_DIRS include
+    #  LIBRARIES py_basic_nodes
+    CATKIN_DEPENDS rospy message_runtime std_msgs
+    #  DEPENDS system_lib
+    )
+    ```
+
+    > More about the `catkin_package` function [here](http://wiki.ros.org/catkin/CMakeLists.txt#catkin_package.28.29)
+
+3. Go to the `Declare ROS messages, services and actions` heading. You shall also find the whole procedure as comments in this section.
+    1. Add the `add_action_files` (you could uncomment the existing code, or write a new one under it).
+
+        Include the `.srv` files declared in the `srv` folder here. After adding the function, it would look like this
+
+        ```txt
+        add_service_files(
+            FILES
+            AddAllFloat64Numbers_py.srv
+        )
+        ```
+
+    2. Add the `generate_messages` function to the macro. This is to invoke code generation for the source code.
+
+        Add the `std_msgs` dependency. After everything, the function must look like this
+
+        ```txt
+        generate_messages(
+            DEPENDENCIES
+            std_msgs    # Float64
+        )
+        ```
+
+    > There is an [example on roswiki](http://wiki.ros.org/catkin/CMakeLists.txt#Example) to demonstrate changes to the CMakeLists.txt file for adding custom messages, services and actions
+
+After this, run `catkin_make` in the workspace directory.
+
+After a successful build, the python modules (that can be imported) can be found in the `devel/lib/python3/dist-packages` directory inside the workspace directory. It must be inside a folder named `py_basic_nodes`. Within this folder, you must find a `srv` folder (which is a common folder for all services generated by the package).
+
+You can also see the header files for C++ generated in the `devel/include` folder inside the workspace folder. These header files can be included in nodes programmed using C++.
+
+For any IDE, you may want to include the `devel/lib/python3/dist-packages` directory (for auto completion features).
 
 ## Reference
 

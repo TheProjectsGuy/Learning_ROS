@@ -9,6 +9,8 @@ project(py_basic_nodes)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  message_generation
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -57,6 +59,10 @@ find_package(catkin REQUIRED COMPONENTS
 #   Service1.srv
 #   Service2.srv
 # )
+add_service_files(
+    FILES
+    AddAllFloat64Numbers_py.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -70,6 +76,10 @@ find_package(catkin REQUIRED COMPONENTS
 #   DEPENDENCIES
 #   std_msgs  # Or other packages containing msgs
 # )
+generate_messages(
+    DEPENDENCIES
+    std_msgs    # Float64
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -103,7 +113,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES py_basic_nodes
-#  CATKIN_DEPENDS rospy
+  CATKIN_DEPENDS rospy message_runtime std_msgs
 #  DEPENDS system_lib
 )
 
@@ -165,6 +175,7 @@ catkin_install_python(PROGRAMS
     scripts/simple_hello_world.py
     scripts/simple_publisher.py
     scripts/simple_subscriber.py
+    scripts/simple_service_server.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
