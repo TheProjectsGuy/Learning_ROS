@@ -54,5 +54,5 @@ if __name__ == '__main__':
     try:
         main()
     except rospy.ROSException as e:
-        rospy.logfatal("ROS error occurred: %s".format(e))
+        rospy.logfatal("ROS error occurred: {0}".format(e))
     pass

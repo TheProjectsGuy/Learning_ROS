@@ -41,9 +41,9 @@ int main(int argc, char **argv) {
     
     // Append the argument values to the request
     ROS_INFO("Numbers passed to the node are ");
-    for (int i = 0; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {    // 0th argument is node executable path
         double num = atof(argv[i]); // Link (atof): http://www.cplusplus.com/reference/cstdlib/atof/
-        ROS_INFO_STREAM(num);
+        ROS_INFO_STREAM(argv[i]);
         // Append the number to the request.data
         srv_obj.request.data.push_back(num);
     }
