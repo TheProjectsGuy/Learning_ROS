@@ -23,6 +23,9 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Service Server](#simple-service-server)
             - [Building](#building-2)
             - [Running](#running-2)
+        - [Simple Service Client](#simple-service-client)
+            - [Building](#building-3)
+            - [Running](#running-3)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building messages, services and messages](#building-messages-services-and-messages)
@@ -289,6 +292,50 @@ When you used tab completion, the first data value would be filled with 0. Just 
 ```txt
 sum: 130.2
 ```
+
+### Simple Service Client
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `simple_py_service_client` |
+| Code | [scripts/simple_service_client.py](./scripts/simple_service_client.py) |
+| Service | [AddAllFloat64Numbers_py.srv](./srv/AddAllFloat64Numbers_py.srv) |
+
+Before this node, you have to understand declaring and building services. Check [AddAllFloat64Numbers_py](#addallfloat64numbers_py) for that. This node demonstrates how to create a service client. It will call a service, so the service server needs to be present first. A simple service server is [demonstrated above](#simple-service-server).
+
+#### Building
+
+In the `CMakeLists.txt`, add the following lines at appropriate places
+
+1. Add the script to `catkin_install_python` function
+
+    Add the line
+
+    ```txt
+        scripts/simple_service_client.py
+    ```
+
+    before the `DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}` line.
+
+Then, run `catkin_make` in the workspace folder.
+
+#### Running
+
+To run this node, run `roscore` first. To use this node, a service server (servicing the service mentioned in the node, that is bearing the name `/simple_py_service_server/add_numbers`) must be running. This package has the [corresponding service server node](#simple-service-server). To run that node, run
+
+```bash
+rosrun py_basic_nodes simple_service_server.py
+```
+
+Ensure that the service `/simple_py_service_server/add_numbers` is running (using `rosservice list`)
+
+To run this node, run a command like what's shown below (you can use any numbers in the argument)
+
+```bash
+rosrun py_basic_nodes simple_service_client.py 60 4 0.5 -98.7
+```
+
+If everything's gone right, the sum must return `-34.2` for the given numbers.
 
 ## Services
 

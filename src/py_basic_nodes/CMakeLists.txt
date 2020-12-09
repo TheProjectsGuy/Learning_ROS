@@ -176,6 +176,7 @@ catkin_install_python(PROGRAMS
     scripts/simple_publisher.py
     scripts/simple_subscriber.py
     scripts/simple_service_server.py
+    scripts/simple_service_client.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
