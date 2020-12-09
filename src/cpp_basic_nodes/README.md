@@ -23,6 +23,9 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
         - [Simple Service Server](#simple-service-server)
             - [Building](#building-2)
             - [Running](#running-2)
+        - [Simple Service Client](#simple-service-client)
+            - [Building](#building-3)
+            - [Running](#running-3)
     - [Services](#services)
         - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
             - [Building messages, services and messages](#building-messages-services-and-messages)
@@ -319,6 +322,58 @@ When you used tab completion, the first data value would be filled with 0. Just 
 ```txt
 sum: 130.2
 ```
+
+### Simple Service Client
+
+| Field | Value |
+| :--- | :--- |
+| Node name | `simple_cpp_service_client` |
+| Code | [src/simple_service_client.cpp](./src/simple_service_client.cpp)
+| Service | [AddAllFloat64Numbers_cpp.srv](./srv/AddAllFloat64Numbers_cpp.srv) |
+
+Before this node, you have to understand declaring and building services. Check [AddAllFloat64Numbers_cpp section](#addallfloat64numbers_cpp) for that. This node demonstrates how to create a service client. It will call a service, so the service server needs to be present first. A simple service server is [demonstrated above](#simple-service-server).
+
+#### Building
+
+In the `CMakeLists.txt`, add the following line at appropriate places
+
+1. Add the `add_executable` function
+
+    ```txt
+    add_executable(simple_cpp_service_client src/simple_service_client.cpp)
+    ```
+
+2. Add the `add_dependencies` function
+
+    ```txt
+    add_dependencies(simple_cpp_service_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+    ```
+
+    Note that the `${${PROJECT_NAME}_EXPORTED_TARGETS}` tag is needed for using the service generated
+
+3. Add the `target_link_libraries` function
+
+    ```txt
+    target_link_libraries(simple_cpp_service_client ${catkin_LIBRARIES})
+    ```
+
+#### Running
+
+To run this node, run `roscore` first. Additionally, a service server (servicing the service mentioned in the node, bearing the name `/simple_cpp_service_server/add_numbers`) must be running. This package has the [corresponding service server node](#simple-service-server). To run that node, run
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_service_server
+```
+
+Ensure that the service `/simple_cpp_service_server/add_numbers` is running (using `rosservice list`)
+
+To run this node, run a command like what's shown below (you can use any numbers in the argument)
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_service_client 60 4 0.5 -98.7
+```
+
+If everything's gone right, the sum must return `-34.2` for the given numbers.
 
 ## Services
 
