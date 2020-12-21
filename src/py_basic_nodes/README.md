@@ -10,6 +10,7 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
     - [Table of contents](#table-of-contents)
     - [Creating this package](#creating-this-package)
     - [Foreword](#foreword)
+    - [Contents](#contents)
     - [Nodes](#nodes)
         - [Simple Hello World](#simple-hello-world)
             - [Creating executable](#creating-executable)
@@ -46,9 +47,22 @@ catkin_create_pkg py_basic_nodes rospy
 
 This is teh first package and hence things are described in a little more detail here. The source code has comments describing the contents that are new.
 
-When reading this file, you may either traverse from top to bottom (recommended for beginners) or navigate through [table of contents](#table-of-contents).
+When reading this file, you may either traverse from top to bottom (recommended for beginners) or navigate through [table of contents](#table-of-contents). If you are a beginner, you're suggested to navigate the package using the [contents](#contents) section. In the [Nodes](#nodes) section, the nodes are described starting with a table (to lead you to the source code). Same is done for other sections hereon.
 
 Make sure you know how to build a package before proceeding.
+
+## Contents
+
+Suggested order of traversal for the items in this package (specially for beginners)
+
+| S. No. | Name | Link | Description |
+| :---- | :---: | :--- | :---- |
+| 1 | Hello World | [Nodes > Simple Hello World](#simple-hello-world) | Prints `Hello, World!` |
+| 2 | Publisher (Simple) | [Nodes > Simple Publisher](#simple-publisher) | Publish messages |
+| 3 | Subscriber (Simple) | [Nodes > Simple Subscriber](#simple-subscriber) | Subscribe to messages |
+| 4 | Creating AddAllFloat64Numbers_py service | [Services > AddAllFloat64Numbers_py](#addallfloat64numbers_py) | Creating and building your own service (.srv file) |
+| 5 | Service Server (Simple) | [Nodes > Simple Service Server](#simple-service-server) | Server for the service AddAllFloat64Numbers_py |
+| 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service AddAllFloat64Numbers_py |
 
 ## Nodes
 
