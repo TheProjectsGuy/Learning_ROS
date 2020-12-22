@@ -156,6 +156,7 @@ add_executable(simple_cpp_subscriber src/simple_subscriber.cpp)
 add_executable(simple_cpp_service_server src/simple_service_server.cpp)
 add_executable(simple_cpp_service_client src/simple_service_client.cpp)
 add_executable(simple_cpp_action_server src/simple_action_server.cpp)
+add_executable(simple_cpp_action_client src/simple_action_client.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -169,6 +170,7 @@ add_executable(simple_cpp_action_server src/simple_action_server.cpp)
 add_dependencies(simple_cpp_service_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(simple_cpp_service_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(simple_cpp_action_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(simple_cpp_action_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -180,6 +182,7 @@ target_link_libraries(simple_cpp_subscriber ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_service_server ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_service_client ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_action_server ${catkin_LIBRARIES})
+target_link_libraries(simple_cpp_action_client ${catkin_LIBRARIES})
 
 #############
 ## Install ##
