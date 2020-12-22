@@ -1,8 +1,10 @@
 # A service is used to create a Request - Response model
 # More here: http://wiki.ros.org/srv
 # A service uses messages for request and response
+# ----- Request -----
 # A list of numbers (request)
 float64[] data
 ---
+# ----- Response -----
 # A result, sum of the numbers in request (response)
 float64 sum

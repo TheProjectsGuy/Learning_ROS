@@ -29,7 +29,7 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
             - [Running](#running-3)
     - [Services](#services)
         - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
-            - [Building messages, services and messages](#building-messages-services-and-messages)
+            - [Building services and messages](#building-services-and-messages)
                 - [Package.xml](#packagexml)
                 - [CMakeLists.txt](#cmakeliststxt)
     - [Actions](#actions)
@@ -65,7 +65,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 1 | Hello World | [Nodes > Simple Hello World](#simple-hello-world) | Prints `Hello, World!` |
 | 2 | Publisher (Simple) | [Nodes > Simple Publisher](#simple-publisher) | Publish messages |
 | 3 | Subscriber (Simple) | [Nodes > Simple Subscriber](#simple-subscriber) | Subscribe to messages |
-| 4 | Creating AddAllFloat64Numbers_cpp service | [Services > AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp) | Creating and building your own service (.srv file) |
+| 4 | Creating AddAllFloat64Numbers_cpp service | [Services > AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp) | Creating and building your own service (`.srv` file) |
 | 5 | Service Server (Simple) | [Nodes > Simple Service Server](#simple-service-server) | Server for the service AddAllFloat64Numbers_cpp |
 | 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service AddAllFloat64Numbers_cpp |
 | 7 | Creating CountNumbers_cpp action | [Actions > CountNumbers_cpp](#countnumbers_cpp) | Creating and building your own action (`.action` file) |
@@ -408,11 +408,11 @@ Services declared in this package
 | Service Request | `float64[] data` |
 | Service Response | `float64 sum` |
 
-A service that adds all the numbers sent in the _request_ and sends the result as a _response_.
+A service that adds all the numbers sent in the _request_ and sends the result as a _response_. For example, if we send `1, -2.3, 56, -4` in request, it will send `50.7` (their sum) in response. However, note that the logic is not in the `.srv` file, but in the service server. This file only describes the structure.
 
-#### Building messages, services and messages
+#### Building services and messages
 
-The file description is actually just created a service description file. We need to build the files (header and source files) so that this and other packages can use this service.
+The file is actually just a service description file. We need to build the files (header and source files) so that this and other packages can use this service.
 
 ##### Package.xml
 

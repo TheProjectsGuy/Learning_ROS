@@ -29,7 +29,7 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
             - [Running](#running-3)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
-            - [Building messages, services and messages](#building-messages-services-and-messages)
+            - [Building services and messages](#building-services-and-messages)
                 - [Package.xml](#packagexml)
                 - [CMakeLists.txt](#cmakeliststxt)
     - [Reference](#reference)
@@ -364,9 +364,9 @@ Services declared in this package
 | Service Request | `float64[] data` |
 | Service Response | `float64 sum` |
 
-A service that adds all the numbers sent in the _request_ and sends the result as a _response_.
+A service that adds all the numbers sent in the _request_ and sends the result as a _response_. For example, if we send `1, -2.3, 56, -4` in request, it will send `50.7` (their sum) in response. However, note that the logic is not in the `.srv` file, but in the service server. This file only describes the structure.
 
-#### Building messages, services and messages
+#### Building services and messages
 
 The file description is actually just created a service description file. We need to build the files (header and source files) so that this and other packages can use this service.
 
