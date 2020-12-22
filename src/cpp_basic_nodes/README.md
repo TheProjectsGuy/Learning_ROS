@@ -27,6 +27,9 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
         - [Simple Service Client](#simple-service-client)
             - [Building](#building-3)
             - [Running](#running-3)
+        - [Simple Action Server](#simple-action-server)
+            - [Building](#building-4)
+            - [Running](#running-4)
     - [Services](#services)
         - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
             - [Building services and messages](#building-services-and-messages)
@@ -69,6 +72,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 5 | Service Server (Simple) | [Nodes > Simple Service Server](#simple-service-server) | Server for the service AddAllFloat64Numbers_cpp |
 | 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service AddAllFloat64Numbers_cpp |
 | 7 | Creating CountNumbers_cpp action | [Actions > CountNumbers_cpp](#countnumbers_cpp) | Creating and building your own action (`.action` file) |
+| 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_cpp |
 
 ## Nodes
 
@@ -394,6 +398,89 @@ rosrun cpp_basic_nodes simple_cpp_service_client 60 4 0.5 -98.7
 ```
 
 If everything's gone right, the sum must return `-34.2` for the given numbers.
+
+### Simple Action Server
+
+| Field | Value |
+| :--- | :--- |
+| Node name | `simple_cpp_action_server` |
+| Code | [src/simple_action_server.cpp](./src/simple_action_server.cpp) |
+| Action | [action/CountNumbers_cpp.action](./action/CountNumbers_cpp.action) |
+
+Before this node, you have to understand how `.action` files are build, check [Actions > CountNumbers_cpp](#countnumbers_cpp) for that. This node shows how to create an action server.
+
+#### Building
+
+In the `CMakeLists.txt`, add the following lines at appropriate places
+
+1. Add the `add_executable` function
+
+    ```txt
+    add_executable(simple_cpp_action_server src/simple_action_server.cpp)
+    ```
+
+2. Add the `add_dependencies` function for the action headers (the tags will be generated automatically)
+
+    ```txt
+    add_dependencies(simple_cpp_action_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+    ```
+
+3. Add the `target_link_libraries` function
+
+    ```txt
+    target_link_libraries(simple_cpp_action_server ${catkin_LIBRARIES})
+    ```
+
+After that, run `catkin_make` in the workspace folder. The node will be generated. In order to use it, you'll need an action client. However, you can use direct messaging to see the underlying mechanism.
+
+#### Running
+
+To run this node, run `roscore` first. To run the node, run
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_action_server
+```
+
+Note that actions actually use messages to communicate. To see the messages for the action, run the following command
+
+```bash
+rostopic list | grep -E "/simple_cpp_action_server/count_numbers/"
+```
+
+You'll see messages for `cancel`, `feedback`, `goal`, `result` and `status`. To test and see how the actionlib mechanism may work, run these commands in separate terminals that you can see at the same time
+
+```bash
+rostopic echo /simple_cpp_action_server/count_numbers/result
+rostopic echo /simple_cpp_action_server/count_numbers/feedback
+rostopic echo /simple_cpp_action_server/count_numbers/status
+```
+
+Then, in another terminal, we will publish a message to the `goal` topic. You could use the command below
+
+```bash
+rostopic pub /simple_cpp_action_server/count_numbers/goal cpp_basic_nodes/CountNumbers_cppActionGoal "header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: ''
+goal_id:
+  stamp:
+    secs: 0
+    nsecs: 0
+  id: ''
+goal:
+  target_number: 10
+  del_ms: 1000" -1
+```
+
+The above command will tell the server to count up to `10` with a delay of `1000 ms` between each count. After everything is done, the output must look somewhat like below
+
+![ROS Action Server CLI tools run image](./media/pic2.png)
+
+The `status` is being displayed on the bottom right, with the `feedback` on top and `result` left to it. The main node is at the top left and under it is the publisher to `goal`.
+
+As seen in the code, we have only programmed the logic of execution, and everything on the communication side has been handled by the `actionlib` package (which is why we needed it as a dependency). However, the method that we used is not a proper one used to call actions (see that we did not fill many fields in the `goal` publisher command above). For that, we need to create an action client. Then, `actionlib` would handle the publishing part as well, we'd only have to give it the `goal`. For that, check out the [Simple Action Client](#simple-action-client) below.
 
 ## Services
 
