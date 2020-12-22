@@ -1,0 +1,13 @@
+# An action is used to create a Goal-Feedback-Result model
+# More here: http://wiki.ros.org/actionlib
+# An action uses messages to send requests, feedbacks and responses
+# ----- Request (Goal) -----
+uint32 target_number    # Count till this target
+uint32 del_ms       # Use this much delay (in milliseconds) when counting numbers
+---
+# ----- Response (Result) -----
+string res_note     # A note for the result
+---
+# ----- Feedback -----
+uint32 curr_number      # Current number
+

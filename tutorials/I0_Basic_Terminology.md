@@ -18,6 +18,7 @@ This file contains definitions of basic terms used in ROS. Each term is as a hea
         - [Messages](#messages)
         - [Topics](#topics)
         - [Services](#services)
+        - [Actions](#actions)
     - [Auxiliary information](#auxiliary-information)
     - [References](#references)
 
@@ -134,6 +135,20 @@ There can be a node that registers to the master as a **Service Server** (which 
 Many packages that come with ROS have their own services. However, if needed, we can create our own services as well. To define a service, a `.srv` file is created. It is usually put inside a folder named `srv` within a package.
 
 > More about *srv* files [here](http://wiki.ros.org/srv)
+
+### Actions
+
+Services ensure that you can have a request and response type of interaction between a client (who requests) and a server (who processes the request and sends an action). Sometimes, it is important for the client to get periodic feedbacks on the process. Hence, an action allows you to have a _Goal_ sent from a client to the server and _Feedback_ sent from the server to the client until the goal is reached. After reaching the goal, the server can send a _Result_. This is helpful in aspects like servo control, where you give a goal position and want to also periodically know the position as feedback.
+
+Just in case of a service, even in actions, there can be a node that registers to the master as an **Action Server** (which provides the action), and there can be nodes registered as **Action Clients** (which use the action by calling the action server).
+
+The facility of an action is provided through a package named `actionlib`. This package handles the underlying plumbing work to deliver the goal, feedback and results by creating messages. It also provides an API to use it for creating action servers and action clients.
+
+> More about the `actionlib` package [here](http://wiki.ros.org/actionlib)
+
+The structure of actions have to be declared in `.action` files which are put inside a folder named `action` within a package.
+
+> More about *action* files [here](http://wiki.ros.org/actionlib#A.action_File)
 
 ## Auxiliary information
 
