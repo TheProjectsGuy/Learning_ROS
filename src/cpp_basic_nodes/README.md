@@ -650,7 +650,7 @@ Actions declared in this package
 | Result | `string res_note` |
 | Feedback | `uint32 curr_number` |
 
-An action that counts the numbers up to a requested number. For example, if the goal is to count up to `5` (`target_number`) with a delay of `1000` (`del_ms`), then in feedback, the node will send numbers `1, 2, 3, 4, 5` and then send the result as `Done`. Note that the `.action` file only describes the structure of the action. The logic is defined in the action server implementation.
+An action that counts the numbers up to a requested number. For example, if the goal is to count up to `5` (`target_number`) with a delay of `1000` (`del_ms`), then in feedback, the node will send numbers `1, 2, 3, 4, 5` and then send the result as `Done` (or something similar). Note that the `.action` file only describes the structure of the action. The logic is defined in the [action server implementation](#simple-action-server) and not in the `.action` file.
 
 #### Building actions
 
@@ -735,7 +735,7 @@ Add the following at appropriate places
 
     > There is an [example on roswiki](http://wiki.ros.org/actionlib#A.action_File) to demonstrate a sample `.action` file and building it.
 
-After all that, run `catkin_make` in the ros workspace directory. After a successful build, the header files for C++ nodes must be available in `devel/include/cpp_basic_nodes` directory of the workspace. You can see the messages created by running the command
+After all that, run `catkin_make` in the ros workspace directory. After a successful build, the header files for C++ nodes must be available in `devel/include/cpp_basic_nodes` directory of the workspace (python libraries are in the `devel/lib/python3/dist-packages/cpp_basic_nodes` directory). You can see the messages created by running the command
 
 ```bash
 rosmsg list | grep cpp_basic_nodes/CountNumbers_cpp
