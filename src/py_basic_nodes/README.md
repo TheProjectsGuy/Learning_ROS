@@ -27,6 +27,9 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Service Client](#simple-service-client)
             - [Building](#building-3)
             - [Running](#running-3)
+        - [Simple Action Server](#simple-action-server)
+            - [Building](#building-4)
+            - [Running](#running-4)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -69,6 +72,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 5 | Service Server (Simple) | [Nodes > Simple Service Server](#simple-service-server) | Server for the service AddAllFloat64Numbers_py |
 | 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service AddAllFloat64Numbers_py |
 | 7 | Creating CountNumbers_py action | [Actions > CountNumbers_py](#countnumbers_py) | Creating and building your own action (`.action` file) |
+| 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_py |
 
 ## Nodes
 
@@ -356,6 +360,75 @@ rosrun py_basic_nodes simple_service_client.py 60 4 0.5 -98.7
 ```
 
 If everything's gone right, the sum must return `-34.2` for the given numbers.
+
+### Simple Action Server
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `simple_py_action_server` |
+| Code | [scripts/simple_action_server.py](./scripts/simple_action_server.py) |
+| Action | [action/CountNumbers_py.action](./action/CountNumbers_py.action) |
+
+Before this node, you have to understand how `.action` files are build, check [Actions > CountNumbers_py](#countnumbers_py) for that. This node shows how to create an action server.
+
+#### Building
+
+In the `CMakeLists.txt` file, add the following line in `catkin_install_python` function before the `DESTINATION` line
+
+```txt
+    scripts/simple_action_server.py
+```
+
+Then, run `catkin_make` in the workspace
+
+#### Running
+
+To run this node, run `roscore` first. To run the node, run
+
+```bash
+rosrun py_basic_nodes simple_action_server.py
+```
+
+Note that actions actually use messages to communicate. To see the messages for the action, run the following command
+
+```bash
+rostopic list | grep /simple_py_action_server/count_numbers/
+```
+
+You'll see messages for `cancel`, `feedback`, `goal`, `result` and `status`. To test and see how the `actionlib` mechanism may work, run these commands in separate terminals that you can see at the same time
+
+```bash
+rostopic echo /simple_py_action_server/count_numbers/result
+rostopic echo /simple_py_action_server/count_numbers/feedback
+rostopic echo /simple_py_action_server/count_numbers/status
+```
+
+Then, in another terminal, we will publish a message to the `goal` topic. You could use the command below
+
+```bash
+rostopic pub /simple_py_action_server/count_numbers/goal py_basic_nodes/CountNumbers_pyActionGoal "header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: ''
+goal_id:
+  stamp:
+    secs: 0
+    nsecs: 0
+  id: ''
+goal:
+  target_number: 15
+  del_ms: 500" -1
+```
+
+The above command will tell the server to count up to `15` with a delay of `500 ms` between each count. After everything is done, the output must look somewhat like below
+
+![ROS Action Server CLI tools run image](./media/pic2.png)
+
+The `status` is being displayed on the bottom right, with the `feedback` on top and `result` left to it. The main node is at the top left and under it is the publisher to `goal`.
+
+As seen in the code, we have only programmed the logic of execution, and everything on the communication side has been handled by the `actionlib` package (which is why we needed it as a dependency). However, the method that we used here is not a proper one used to *call* actions (notice that we did not fill many fields in the `goal` publisher command above, namely header and goal ID). For that, we need to create an action client. Then, `actionlib` would handle the publishing part as well, we'd only have to give it the `goal`.
 
 ## Services
 
