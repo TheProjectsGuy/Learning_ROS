@@ -451,7 +451,7 @@ Note that actions actually use messages to communicate. To see the messages for 
 rostopic list | grep -E "/simple_cpp_action_server/count_numbers/"
 ```
 
-You'll see messages for `cancel`, `feedback`, `goal`, `result` and `status`. To test and see how the actionlib mechanism may work, run these commands in separate terminals that you can see at the same time
+You'll see messages for `cancel`, `feedback`, `goal`, `result` and `status`. To test and see how the `actionlib` mechanism may work, run these commands in separate terminals that you can see at the same time
 
 ```bash
 rostopic echo /simple_cpp_action_server/count_numbers/result
@@ -484,7 +484,7 @@ The above command will tell the server to count up to `10` with a delay of `1000
 
 The `status` is being displayed on the bottom right, with the `feedback` on top and `result` left to it. The main node is at the top left and under it is the publisher to `goal`.
 
-As seen in the code, we have only programmed the logic of execution, and everything on the communication side has been handled by the `actionlib` package (which is why we needed it as a dependency). However, the method that we used is not a proper one used to call actions (see that we did not fill many fields in the `goal` publisher command above). For that, we need to create an action client. Then, `actionlib` would handle the publishing part as well, we'd only have to give it the `goal`. For that, check out the [Simple Action Client](#simple-action-client) below.
+As seen in the code, we have only programmed the logic of execution, and everything on the communication side has been handled by the `actionlib` package (which is why we needed it as a dependency). However, the method that we used here is not a proper one used to *call* actions (notice that we did not fill many fields in the `goal` publisher command above, namely header and goal ID). For that, we need to create an action client. Then, `actionlib` would handle the publishing part as well, we'd only have to give it the `goal`. For that, check out the [Simple Action Client](#simple-action-client) below.
 
 ### Simple Action Client
 

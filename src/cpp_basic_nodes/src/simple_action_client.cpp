@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     
     // Create an action client object
     /*
-     * Just as a service client is used to call a service server, an action client object is used to call an action server
+     * Just as a service client (proxy) is used to call a service server, an action client object is used to call an action server
      * The first argument is the action name and the second argument is 
      * 
      * Link: https://docs.ros.org/en/api/actionlib/html/classactionlib_1_1SimpleActionClient.html#a416667d5c870abc27227e45a492c1e3f
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     ROS_INFO("Waiting for the /simple_cpp_action_server/count_numbers action");
     // Wait for the server with 1s timeout
     /*
-     * Used to wait until a timeout occurrs. If a timeout does occur, then false is returned and if it can connect to the action server,
+     * Used to wait until a timeout occurs. If a timeout does occur, then false is returned and if it can connect to the action server,
      * then true is returned.
      * The first argument is the duration
      * 
@@ -79,14 +79,14 @@ int main(int argc, char **argv) {
                                    boost::bind(recv_feedback, _1)   // Feedback
         );
         ROS_INFO("Waiting for the response");
-        int wait_duration = goal_obj.del_ms * goal_obj.target_number + 1;
+        int wait_duration_ms = goal_obj.del_ms * goal_obj.target_number;
         // Wait for the response
         /*
          * Wait for the action server to finish the task and send a result
          * 
          * Link: https://docs.ros.org/en/api/actionlib/html/classactionlib_1_1SimpleActionClient.html#a94b5a38fae6917f83331560b81eea341
          */
-        if (!action_client_obj.waitForResult(ros::Duration(wait_duration, 0))) {
+        if (action_client_obj.waitForResult(ros::Duration((wait_duration_ms / 1000) + 1, 0))) {
             ROS_INFO("Got a response");
             // Get the state of the result
             /*

@@ -76,6 +76,7 @@ int main(int argc, char **argv) {
      * Second argumet is the name under which the action is being published
      * Third argument is the callback function, but binded using the boost::bind function
      *      This function creates custom function callbacks
+     * Fourth argument is false to imply that the server will be started manually using a start() call (to avoid race conditions)
      * 
      * Link (boost::bind): https://www.boost.org/doc/libs/1_75_0/libs/bind/doc/html/bind.html#bind.purpose
      * Link: https://docs.ros.org/en/api/actionlib/html/classactionlib_1_1SimpleActionServer.html
