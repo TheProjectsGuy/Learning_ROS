@@ -30,6 +30,9 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Action Server](#simple-action-server)
             - [Building](#building-4)
             - [Running](#running-4)
+        - [Simple Action Client](#simple-action-client)
+            - [Building](#building-5)
+            - [Running](#running-5)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -73,6 +76,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service AddAllFloat64Numbers_py |
 | 7 | Creating CountNumbers_py action | [Actions > CountNumbers_py](#countnumbers_py) | Creating and building your own action (`.action` file) |
 | 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_py |
+| 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_py |
 
 ## Nodes
 
@@ -429,6 +433,46 @@ The above command will tell the server to count up to `15` with a delay of `500 
 The `status` is being displayed on the bottom right, with the `feedback` on top and `result` left to it. The main node is at the top left and under it is the publisher to `goal`.
 
 As seen in the code, we have only programmed the logic of execution, and everything on the communication side has been handled by the `actionlib` package (which is why we needed it as a dependency). However, the method that we used here is not a proper one used to *call* actions (notice that we did not fill many fields in the `goal` publisher command above, namely header and goal ID). For that, we need to create an action client. Then, `actionlib` would handle the publishing part as well, we'd only have to give it the `goal`.
+
+### Simple Action Client
+
+| Field | Value |
+| :--- | :--- |
+| Name | `simple_py_action_client` |
+| Code | [scripts/simple_action_client.py](./scripts/simple_action_client.py) |
+| Action | [action/CountNumbers_py.action](./action/CountNumbers_py.action) |
+
+Before this node, you have to understand how `.action` files are build, check [Actions > CountNumbers_py](#countnumbers_py) for that. This node shows how to create an action client. A [simple action server](#simple-action-server) that can be used with this client is demonstrated above.
+
+#### Building
+
+In the `CMakeLists.txt` file, add the following line in `catkin_install_python` function before the `DESTINATION` line
+
+```txt
+    scripts/simple_action_client.py
+```
+
+Then, run `catkin_make` in the workspace
+
+#### Running
+
+To run this node, run `roscore` first. In order to run an action client, an action server has to be spawned first, run the following
+
+```bash
+rosrun py_basic_nodes simple_action_server.py
+```
+
+Now, you can run the client using (run this on a different terminal window)
+
+```bash
+rosrun py_basic_nodes simple_action_client.py 10 500
+```
+
+This must produce the following output
+
+![Output of action client and server](./media/pic3.png)
+
+You are encouraged to inspect the contents of the underlying messages as discussed in the [simple action server](#simple-action-server).
 
 ## Services
 
