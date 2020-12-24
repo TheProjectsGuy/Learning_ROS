@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   message_generation
   std_msgs
+  actionlib
+  genmsg
+  actionlib_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -70,6 +73,10 @@ add_service_files(
 #   Action1.action
 #   Action2.action
 # )
+add_action_files(
+    FILES
+    CountNumbers_py.action
+)
 
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
@@ -79,6 +86,7 @@ add_service_files(
 generate_messages(
     DEPENDENCIES
     std_msgs    # Float64
+    actionlib_msgs
 )
 
 ################################################
@@ -113,7 +121,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES py_basic_nodes
-  CATKIN_DEPENDS rospy message_runtime std_msgs
+  CATKIN_DEPENDS rospy message_runtime std_msgs actionlib_msgs
 #  DEPENDS system_lib
 )
 
