@@ -629,7 +629,7 @@ Add the following at appropriate places
 
     ```txt
     find_package(catkin REQUIRED COMPONENTS
-        roscpp
+        rospy
         message_generation
         std_msgs
         actionlib
@@ -673,8 +673,8 @@ Add the following at appropriate places
         ```txt
         catkin_package(
         #  INCLUDE_DIRS include
-        #  LIBRARIES cpp_basic_nodes
-        CATKIN_DEPENDS roscpp message_runtime std_msgs actionlib_msgs
+        #  LIBRARIES py_basic_nodes
+        CATKIN_DEPENDS rospy message_runtime std_msgs actionlib_msgs
         #  DEPENDS system_lib
         )
         ```
