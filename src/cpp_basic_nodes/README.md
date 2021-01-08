@@ -506,7 +506,7 @@ Before this node, you have to understand how `.action` files are build, check [A
 
 #### Building
 
-Add the following functions at the appropriate places
+Add the following functions at the appropriate places in the `CMakeLists.txt` file.
 
 ```txt
 add_executable(simple_cpp_action_client src/simple_action_client.cpp)
