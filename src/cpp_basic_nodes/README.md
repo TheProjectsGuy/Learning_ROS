@@ -33,6 +33,9 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
         - [Simple Action Client](#simple-action-client)
             - [Building](#building-5)
             - [Running](#running-5)
+        - [Simple Parameter Node](#simple-parameter-node)
+            - [Building](#building-6)
+            - [Running](#running-6)
     - [Services](#services)
         - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
             - [Building services and messages](#building-services-and-messages)
@@ -81,6 +84,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_cpp |
 | 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_cpp |
 | 10 | YAML ROS Parameter | [YAML Files > Params1](#params1) | Simple YAML file which can be loaded on the ROS Parameter Server (`.yaml` file) |
+| 11 | Parameter Node (Simple) | [Nodes > Simple Parameter Node](#simple-parameter-node) | Accessing parameters on the parameter server in a node |
 
 ## Nodes
 
@@ -783,6 +787,51 @@ rosmsg list | grep cpp_basic_nodes/CountNumbers_cpp
 ```
 
 There will be messages for actions as well as individual messages for the goal, feedback and result.
+
+## YAML Files
+
+### Params1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `Params1` |
+| File | [yaml/Params1.yaml](./yaml/Params1.yaml) |
+
+This file contains parameters that can be loaded to the ROS Master (on the Parameter Server).
+
+#### Loading parameters
+
+Make sure the master is running first
+
+```bash
+roscore
+```
+
+We use the [rosparam](https://wiki.ros.org/rosparam) tool to list, get and load parameters from a YAML file. Now let's list the parameters that are present when roscore is launched.
+
+```bash
+rosparam list
+```
+
+Say we want to get the value of `/run_id`, use `rosparam get`
+
+```bash
+rosparam get /run_id
+```
+
+You can save all the current parameters in a temporary file
+
+```bash
+rosparam dump curr_params.yaml
+```
+
+The contents of the file are the parameters in the ROS Parameter Server. To load the parameters in this file into the ROS parameter server, run the following command
+
+```bash
+rosparam load `rospack find cpp_basic_nodes`/yaml/Params1.yaml
+```
+
+The `rospack find cpp_basic_nodes` command is to find this package (named `cpp_basic_nodes`), and then point to the YAML file from which parameters have to be loaded. You can view individual parameters using `rosparam get` or dump it into another file.
 
 ## Reference
 
