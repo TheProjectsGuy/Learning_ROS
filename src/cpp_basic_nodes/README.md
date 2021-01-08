@@ -43,6 +43,9 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
             - [Building actions](#building-actions)
                 - [Package.xml](#packagexml-1)
                 - [CMakeLists.txt](#cmakeliststxt-1)
+    - [YAML Files](#yaml-files)
+        - [Params1](#params1)
+            - [Loading parameters](#loading-parameters)
     - [Reference](#reference)
 
 ## Creating this package
@@ -77,6 +80,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 7 | Creating CountNumbers_cpp action | [Actions > CountNumbers_cpp](#countnumbers_cpp) | Creating and building your own action (`.action` file) |
 | 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_cpp |
 | 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_cpp |
+| 10 | YAML ROS Parameter | [YAML Files > Params1](#params1) | Simple YAML file which can be loaded on the ROS Parameter Server (`.yaml` file) |
 
 ## Nodes
 
@@ -527,6 +531,43 @@ This must produce the following output
 ![Output of action client and server](./media/pic3.png)
 
 You are encouraged to inspect the contents of the underlying messages as discussed in the [simple action server](#simple-action-server).
+
+### Simple Parameter Node
+
+| Field | Value |
+| :--- | :--- |
+| Node name | `simple_cpp_parameter_node` |
+| Code | [src/simple_parameter_server.cpp](./src/simple_parameter_server.cpp) |
+
+Before this, it is suggested that you get a hands on experience with parameters. You must also understand the notion of storing and loading parameters through YAML files. Check out [YAML Files > Params](#params1) for understanding YAML files and parameter server in ROS.
+
+#### Building
+
+Add the following functions at the appropriate places in the `CMakeLists.txt` file.
+
+```txt
+add_executable(simple_cpp_parameter_node src/simple_parameter_server.cpp)
+target_link_libraries(simple_cpp_parameter_node ${catkin_LIBRARIES})
+```
+
+And then run `catkin_make` in the workspace folder
+
+#### Running
+
+First, run `roscore`, then run this node using
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_parameter_node
+```
+
+The output must consist of the contents of existing parameters (you can `roskill` the node now). It must also have created another parameter on the server by the name of `/custom_cpp_parameter`, check it using `rosparam get` (this will persist even after the node as the resource is on the ROS Master). You must now load the [Params1.yaml](./yaml/Params1.yaml) file into the parameter server and then rerun the node.
+
+```bash
+rosparam load `rospack find cpp_basic_nodes`/yaml/Params1.yaml
+rosrun cpp_basic_nodes simple_cpp_parameter_node
+```
+
+Now, the node must display the values of the parameters on the parameter server having previously unidentified keys. Most importantly, a junk parameter with the key `junk_parameter` must have been loaded by the YAML file (through `rosparam load` command) and then deleted by this node (check using `rosparam list` before running the node and after running the node, with the YAML file freshly loaded this time).
 
 ## Services
 
