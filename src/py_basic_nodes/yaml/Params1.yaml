@@ -1,0 +1,12 @@
+# ROS Wiki on Parameter server: https://wiki.ros.org/Parameter%20Server
+# 
+str_param: "Simple Text"
+num_param: 546.35
+parent_param:
+  child_param:
+    param_1: "Parameter 1"
+    param_2: "Parameter 2"
+list_param:
+  - Item_1
+  - Item_2
+junk_parameter: Node will delete this parameter

@@ -43,6 +43,9 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
             - [Building actions](#building-actions)
                 - [Package.xml](#packagexml-1)
                 - [CMakeLists.txt](#cmakeliststxt-1)
+    - [YAML Files](#yaml-files)
+        - [Params1](#params1)
+            - [Loading parameters](#loading-parameters)
     - [Reference](#reference)
 
 ## Creating this package
@@ -77,6 +80,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 7 | Creating CountNumbers_py action | [Actions > CountNumbers_py](#countnumbers_py) | Creating and building your own action (`.action` file) |
 | 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_py |
 | 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_py |
+| 10 | YAML ROS Parameter | [YAML Files > Params1](#params1) | Simple YAML file which can be loaded on the ROS Parameter Server (`.yaml` file) |
 
 ## Nodes
 
@@ -690,6 +694,51 @@ rosmsg list | grep py_basic_nodes/CountNumbers_py
 ```
 
 There will be messages for actions as well as individual messages for the goal, feedback and result.
+
+## YAML Files
+
+### Params1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `Params1` |
+| File | [yaml/Params1.yaml](./yaml/Params1.yaml) |
+
+This file contains parameters that can be loaded to the ROS Master (on the Parameter Server).
+
+#### Loading parameters
+
+Make sure the master is running first
+
+```bash
+roscore
+```
+
+We use the [rosparam](https://wiki.ros.org/rosparam) tool to list, get and load parameters from a YAML file. Now let's list the parameters that are present when roscore is launched.
+
+```bash
+rosparam list
+```
+
+Say we want to get the value of `/run_id`, use `rosparam get`
+
+```bash
+rosparam get /run_id
+```
+
+You can save all the current parameters in a temporary file
+
+```bash
+rosparam dump curr_params.yaml
+```
+
+The contents of the file are the parameters in the ROS Parameter Server. To load the parameters in this file (`Params1.yaml`) into the ROS parameter server, run the following command
+
+```bash
+rosparam load `rospack find py_basic_nodes`/yaml/Params1.yaml
+```
+
+The `rospack find py_basic_nodes` command is to find this package (named `py_basic_nodes`), and then point to the YAML file from which parameters have to be loaded. You can view individual parameters using `rosparam get` or dump it into another file.
 
 ## Reference
 
