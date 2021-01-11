@@ -460,7 +460,7 @@ In the `CMakeLists.txt` file, add the following line in `catkin_install_python` 
     scripts/simple_action_client.py
 ```
 
-Then, run `catkin_make` in the workspace
+Then, run `catkin_make` in the workspace folder
 
 #### Running
 
