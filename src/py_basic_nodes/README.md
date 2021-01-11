@@ -33,6 +33,9 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Action Client](#simple-action-client)
             - [Building](#building-5)
             - [Running](#running-5)
+        - [Simple Parameter Node](#simple-parameter-node)
+            - [Building](#building-6)
+            - [Running](#running-6)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -81,6 +84,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_py |
 | 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_py |
 | 10 | YAML ROS Parameter | [YAML Files > Params1](#params1) | Simple YAML file which can be loaded on the ROS Parameter Server (`.yaml` file) |
+| 11 | Parameter Node (Simple) | [Nodes > Simple Parameter Node](#simple-parameter-node) | Accessing parameters on the parameter server |
 
 ## Nodes
 
@@ -477,6 +481,42 @@ This must produce the following output
 ![Output of action client and server](./media/pic3.png)
 
 You are encouraged to inspect the contents of the underlying messages as discussed in the [simple action server](#simple-action-server).
+
+### Simple Parameter Node
+
+| Field | Value |
+| :--- | :---- |
+| Name | `simple_py_parameter_node` |
+| Code | [scripts/simple_parameter_server.py](./scripts/simple_parameter_server.py) |
+
+Before this, it is suggested that you get a hands on experience with parameters. You must also understand the notion of storing and loading parameters through YAML files. Check out [YAML Files > Params](#params1) for understanding YAML files and parameter server in ROS.
+
+#### Building
+
+In the `CMakeLists.txt` file, add the following line in `catkin_install_python` function before the `DESTINATION` line
+
+```txt
+    scripts/simple_parameter_server.py
+```
+
+Then, run `catkin_make` in the workspace folder
+
+#### Running
+
+First, run `roscore`, then run this node using
+
+```bash
+rosrun py_basic_nodes simple_parameter_server.py
+```
+
+The output must consist of the contents of existing parameters (some keys/parameters may not be found and that's okay, you can `roskill` the node now). It must also have created another parameter on the server by the name of `/custom_py_parameter`, check it using `rosparam get` (this will persist even after the node as the resource is on the ROS Master). You must now load the [Params1.yaml](./yaml/Params1.yaml) file into the parameter server and then rerun the node.
+
+```bash
+rosparam load `rospack find py_basic_nodes`/yaml/Params1.yaml
+rosrun py_basic_nodes simple_parameter_server.py
+```
+
+Now, the node must display the values of the parameters on the parameter server having previously unidentified keys. Most importantly, a junk parameter with the key `junk_parameter` must have been loaded by the YAML file (through `rosparam load` command) and then deleted by this node (check using `rosparam list` before running the node and after running the node, with the YAML file freshly loaded this time).
 
 ## Services
 
