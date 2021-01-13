@@ -49,6 +49,8 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
     - [YAML Files](#yaml-files)
         - [Params1](#params1)
             - [Loading parameters](#loading-parameters)
+    - [Launch Files](#launch-files)
+        - [Launch1](#launch1)
     - [Reference](#reference)
 
 ## Creating this package
@@ -832,6 +834,35 @@ rosparam load `rospack find cpp_basic_nodes`/yaml/Params1.yaml
 ```
 
 The `rospack find cpp_basic_nodes` command is to find this package (named `cpp_basic_nodes`), and then point to the YAML file from which parameters have to be loaded. You can view individual parameters using `rosparam get` or dump it into another file.
+
+## Launch Files
+
+### Launch1
+
+| Field | Value |
+| :--- | :--- |
+| Name | `launch1` |
+| File | [launch/launch1.launch](./launch/launch1.launch) |
+
+A launch file is used to execute multiple nodes and run multiple commands in one go, so that you do not have to keep opening new terminals and typing new commands every time. Check out the [file](./launch/launch1.launch) to know more.
+
+In order to run this file, use the following command
+
+```bash
+roslaunch cpp_basic_nodes launch1.launch
+```
+
+After launching, the following nodes must have spawned (use `rosnode list` to get these):
+
+- `/rqt_console`: This is a console to visualize the messages being transmitted (since the output is logged, although there is provision to log to the screen).
+- `/l1/ps/cppl1_publisher`: This is the publisher node (note the namespace and renaming).
+- `/l1/ps/cppl1_subscriber`: This is the subscriber node.
+
+The following topics are of importance (use `rostopic list` to get these):
+
+- `/l1/ps/topic`: The topic to which the publisher publishes and subscriber subscribes. Note that this is completely achieved through argument remapping and namespace allocation (because the nodes themselves use a different topic by default).
+
+Also note that upon closing the `rqt_console` window, the launch closes. This is because of the `required` attribute in the `<node>` for it.
 
 ## Reference
 

@@ -1,0 +1,8 @@
+<launch>
+    <!-- A Launch file is a `.launch` file (XML format) that can execute multiple commands by a single call -->
+    <!-- More info about XML tags here: https://wiki.ros.org/roslaunch/XML -->
+
+    <!-- Launch the rqt_console node -->
+    <!-- More about <node> here: https://wiki.ros.org/roslaunch/XML/node -->
+    <node pkg="rqt_console" type="rqt_console" name="rqt_console" required="true" />
+</launch>
