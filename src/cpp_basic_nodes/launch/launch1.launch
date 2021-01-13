@@ -5,4 +5,18 @@
     <!-- Launch the rqt_console node -->
     <!-- More about <node> here: https://wiki.ros.org/roslaunch/XML/node -->
     <node pkg="rqt_console" type="rqt_console" name="rqt_console" required="true" />
+
+    <!-- Create a group for publisher and subscriber -->
+    <!-- More about <group> here: https://wiki.ros.org/roslaunch/XML/group -->
+    <group ns="l1/ps">   <!-- ns: Napespace for all topics -->
+        <!-- Launch the publisher node -->
+        <node pkg="cpp_basic_nodes" type="launch1_publisher" name="cppl1_publisher" >
+            <!-- Set publishing frequency to 0.5 Hz -->
+            <!-- More about <param> here: https://wiki.ros.org/roslaunch/XML/param -->
+            <param name="l1pub_PubFreq" value="0.5" type="double" />
+            <!-- Remap (rename) the topic to the namespace 'l1ps'-->
+            <!-- More about <remap> here: https://wiki.ros.org/roslaunch/XML/remap -->
+            <remap from="~/pub_topic" to="topic" /> <!-- The topic name will finally be /l1/ps/topic -->
+        </node>
+    </group>
 </launch>

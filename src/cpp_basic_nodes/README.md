@@ -36,6 +36,8 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
         - [Simple Parameter Node](#simple-parameter-node)
             - [Building](#building-6)
             - [Running](#running-6)
+        - [Launch1 Publisher](#launch1-publisher)
+            - [Building](#building-7)
     - [Services](#services)
         - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
             - [Building services and messages](#building-services-and-messages)
@@ -574,6 +576,27 @@ rosrun cpp_basic_nodes simple_cpp_parameter_node
 ```
 
 Now, the node must display the values of the parameters on the parameter server having previously unidentified keys. Most importantly, a junk parameter with the key `junk_parameter` must have been loaded by the YAML file (through `rosparam load` command) and then deleted by this node (check using `rosparam list` before running the node and after running the node, with the YAML file freshly loaded this time).
+
+### Launch1 Publisher
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `launch1_publisher` |
+| Code | [src/launch1_publisher.cpp](./src/launch1_publisher.cpp) |
+| Launch File | [launch/launch1.launch](./launch/launch1.launch) |
+
+A publisher made for the purpose of [Launch1](#launch1) file. Simply publishes messages to the topic `~/pub_topic`. Also uses a local parameter called `l1pub_PubFreq` to set the frequency of publishing (see code for more information).
+
+#### Building
+
+To build this node, insert the following lines at the appropriate places in the `CMakeLists.txt` file of the package
+
+```txt
+add_executable(launch1_publisher src/launch1_publisher.cpp)
+target_link_libraries(launch1_publisher ${catkin_LIBRARIES})
+```
+
+Run `catkin_make` in the workspace folder to build the node. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
 
 ## Services
 
