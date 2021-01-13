@@ -38,6 +38,8 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
             - [Running](#running-6)
         - [Launch1 Publisher](#launch1-publisher)
             - [Building](#building-7)
+        - [Launch1 Subscriber](#launch1-subscriber)
+            - [Building](#building-8)
     - [Services](#services)
         - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
             - [Building services and messages](#building-services-and-messages)
@@ -597,6 +599,28 @@ target_link_libraries(launch1_publisher ${catkin_LIBRARIES})
 ```
 
 Run `catkin_make` in the workspace folder to build the node. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
+
+### Launch1 Subscriber
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `launch1_subscriber` |
+| Code | [src/launch1_subscriber.cpp](./src/launch1_subscriber.cpp) |
+| Launch File | [launch/launch1.launch](./launch/launch1.launch) |
+
+A subscriber made for the purpose of [Launch1](#launch1) file. Simply subscribes to messages on topic `~/subs_topic` (see code for more information).
+
+#### Building
+
+To build this node, insert the following lines at the appropriate places in the `CMakeLists.txt` file of the package
+
+```txt
+add_executable(launch1_subscriber src/launch1_subscriber.cpp)
+target_link_libraries(launch1_subscriber ${catkin_LIBRARIES})
+```
+
+Run `catkin_make` in the workspace folder to build the node. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
+
 
 ## Services
 

@@ -159,6 +159,7 @@ add_executable(simple_cpp_action_server src/simple_action_server.cpp)
 add_executable(simple_cpp_action_client src/simple_action_client.cpp)
 add_executable(simple_cpp_parameter_node src/simple_parameter_server.cpp)
 add_executable(launch1_publisher src/launch1_publisher.cpp)
+add_executable(launch1_subscriber src/launch1_subscriber.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -187,6 +188,7 @@ target_link_libraries(simple_cpp_action_server ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_action_client ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_parameter_node ${catkin_LIBRARIES})
 target_link_libraries(launch1_publisher ${catkin_LIBRARIES})
+target_link_libraries(launch1_subscriber ${catkin_LIBRARIES})
 
 #############
 ## Install ##

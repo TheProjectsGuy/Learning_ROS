@@ -18,5 +18,10 @@
             <!-- More about <remap> here: https://wiki.ros.org/roslaunch/XML/remap -->
             <remap from="~/pub_topic" to="topic" /> <!-- The topic name will finally be /l1/ps/topic -->
         </node>
+        <!-- Launch the Subscriber node -->
+        <node pkg="cpp_basic_nodes" type="launch1_subscriber" name="cppl1_subscriber">
+            <!-- Remap the topic name (to match the publisher topic name) -->
+            <remap from="~/subs_topic" to="topic" /> <!-- Topic remapped to /l1/ps/topic -->
+        </node>
     </group>
 </launch>
