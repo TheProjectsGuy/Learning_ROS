@@ -6,6 +6,10 @@
     <!-- More about <node> here: https://wiki.ros.org/roslaunch/XML/node -->
     <node pkg="rqt_console" type="rqt_console" name="rqt_console" required="true" />
 
+    <!-- Load environment variables -->
+    <!-- More about <env> here: https://wiki.ros.org/roslaunch/XML/env -->
+    <env name="ROSCONSOLE_CONFIG_FILE" value="$(find cpp_basic_nodes)/config/launch1.config" />
+
     <!-- Create a group for publisher and subscriber -->
     <!-- More about <group> here: https://wiki.ros.org/roslaunch/XML/group -->
     <group ns="l1/ps">   <!-- ns: Napespace for all topics -->
