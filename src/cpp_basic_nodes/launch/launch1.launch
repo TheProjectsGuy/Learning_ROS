@@ -28,4 +28,11 @@
             <remap from="~/subs_topic" to="topic" /> <!-- Topic remapped to /l1/ps/topic -->
         </node>
     </group>
+
+    <!-- Create a group for creating parameters in the launch -->
+    <group ns="l1/params">
+        <!-- Launch the parameter scanning node -->
+        <node pkg="cpp_basic_nodes" type="launch1_parameters" name="cppl1_parameters" />
+    </group>
+
 </launch>
