@@ -55,6 +55,8 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
     - [YAML Files](#yaml-files)
         - [Params1](#params1)
             - [Loading parameters](#loading-parameters)
+        - [l1_params1](#l1_params1)
+        - [l1_params2](#l1_params2)
     - [Launch Files](#launch-files)
         - [Launch1](#launch1)
     - [Reference](#reference)
@@ -93,6 +95,12 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_cpp |
 | 10 | YAML ROS Parameter | [YAML Files > Params1](#params1) | Simple YAML file which can be loaded on the ROS Parameter Server (`.yaml` file) |
 | 11 | Parameter Node (Simple) | [Nodes > Simple Parameter Node](#simple-parameter-node) | Accessing parameters on the parameter server |
+| 12 | Publisher for `Launch1` | [Nodes > Launch1 Publisher](#launch1-publisher) | A publisher created for a launch file |
+| 13 | Subscriber for `Launch1` | [Nodes > Launch1 Subscriber](#launch1-subscriber) | A subscriber created for a launch file |
+| 14 | Parameters Node for `Launch1` | [Nodes > Launch1 Parameters](#launch1-parameters) | Accessing parameters, spawned through a launch file |
+| 15 | YAML file 1 for `Launch1` | [YAML Files > l1_params1](#l1_params1) | A YAML file to load parameters into a launch file |
+| 16 | YAML file 2 for `Launch1` | [YAML Files > l1_params2](#l1_params2) | A YAML file to load parameters into a launch file |
+| 17 | `Launch1` launch file | [Launch Files > Launch1](#launch1) | A `.launch` file to simplify launching everything tagged as `Launch1` |
 
 ## Nodes
 
@@ -904,6 +912,24 @@ rosparam load `rospack find cpp_basic_nodes`/yaml/Params1.yaml
 
 The `rospack find cpp_basic_nodes` command is to find this package (named `cpp_basic_nodes`), and then point to the YAML file from which parameters have to be loaded. You can view individual parameters using `rosparam get` or dump it into another file.
 
+### l1_params1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `l1_params1` |
+| File | [yaml/l1_params1.yaml](./yaml/l1_params1.yaml) |
+
+This file is to load some parameters for [launch1](#launch1). Note that the `cat` command is used to pipe the contents to the `<param>` in the launch file.
+
+### l1_params2
+
+| Field | Value |
+| :---- | :---- |
+| Name | `l1_params2` |
+| File | [yaml/l1_params2.yaml](./yaml/l1_params2.yaml) |
+
+This file is to load some parameters for [launch1](#launch1). This file contains parameters intended for global scope / usage. Note that the `cat` command is used to pipe the contents to the `<param>` in the launch file.
+
 ## Launch Files
 
 ### Launch1
@@ -913,7 +939,7 @@ The `rospack find cpp_basic_nodes` command is to find this package (named `cpp_b
 | Name | `launch1` |
 | File | [launch/launch1.launch](./launch/launch1.launch) |
 
-A launch file is used to execute multiple nodes and run multiple commands in one go, so that you do not have to keep opening new terminals and typing new commands every time. Check out the [file](./launch/launch1.launch) to know more.
+A launch file is used to *execute multiple nodes and run multiple commands in one go*, so that you do not have to keep opening new terminals and typing new commands every time. Check out the [file](./launch/launch1.launch) to know more.
 
 In order to run this file, use the following command
 
@@ -923,15 +949,24 @@ roslaunch cpp_basic_nodes launch1.launch
 
 After launching, the following nodes must have spawned (use `rosnode list` to get these):
 
-- `/rqt_console`: This is a console to visualize the messages being transmitted (since the output is logged, although there is provision to log to the screen).
+- `/rqt_console`: This is a console to visualize the messages being transmitted (since the output is logged, although there also is provision to log to the screen but it is less preferred as it would produce too much clutter).
 - `/l1/ps/cppl1_publisher`: This is the publisher node (note the namespace and renaming).
 - `/l1/ps/cppl1_subscriber`: This is the subscriber node.
+- `/l1/params/cppl1_parameters`: This is the parameter keys node.
 
 The following topics are of importance (use `rostopic list` to get these):
 
 - `/l1/ps/topic`: The topic to which the publisher publishes and subscriber subscribes. Note that this is completely achieved through argument remapping and namespace allocation (because the nodes themselves use a different topic by default).
 
+You must observe the parameters present through running `rosparam list`. The following are important observations:
+
+- `/global/*` are parameters in the global declaration
+- `/l1/params/*` are parameters in the group declaration
+- `/l1/ps/cppl1_publisher/l1pub_PubFreq` is a private parameter but still shared with the parameter server
+
 Also note that upon closing the `rqt_console` window, the launch closes. This is because of the `required` attribute in the `<node>` for it.
+
+After closing the launch, it is possible to see all the output generated by the nodes. This is available in the directory `~/.ros/log/latest` (by default). Each file will contain the output generated by the particular node.
 
 ## Reference
 

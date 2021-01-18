@@ -31,8 +31,14 @@
 
     <!-- Create a group for creating parameters in the launch -->
     <group ns="l1/params">
+        <!-- Load parameters from a YAML file -->
+        <!-- More about it here: https://wiki.ros.org/roslaunch/XML/param#Parameters_from_YAML_output -->
+        <param name="set1" type="yaml" command="cat '$(find cpp_basic_nodes)/yaml/l1_params1.yaml'" />
         <!-- Launch the parameter scanning node -->
         <node pkg="cpp_basic_nodes" type="launch1_parameters" name="cppl1_parameters" />
     </group>
 
+    <!-- Global parameters -->
+    <!-- It is advisable to given them a name so that they do not shadow other parameters -->
+    <param name="global" type="yaml" command="cat '$(find cpp_basic_nodes)/yaml/l1_params2.yaml'" />
 </launch>
