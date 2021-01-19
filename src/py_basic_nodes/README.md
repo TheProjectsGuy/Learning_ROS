@@ -36,6 +36,8 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Parameter Node](#simple-parameter-node)
             - [Building](#building-6)
             - [Running](#running-6)
+        - [Launch1 Publisher](#launch1-publisher)
+            - [Building](#building-7)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -49,6 +51,8 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
     - [YAML Files](#yaml-files)
         - [Params1](#params1)
             - [Loading parameters](#loading-parameters)
+    - [Launch Files](#launch-files)
+        - [Launch1](#launch1)
     - [Reference](#reference)
 
 ## Creating this package
@@ -518,6 +522,26 @@ rosrun py_basic_nodes simple_parameter_server.py
 
 Now, the node must display the values of the parameters on the parameter server having previously unidentified keys. Most importantly, a junk parameter with the key `junk_parameter` must have been loaded by the YAML file (through `rosparam load` command) and then deleted by this node (check using `rosparam list` before running the node and after running the node, with the YAML file freshly loaded this time).
 
+### Launch1 Publisher
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `launch1_publisher` |
+| Code | [scripts/launch1_publisher.py](./scripts/launch1_publisher.py) |
+| Launch File | [launch/launch1.launch](./launch/launch1.launch) |
+
+A publisher made for the purpose of [Launch1](#launch1) file. Simply publishes messages to the topic `pub_topic`. Also uses a local parameter called `~/l1pub_PubFreq` to set the frequency of publishing (see code for more information).
+
+#### Building
+
+In the `CMakeLists.txt` file, add the following line in `catkin_install_python` function before the `DESTINATION` line
+
+```txt
+    scripts/launch1_publisher.py
+```
+
+Then, run `catkin_make` in the workspace folder. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
+
 ## Services
 
 Services declared in this package
@@ -779,6 +803,23 @@ rosparam load `rospack find py_basic_nodes`/yaml/Params1.yaml
 ```
 
 The `rospack find py_basic_nodes` command is to find this package (named `py_basic_nodes`), and then point to the YAML file from which parameters have to be loaded. You can view individual parameters using `rosparam get` or dump it into another file.
+
+## Launch Files
+
+### Launch1
+
+| Field | Value |
+| :--- | :--- |
+| Name | `launch1` |
+| File | [launch/launch1.launch](./launch/launch1.launch) |
+
+A launch file is used to *execute multiple nodes and run multiple commands in one go*, so that you do not have to keep opening new terminals and typing new commands every time. Check out the [file](./launch/launch1.launch) to know more.
+
+In order to run this file, use the following command
+
+```bash
+roslaunch py_basic_nodes launch1.launch
+```
 
 ## Reference
 
