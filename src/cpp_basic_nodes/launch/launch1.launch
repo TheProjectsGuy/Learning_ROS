@@ -18,7 +18,7 @@
             <!-- Set publishing frequency to 0.5 Hz -->
             <!-- More about <param> here: https://wiki.ros.org/roslaunch/XML/param -->
             <param name="l1pub_PubFreq" value="0.5" type="double" />
-            <!-- Remap (rename) the topic to the namespace 'l1ps'-->
+            <!-- Remap (rename) the topic to the namespace 'l1/ps'-->
             <!-- More about <remap> here: https://wiki.ros.org/roslaunch/XML/remap -->
             <remap from="~/pub_topic" to="topic" /> <!-- The topic name will finally be /l1/ps/topic -->
         </node>

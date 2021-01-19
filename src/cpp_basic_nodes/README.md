@@ -958,7 +958,7 @@ The following topics are of importance (use `rostopic list` to get these):
 
 - `/l1/ps/topic`: The topic to which the publisher publishes and subscriber subscribes. Note that this is completely achieved through argument remapping and namespace allocation (because the nodes themselves use a different topic by default).
 
-You must observe the parameters present through running `rosparam list`. The following are important observations:
+You must observe the parameters present by running `rosparam list`. The following are important observations:
 
 - `/global/*` are parameters in the global declaration
 - `/l1/params/*` are parameters in the group declaration
