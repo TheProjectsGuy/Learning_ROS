@@ -6,6 +6,10 @@
     <!-- More about <node> here: https://wiki.ros.org/roslaunch/XML/node -->
     <node pkg="rqt_console" type="rqt_console" name="rqt_console" required="true" />
     
+    <!-- Load environment variables -->
+    <!-- More about <env> here: https://wiki.ros.org/roslaunch/XML/env -->
+    <env name="ROS_PYTHON_LOG_CONFIG_FILE" value="$(find py_basic_nodes)/config/launch1.config" />
+
     <!-- Create a group for publisher and subscriber -->
     <!-- More about <group> here: https://wiki.ros.org/roslaunch/XML/group -->
     <group ns="l1/ps">
@@ -17,6 +21,11 @@
             <!-- Remap (rename) the topic to the namespace 'l1/ps'-->
             <!-- More about <remap> here: https://wiki.ros.org/roslaunch/XML/remap -->
             <remap from="pub_topic" to="topic" /> <!-- The topic name will finally be /l1/ps/topic -->
+        </node>
+        <!-- Launch the subscriber -->
+        <node name="pyl1_subscriber" pkg="py_basic_nodes" type="launch1_subscriber.py">
+            <!-- Remap (rename) the topic to the namespace 'l1/ps'-->
+            <remap from="subs_topic" to="topic" /> <!-- The topic name will finally be /l1/ps/topic -->
         </node>
     </group>
 

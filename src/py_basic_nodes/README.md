@@ -38,6 +38,8 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
             - [Running](#running-6)
         - [Launch1 Publisher](#launch1-publisher)
             - [Building](#building-7)
+        - [Launch1 Subscriber](#launch1-subscriber)
+            - [Building](#building-8)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -538,6 +540,26 @@ In the `CMakeLists.txt` file, add the following line in `catkin_install_python` 
 
 ```txt
     scripts/launch1_publisher.py
+```
+
+Then, run `catkin_make` in the workspace folder. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
+
+### Launch1 Subscriber
+
+| Field | Value |
+| :--- | :---- |
+| Node name | `launch1_subscriber` |
+| Code | [scripts/launch1_subscriber.py](./scripts/launch1_subscriber.py) |
+| Launch File | [launch/launch1.launch](./launch/launch1.launch) |
+
+A subscriber made for the purpose of [Launch1](#launch1) file. Simply subscribes to messages on topic `subs_topic` (see code for more information).
+
+#### Building
+
+In the `CMakeLists.txt` file, add the following line in `catkin_install_python` function before the `DESTINATION` line
+
+```txt
+    scripts/launch1_subscriber.py
 ```
 
 Then, run `catkin_make` in the workspace folder. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
