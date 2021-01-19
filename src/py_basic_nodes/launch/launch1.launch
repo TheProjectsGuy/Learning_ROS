@@ -29,4 +29,17 @@
         </node>
     </group>
 
+    <!-- Create a group for creating parametrs in the launch -->
+    <group ns="l1/params">
+        <!-- Load parameters from a YAML file -->
+        <!-- More about it here: https://wiki.ros.org/roslaunch/XML/param#Parameters_from_YAML_output -->
+        <param name="set1" type="yaml" command="cat '$(find py_basic_nodes)/yaml/l1_params1.yaml'" />
+        <!-- Launch the parameter scanning node -->
+        <node name="pyl1_parameters" type="launch1_parameters.py" pkg="py_basic_nodes" />
+    </group>
+
+    <!-- Global parameters -->
+    <!-- It is advisable to given them a name so that they do not shadow other parameters -->
+    <param name="global" type="yaml" command="cat '$(find py_basic_nodes)/yaml/l1_params2.yaml'" />
+
 </launch>

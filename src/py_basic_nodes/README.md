@@ -40,6 +40,7 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
             - [Building](#building-7)
         - [Launch1 Subscriber](#launch1-subscriber)
             - [Building](#building-8)
+        - [Launch1 Parameters](#launch1-parameters)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -53,6 +54,8 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
     - [YAML Files](#yaml-files)
         - [Params1](#params1)
             - [Loading parameters](#loading-parameters)
+        - [l1_params1](#l1_params1)
+        - [l1_params2](#l1_params2)
     - [Launch Files](#launch-files)
         - [Launch1](#launch1)
     - [Reference](#reference)
@@ -91,6 +94,12 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_py |
 | 10 | YAML ROS Parameter | [YAML Files > Params1](#params1) | Simple YAML file which can be loaded on the ROS Parameter Server (`.yaml` file) |
 | 11 | Parameter Node (Simple) | [Nodes > Simple Parameter Node](#simple-parameter-node) | Accessing parameters on the parameter server |
+| 12 | Publisher for `Launch1` | [Nodes > Launch1 Publisher](#launch1-publisher) | A publisher created for a launch file |
+| 13 | Subscriber for `Launch1` | [Nodes > Launch1 Subscriber](#launch1-subscriber) | A subscriber created for a launch file |
+| 14 | Parameters Node for `Launch1` | [Nodes > Launch1 Parameters](#launch1-parameters) | Accessing parameters, spawned through a launch file |
+| 15 | YAML file 1 for `Launch1` | [YAML Files > l1_params1](#l1_params1) | A YAML file to load parameters into a launch file |
+| 16 | YAML file 2 for `Launch1` | [YAML Files > l1_params2](#l1_params2) | A YAML file to load parameters into a launch file |
+| 17 | `Launch1` launch file | [Launch Files > Launch1](#launch1) | A `.launch` file to simplify launching everything tagged as `Launch1` |
 
 ## Nodes
 
@@ -564,6 +573,16 @@ In the `CMakeLists.txt` file, add the following line in `catkin_install_python` 
 
 Then, run `catkin_make` in the workspace folder. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
 
+### Launch1 Parameters
+
+| Field | Value |
+| :---- | :---- |
+| Name | `launch1_params` |
+| Code | [scripts/launch1_parameters.py](./scripts/launch1_parameters.py) |
+| Launch File | [launch/launch1.launch](./launch/launch1.launch) |
+
+A node made to print out all parameter keys. It is suggested that you see [l1_params1](#l1_params1) and [l1_params2](#l1_params2) `.yaml` parameter files.
+
 ## Services
 
 Services declared in this package
@@ -826,6 +845,24 @@ rosparam load `rospack find py_basic_nodes`/yaml/Params1.yaml
 
 The `rospack find py_basic_nodes` command is to find this package (named `py_basic_nodes`), and then point to the YAML file from which parameters have to be loaded. You can view individual parameters using `rosparam get` or dump it into another file.
 
+### l1_params1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `l1_params1` |
+| File | [yaml/l1_params1.yaml](./yaml/l1_params1.yaml) |
+
+This file is to load some parameters for [launch1](#launch1). Note that the `cat` command is used to pipe the contents to the `<param>` in the launch file.
+
+### l1_params2
+
+| Field | Value |
+| :---- | :---- |
+| Name | `l1_params2` |
+| File | [yaml/l1_params2.yaml](./yaml/l1_params2.yaml) |
+
+This file is to load some parameters for [launch1](#launch1). This file contains parameters intended for global scope / usage. Note that the `cat` command is used to pipe the contents to the `<param>` in the launch file.
+
 ## Launch Files
 
 ### Launch1
@@ -855,6 +892,8 @@ The following topics are of importance (use `rostopic list` to get these):
 
 You must observe the parameters present by running `rosparam list`. The following are important observations:
 
+- `/global/*` are parameters in the global declaration
+- `/l1/params/set1/*` are parameters in the group declaration
 - `/l1/ps/pyl1_publisher/l1pub_PubFreq` is a private parameter but still shared with the parameter server
 
 Also note that upon closing the `rqt_console` window, the launch closes. This is because of the `required` attribute in the `<node>` for it.

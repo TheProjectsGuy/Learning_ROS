@@ -190,6 +190,7 @@ catkin_install_python(PROGRAMS
     scripts/simple_parameter_server.py
     scripts/launch1_publisher.py
     scripts/launch1_subscriber.py
+    scripts/launch1_parameters.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -1,0 +1,6 @@
+# Parameters for launch1
+param1: "Simple parameter"
+param2: "Another parameter"
+param_list:
+  - Item1
+  - Item2

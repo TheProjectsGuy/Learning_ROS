@@ -1,0 +1,9 @@
+# Another set of parameters to be loaded globally for launch1
+global_param1: "Value 1"
+global_param2: 12
+global_list:
+  - Item A
+  - Item B
+global_header:
+  global_child:
+    param1: "ABCD"
