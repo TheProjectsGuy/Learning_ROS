@@ -961,7 +961,7 @@ The following topics are of importance (use `rostopic list` to get these):
 You must observe the parameters present by running `rosparam list`. The following are important observations:
 
 - `/global/*` are parameters in the global declaration
-- `/l1/params/*` are parameters in the group declaration
+- `/l1/params/set1/*` are parameters in the group declaration
 - `/l1/ps/cppl1_publisher/l1pub_PubFreq` is a private parameter but still shared with the parameter server
 
 Also note that upon closing the `rqt_console` window, the launch closes. This is because of the `required` attribute in the `<node>` for it.
