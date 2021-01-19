@@ -885,6 +885,7 @@ After launching, the following nodes must have spawned (use `rosnode list` to ge
 - `/rqt_console`: This is a console to visualize the messages being transmitted (since the output is logged, although there also is provision to log to the screen but it is less preferred as it would produce too much clutter). Experiment with the console (exclude and highlight messages).
 - `/l1/ps/pyl1_publisher`: This is the publisher node (note the namespace and renaming).
 - `/l1/ps/pyl1_subscriber`: This is the subscriber node.
+- `/l1/params/pyl1_parameters`: This is the parameter keys node.
 
 The following topics are of importance (use `rostopic list` to get these):
 
