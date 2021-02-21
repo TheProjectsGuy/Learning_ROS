@@ -41,6 +41,10 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Launch1 Subscriber](#launch1-subscriber)
             - [Building](#building-8)
         - [Launch1 Parameters](#launch1-parameters)
+            - [Building](#building-9)
+        - [Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server)
+            - [Building](#building-10)
+            - [Running](#running-7)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -585,6 +589,68 @@ Then, run `catkin_make` in the workspace folder. This node, along with some othe
 | Launch File | [launch/launch1.launch](./launch/launch1.launch) |
 
 A node made to print out all parameter keys. It is suggested that you see [l1_params1](#l1_params1) and [l1_params2](#l1_params2) `.yaml` parameter files.
+
+#### Building
+
+In the `CMakeLists.txt` file, add the following line in `catkin_install_python` function before the `DESTINATION` line
+
+```txt
+    scripts/launch1_parameters.py
+```
+
+Then, run `catkin_make` in the workspace folder. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
+
+### Simple Dynamic Reconfiguration Server
+
+| Field | Value |
+| :---- | :---- |
+| Name | `simple_py_firstdr_server` |
+| File | [scripts/simple_FirstDR_server.py](./scripts/simple_FirstDR_server.py) |
+| Dynamic Reconfiguration File | [cfg/FirstDR.cfg](./cfg/FirstDR.cfg) |
+
+A dynamic reconfiguration server made to host the parameters included in the `.cfg` file. This node depends on the [dynamic reconfiguration file](#firstdr). A server maintains the record of parameters and provides a callback interface for handling updates (these updates are made by a client).
+
+#### Building
+
+In the `CMakeLists.txt` file, add the following line in `catkin_install_python` function before the `DESTINATION` line
+
+```txt
+    scripts/simple_FirstDR_server.py
+```
+
+Then, run `catkin_make` in the workspace folder.
+
+#### Running
+
+First, run `roscore`, then run this node using
+
+```bash
+rosrun py_basic_nodes simple_FirstDR_server.py
+```
+
+The output will consist of the default parameters being loaded in the callback (with level being `-1` as no signal was called). The node then goes into spinning mode.
+
+To call the callback, you'll need a client. You could create a node for that, however a simple GUI client is available using `rqt_reconfigure`. To run it, run
+
+```bash
+rosrun rqt_reconfigure rqt_reconfigure
+```
+
+This should open a GUI window like whats shown below
+
+![rqt_reconfigure GUI for FirstDR](./media/pic4.png)
+
+You can modify the values and see the output in the terminal running the node. You can also save the modified parameters as a `.yaml` file and restore them. This shall also allow testing how multiple parameters can be changed in just one attempt.
+
+For example, for the following `rqt_reconfigure` configurations
+
+![rqt_reconfigure GUI for FirstDR after modifications](./media/pic5.png)
+
+The result is the following
+
+![result of parameter change for node](./media/pic6.png)
+
+Notice the level passed, it is the `binary OR` of all the parameters with a different value. You may also verify that the parameters are actual parameters on the ROS Parameter Server by inspecting the output of `rosparam list`. You may also what to check the `/simple_py_firstdr_server/set_parameters` service.
 
 ## Services
 
