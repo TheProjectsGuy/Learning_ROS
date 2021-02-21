@@ -52,7 +52,7 @@ Contents in the order of traversal
 
 | S. No. | Name | Description |
 | :---- | :---- | :------ |
-| 1 | [I0_Basic_Terminology.md](./tutorials/I0_Basic_Terminology.md) | **Basic Terminology**: Description about various terms and concepts used in ROS |
+| 1 | [I0_Basic_Terminology.md](./tutorials/I0_Basic_Terminology.md) | **Basic Terminology**: Description about various terms and concepts used in ROS (you may want to keep this for reference) |
 | 2 | [T0_GS_Turtlesim.md](./tutorials/T0_GS_Turtlesim.md) | **Understanding ROS concepts without code**: Basic ROS concepts demonstrated using `turtlesim` |
 | 3 | [T1_Workspace_Package.md](./tutorials/T1_Workspace_Package.md) | **Workspace and Package**: Create your own workspace and packages |
 | 4 | [src/README.md](./src/README.md) | **Main Packages**: Packages made for learning ROS |
