@@ -42,6 +42,9 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
             - [Building](#building-8)
         - [Launch1 Parameters](#launch1-parameters)
             - [Building](#building-9)
+        - [Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server)
+            - [Building](#building-10)
+            - [Running](#running-7)
     - [Services](#services)
         - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
             - [Building services and messages](#building-services-and-messages)
@@ -656,6 +659,62 @@ target_link_libraries(launch1_parameters ${catkin_LIBRARIES})
 ```
 
 Run `catkin_make` in the workspace folder to build the node. This node, along with some others, is supposed to be run in the `launch1.launch` process (check it out [here](#launch1)).
+
+### Simple Dynamic Reconfiguration Server
+
+| Field | Value |
+| :---- | :---- |
+| Name | `simple_cpp_firstdr_server` |
+| Value | [src/simple_FirstDR_server.cpp](./src/simple_FirstDR_server.cpp) |
+| Dynamic Reconfiguration File | [cfg/FirstDR.cfg](./cfg/FirstDR.cfg) |
+
+A dynamic reconfiguration server made to host the parameters included in the `.cfg` file. This node depends on the [dynamic reconfiguration file](#firstdr). A server maintains the record of parameters and provides a callback interface for handling updates (these updates are made by a client).
+
+#### Building
+
+To build this node, add the following to `CMakeLists.txt` file
+
+```txt
+add_executable(simple_cpp_firstdr_server src/simple_FirstDR_server.cpp)
+add_dependencies(simple_cpp_firstdr_server ${PROJECT_NAME}_gencfg)
+target_link_libraries(simple_cpp_firstdr_server ${catkin_LIBRARIES})
+```
+
+Notice the `add_dependencies` function, it is needed for the `.cfg` files to generate headers before building this node (because of dependency).
+
+Run `catkin_make` in the workspace folder to build the node.
+
+#### Running
+
+First, run `roscore`, then run this node using
+
+```bash
+rosrun cpp_basic_nodes simple_cpp_firstdr_server
+```
+
+The output will consist of the default parameters being loaded in the callback (with level being `0xffff ffff`, which is `4294967295`). The node then goes into spinning mode.
+
+To call the callback, you'll need a client. You could create a node for that, however a simple GUI client is available using `rqt_reconfigure`. To run it, run
+
+```bash
+rosrun rqt_reconfigure rqt_reconfigure
+```
+
+This should open a GUI window like whats shown below
+
+![rqt_reconfigure GUI for FirstDR](./media/pic4.png)
+
+You can modify the values and see the output in the terminal running the node. You can also save the modified parameters as a `.yaml` file and restore them. This shall also allow testing how multiple parameters can be changed in just one attempt.
+
+For example, for the following `rqt_reconfigure` configurations
+
+![rqt_reconfigure GUI for FirstDR after modifications](./media/pic5.png)
+
+The result is the following
+
+![result of parameter change for node](./media/pic6.png)
+
+Notice the level passed, it is the `binary OR` of all the parameters with a different value. You may also verify that the parameters are actual parameters on the ROS Parameter Server by inspecting the output of `rosparam list`.
 
 ## Services
 
