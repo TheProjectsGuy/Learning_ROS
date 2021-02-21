@@ -93,12 +93,12 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 1 | Hello World | [Nodes > Simple Hello World](#simple-hello-world) | Prints `Hello, World!` |
 | 2 | Publisher (Simple) | [Nodes > Simple Publisher](#simple-publisher) | Publish messages |
 | 3 | Subscriber (Simple) | [Nodes > Simple Subscriber](#simple-subscriber) | Subscribe to messages |
-| 4 | Creating AddAllFloat64Numbers_py service | [Services > AddAllFloat64Numbers_py](#addallfloat64numbers_py) | Creating and building your own service (.srv file) |
-| 5 | Service Server (Simple) | [Nodes > Simple Service Server](#simple-service-server) | Server for the service AddAllFloat64Numbers_py |
-| 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service AddAllFloat64Numbers_py |
-| 7 | Creating CountNumbers_py action | [Actions > CountNumbers_py](#countnumbers_py) | Creating and building your own action (`.action` file) |
-| 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_py |
-| 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_py |
+| 4 | Creating `AddAllFloat64Numbers_py` service | [Services > AddAllFloat64Numbers_py](#addallfloat64numbers_py) | Creating and building your own service (.srv file) |
+| 5 | Service Server (Simple) | [Nodes > Simple Service Server](#simple-service-server) | Server for the service `AddAllFloat64Numbers_py` |
+| 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service `AddAllFloat64Numbers_py` |
+| 7 | Creating `CountNumbers_py` action | [Actions > CountNumbers_py](#countnumbers_py) | Creating and building your own action (`.action` file) |
+| 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action `CountNumbers_py` |
+| 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action `CountNumbers_py` |
 | 10 | YAML ROS Parameter | [YAML Files > Params1](#params1) | Simple YAML file which can be loaded on the ROS Parameter Server (`.yaml` file) |
 | 11 | Parameter Node (Simple) | [Nodes > Simple Parameter Node](#simple-parameter-node) | Accessing parameters on the parameter server |
 | 12 | Publisher for `Launch1` | [Nodes > Launch1 Publisher](#launch1-publisher) | A publisher created for a launch file |
@@ -107,6 +107,8 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 15 | YAML file 1 for `Launch1` | [YAML Files > l1_params1](#l1_params1) | A YAML file to load parameters into a launch file |
 | 16 | YAML file 2 for `Launch1` | [YAML Files > l1_params2](#l1_params2) | A YAML file to load parameters into a launch file |
 | 17 | `Launch1` launch file | [Launch Files > Launch1](#launch1) | A `.launch` file to simplify launching everything tagged as `Launch1` |
+| 18 | `FirstDR` Dynamic Reconfiguration file | [Dynamic Reconfiguration Files > FirstDR](#firstdr) | Creating a `.cfg` file for parameters that can be dynamically reconfigured |
+| 19 | Dynamic Reconfiguration Server (Simple) | [Nodes > Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server) | Creating a node that will contain the modifiable parameters for dynamic reconfiguration `FirstDR` |
 
 ## Nodes
 
