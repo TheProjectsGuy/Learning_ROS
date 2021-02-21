@@ -714,7 +714,7 @@ The result is the following
 
 ![result of parameter change for node](./media/pic6.png)
 
-Notice the level passed, it is the `binary OR` of all the parameters with a different value. You may also verify that the parameters are actual parameters on the ROS Parameter Server by inspecting the output of `rosparam list`.
+Notice the level passed, it is the `binary OR` of all the parameters with a different value. You may also verify that the parameters are actual parameters on the ROS Parameter Server by inspecting the output of `rosparam list`. You may also what to check the `/simple_cpp_firstdr_server/set_parameters` service.
 
 ## Services
 

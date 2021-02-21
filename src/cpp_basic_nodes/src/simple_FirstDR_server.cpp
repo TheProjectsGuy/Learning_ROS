@@ -26,7 +26,7 @@ using namespace std;
 // A callback function to call whenever the server receives a parameter modification
 /*
  * This function is called once when setting up (default values in the config, level is 0xffffffff - all ones) and 
- * every time a client makes a parameter modification request.
+ * every time a client makes a parameter modification request. You may even update the configuration (it's a &).
  *  
  * Parameters:
  *  - config: The configuration object. Different paraemters are members of this object.
@@ -53,8 +53,8 @@ void callback_function(cpp_basic_nodes::FirstDRConfig &config, uint32_t level) {
         << "\t" << "user_int = " << config.user_int << endl
         << "\t" << "Level testing parameters" << endl
         << "\t\t" << "usr_int1 = " << config.usr_int1 << endl
-        << "\t\t" << "usr_int1 = " << config.usr_int2 << endl
-        << "\t\t" << "usr_int1 = " << config.usr_int3 << endl
+        << "\t\t" << "usr_int2 = " << config.usr_int2 << endl
+        << "\t\t" << "usr_int3 = " << config.usr_int3 << endl
         << "\t" << "user_bool = " << config.user_bool << endl
         << "\t" << "user_str = " << config.user_str << endl
         << "\t" << "OP_sel = " << OP_sel_str << " (" << config.OP_sel << ")"
