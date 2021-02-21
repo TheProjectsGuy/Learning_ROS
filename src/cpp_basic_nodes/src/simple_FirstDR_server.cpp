@@ -32,7 +32,22 @@ using namespace std;
  *  - config: The configuration object. Different paraemters are members of this object.
  *  - level: The level which is the OR of the levels of changed parameters
  */
-void callback_function(cpp_basic_nodes::FirstDRConfig &config, uint32_t level) {    
+void callback_function(cpp_basic_nodes::FirstDRConfig &config, uint32_t level) {
+    string OP_sel_str;  // String for parameter OP_sel
+    switch(config.OP_sel) {
+        case cpp_basic_nodes::FirstDR_OP_1:
+            OP_sel_str = "Option 1";
+            break;
+        case cpp_basic_nodes::FirstDR_OP_2:
+            OP_sel_str = "Option 2";
+            break;
+        case cpp_basic_nodes::FirstDR_OP_3:
+            OP_sel_str = "Option 3";
+            break;
+        default:
+            OP_sel_str = "Invalid selection";
+            break;
+    }
     ROS_INFO_STREAM(
         "Reconfig request (level = " << level << ")" << endl
         << "\t" << "user_int = " << config.user_int << endl
@@ -42,7 +57,7 @@ void callback_function(cpp_basic_nodes::FirstDRConfig &config, uint32_t level) {
         << "\t\t" << "usr_int1 = " << config.usr_int3 << endl
         << "\t" << "user_bool = " << config.user_bool << endl
         << "\t" << "user_str = " << config.user_str << endl
-        << "\t" << "OP_sel = " << config.OP_sel
+        << "\t" << "OP_sel = " << OP_sel_str << " (" << config.OP_sel << ")"
     );
 }
 
