@@ -1050,6 +1050,11 @@ Holds the following dynamic reconfigurations as template
 | Parameter Name | Type | Description | Default Value |
 | :--- | :---: | :----- | :----: |
 | user_int | `int_t` | A configurable integer | 50 |
+| usr_int1 | `int_t` | An integer with level 3 | 50 |
+| usr_int2 | `int_t` | An integer with level 2 | 50 |
+| usr_int3 | `int_t` | An integer with level 8 | 50 |
+| user_bool | `bool_t` | A boolean value | False |
+| user_str | `str_t` | A string value | "Hello, World!" |
 
 #### Building Dynamic Reconfiguration Files
 
