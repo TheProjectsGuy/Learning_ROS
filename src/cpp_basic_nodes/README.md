@@ -93,12 +93,12 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 1 | Hello World | [Nodes > Simple Hello World](#simple-hello-world) | Prints `Hello, World!` |
 | 2 | Publisher (Simple) | [Nodes > Simple Publisher](#simple-publisher) | Publish messages |
 | 3 | Subscriber (Simple) | [Nodes > Simple Subscriber](#simple-subscriber) | Subscribe to messages |
-| 4 | Creating AddAllFloat64Numbers_cpp service | [Services > AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp) | Creating and building your own service (`.srv` file) |
-| 5 | Service Server (Simple) | [Nodes > Simple Service Server](#simple-service-server) | Server for the service AddAllFloat64Numbers_cpp |
-| 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service AddAllFloat64Numbers_cpp |
-| 7 | Creating CountNumbers_cpp action | [Actions > CountNumbers_cpp](#countnumbers_cpp) | Creating and building your own action (`.action` file) |
-| 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action CountNumbers_cpp |
-| 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action CountNumbers_cpp |
+| 4 | Creating `AddAllFloat64Numbers_cpp` service | [Services > AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp) | Creating and building your own service (`.srv` file) |
+| 5 | Service Server (Simple) | [Nodes > Simple Service Server](#simple-service-server) | Server for the service `AddAllFloat64Numbers_cpp` |
+| 6 | Service Client (Simple) | [Nodes > Simple Service Client](#simple-service-client) | Client for the service `AddAllFloat64Numbers_cpp` |
+| 7 | Creating `CountNumbers_cpp` action | [Actions > CountNumbers_cpp](#countnumbers_cpp) | Creating and building your own action (`.action` file) |
+| 8 | Action Server (Simple) | [Nodes > Simple Action Server](#simple-action-server) | Server for the action `CountNumbers_cpp` |
+| 9 | Action Client (Simple) | [Nodes > Simple Action Client](#simple-action-client) | Client for the action `CountNumbers_cpp` |
 | 10 | YAML ROS Parameter | [YAML Files > Params1](#params1) | Simple YAML file which can be loaded on the ROS Parameter Server (`.yaml` file) |
 | 11 | Parameter Node (Simple) | [Nodes > Simple Parameter Node](#simple-parameter-node) | Accessing parameters on the parameter server |
 | 12 | Publisher for `Launch1` | [Nodes > Launch1 Publisher](#launch1-publisher) | A publisher created for a launch file |
@@ -891,7 +891,7 @@ Add the following at appropriate places
             CountNumbers_cpp.action
         )
         ```
-    
+
     2. Add the `generate_messages` function.
 
         Add the `actionlib_msgs` dependency. After everything, the function must look like this
