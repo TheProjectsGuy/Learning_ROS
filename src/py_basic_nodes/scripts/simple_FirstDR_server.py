@@ -5,7 +5,7 @@
         1. Creating a dynamic reconfiguration server node that can use 'FirstDR'
 """
 
-import dynamic_reconfigure
+# Main imports
 import rospy
 import sys
 
@@ -73,7 +73,7 @@ def callback_function(config, level):
 # Main function
 def main():
     # Initialize the node
-    rospy.init_node("simple_py_firstdr_server")
+    rospy.init_node("simple_py_firstdr_server", argv=sys.argv)
     
     # Create a server object
     """

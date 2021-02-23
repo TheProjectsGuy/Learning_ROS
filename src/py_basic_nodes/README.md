@@ -614,7 +614,7 @@ Then, run `catkin_make` in the workspace folder. This node, along with some othe
 | File | [scripts/simple_FirstDR_server.py](./scripts/simple_FirstDR_server.py) |
 | Dynamic Reconfiguration File | [cfg/FirstDR.cfg](./cfg/FirstDR.cfg) |
 
-A dynamic reconfiguration server made to host the parameters included in the `.cfg` file. This node depends on the [dynamic reconfiguration file](#firstdr). A server maintains the record of parameters and provides a callback interface for handling updates (these updates are made by a client).
+A dynamic reconfiguration server made to host the parameters included in the `.cfg` file. This node depends on the [dynamic reconfiguration file](#firstdr). A server maintains the record of parameters and provides a callback interface for handling updates (these updates are made by a client). A client is implemented [in this package](#simple-dynamic-reconfiguration-client)
 
 #### Building
 
