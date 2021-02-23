@@ -196,6 +196,7 @@ catkin_install_python(PROGRAMS
     scripts/launch1_subscriber.py
     scripts/launch1_parameters.py
     scripts/simple_FirstDR_server.py
+    scripts/simple_FirstDR_client.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

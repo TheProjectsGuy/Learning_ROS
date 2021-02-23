@@ -45,6 +45,9 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server)
             - [Building](#building-10)
             - [Running](#running-7)
+        - [Simple Dynamic Reconfiguration Client](#simple-dynamic-reconfiguration-client)
+            - [Building](#building-11)
+            - [Running](#running-8)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -108,7 +111,8 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 16 | YAML file 2 for `Launch1` | [YAML Files > l1_params2](#l1_params2) | A YAML file to load parameters into a launch file |
 | 17 | `Launch1` launch file | [Launch Files > Launch1](#launch1) | A `.launch` file to simplify launching everything tagged as `Launch1` |
 | 18 | `FirstDR` Dynamic Reconfiguration file | [Dynamic Reconfiguration Files > FirstDR](#firstdr) | Creating a `.cfg` file for parameters that can be dynamically reconfigured |
-| 19 | Dynamic Reconfiguration Server (Simple) | [Nodes > Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server) | Creating a node that will contain the modifiable parameters for dynamic reconfiguration `FirstDR` |
+| 19 | Dynamic Reconfiguration Server (Simple) | [Nodes > Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server) | Creating a server node that will contain the modifiable parameters for dynamic reconfiguration `FirstDR` |
+| 20 | Dynamic Reconfiguration Client (Simple) | | Creating a client node that will modify parameters of `FirstDR` on the server |
 
 ## Nodes
 
@@ -653,6 +657,50 @@ The result is the following
 ![result of parameter change for node](./media/pic6.png)
 
 Notice the level passed, it is the `binary OR` of all the parameters with a different value. You may also verify that the parameters are actual parameters on the ROS Parameter Server by inspecting the output of `rosparam list`. You may also what to check the `/simple_py_firstdr_server/set_parameters` service.
+
+### Simple Dynamic Reconfiguration Client
+
+| Field | Value |
+| :---- | :---- |
+| Name | `simple_py_firstdr_server` |
+| File | [scripts/simple_FirstDR_client.py](./scripts/simple_FirstDR_client.py) |
+| Dynamic Reconfiguration File | [cfg/FirstDR.cfg](./cfg/FirstDR.cfg) |
+
+A dynamic reconfiguration client made to modify parameters on a dynamic reconfiguration server. The parameters are included in the specified `.cfg` [dynamic reconfiguration file](#firstdr). A client sends commands to the server (which maintains a service to handle changes in parameters). A simple server is [implemented in this package](#simple-dynamic-reconfiguration-server).
+
+#### Building
+
+In the `CMakeLists.txt` file, add the following line in `catkin_install_python` function before the `DESTINATION` line
+
+```txt
+    scripts/simple_FirstDR_client.py
+```
+
+Then, run `catkin_make` in the workspace folder.
+
+#### Running
+
+First, run `roscore`. Before running this node, you need the `simple_FirstDR_server.py` node running (because it serves as the server for this node, check the code). To run it, use this command
+
+```bash
+rosrun py_basic_nodes simple_FirstDR_server.py
+```
+
+Then, run this node using
+
+```bash
+rosrun py_basic_nodes simple_FirstDR_client.py
+```
+
+The output on this node screen may be the following
+
+![Output of Client node](./media/pic7.png)
+
+The output on the server node may be the following
+
+![Output of Server node](./media/pic8.png)
+
+You may check the service `/simple_py_firstdr_server/set_parameters` and may also see the output of `rosrun rqt_graph rqt_graph`. What may be more interesting is that running `rosrun rqt_reconfigure rqt_reconfigure` opens the same GUI window as it did earlier in the case of server, but it also shows the updates in parameters in real time. This synchronization is handled in the background by the `dynamic_reconfigure` package.
 
 ## Services
 
