@@ -665,7 +665,7 @@ Run `catkin_make` in the workspace folder to build the node. This node, along wi
 | Field | Value |
 | :---- | :---- |
 | Name | `simple_cpp_firstdr_server` |
-| Value | [src/simple_FirstDR_server.cpp](./src/simple_FirstDR_server.cpp) |
+| File | [src/simple_FirstDR_server.cpp](./src/simple_FirstDR_server.cpp) |
 | Dynamic Reconfiguration File | [cfg/FirstDR.cfg](./cfg/FirstDR.cfg) |
 
 A dynamic reconfiguration server made to host the parameters included in the `.cfg` file. This node depends on the [dynamic reconfiguration file](#firstdr). A server maintains the record of parameters and provides a callback interface for handling updates (these updates are made by a client).

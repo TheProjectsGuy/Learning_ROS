@@ -5,6 +5,7 @@
 
 // Needed ROS header file
 #include <ros/ros.h>
+
 // The header file for using the dynamic reconfiguration server
 /*
  * This file is included for the Server class which will help create a server object
@@ -12,6 +13,7 @@
  * Location (on disk): /opt/ros/noetic/include/dynamic_reconfigure
  */
 #include <dynamic_reconfigure/server.h>
+
 // Include the header file made
 /*
  * This was made after building the `.cfg` file

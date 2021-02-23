@@ -112,7 +112,7 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 17 | `Launch1` launch file | [Launch Files > Launch1](#launch1) | A `.launch` file to simplify launching everything tagged as `Launch1` |
 | 18 | `FirstDR` Dynamic Reconfiguration file | [Dynamic Reconfiguration Files > FirstDR](#firstdr) | Creating a `.cfg` file for parameters that can be dynamically reconfigured |
 | 19 | Dynamic Reconfiguration Server (Simple) | [Nodes > Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server) | Creating a server node that will contain the modifiable parameters for dynamic reconfiguration `FirstDR` |
-| 20 | Dynamic Reconfiguration Client (Simple) | | Creating a client node that will modify parameters of `FirstDR` on the server |
+| 20 | Dynamic Reconfiguration Client (Simple) | [Nodes > Simple Dynamic Reconfiguration Client](#simple-dynamic-reconfiguration-client) | Creating a client node that will modify parameters of `FirstDR` on the server |
 
 ## Nodes
 
