@@ -8,7 +8,6 @@ All the packages in this repository.
     - [Table of contents](#table-of-contents)
     - [Foreword](#foreword)
     - [Basic Packages](#basic-packages)
-        - [Code](#code)
     - [References](#references)
 
 ## Foreword
@@ -21,13 +20,23 @@ For most of the packages, specially those which have traditional coding involved
 
 Essential packages that every beginner must know before proceeding with any ROS application
 
-### Code
-
-These packages have traditional coding involved
-
-| S. No. | Title | C++ Package Name | Python Package Name | Description |
-| :--- | :---: | :----- | :------ | :----- |
-| 1 | Basic Nodes | [cpp_basic_nodes](./cpp_basic_nodes/README.md) | [py_basic_nodes](./py_basic_nodes/README.md) | Nodes: Hello world, Publisher, Subscriber, Service (Server and Client), Actions (Server and Client), Parameters, Dynamic Reconfigure |
+<table>
+    <tr>
+        <th> S.No. </th>
+        <th> Title </th>
+        <th colspan="2" style="text-align:center"> Package </th>
+        <th> Description </th>
+    </tr>
+    <tr>
+        <td> 1 </td>
+        <td style="text-align:center"> Basic Nodes </td>
+        <td> <a href="./cpp_basic_nodes/README.md">cpp_basic_nodes</a> </td>
+        <td> <a href="./py_basic_nodes/README.md">py_basic_nodes</a> </td>
+        <td>
+            <b> Basic Nodes</b>: Hello world, Publisher, Subscriber, Service (Server and Client), Actions (Server and Client), Parameters, Dynamic Reconfigure
+        </td>
+    </tr>
+</table>
 
 ## References
 
