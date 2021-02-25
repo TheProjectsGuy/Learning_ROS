@@ -40,7 +40,9 @@ Essential packages that every beginner must know before proceeding with any ROS 
         <td> 2 </td>
         <td style="text-align:center"> Basic Robotics </td>
         <td style="text-align:center" colspan="2">
+            <center>
             <a href="./basic_robotics/README.md">basic_robotics</a>
+            </center>
         </td>
         <td>
             <b> Basic Robotics </b>: RViZ introduction
