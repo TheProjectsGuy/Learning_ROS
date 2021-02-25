@@ -36,6 +36,16 @@ Essential packages that every beginner must know before proceeding with any ROS 
             <b> Basic Nodes</b>: Hello world, Publisher, Subscriber, Service (Server and Client), Actions (Server and Client), Parameters, Dynamic Reconfigure
         </td>
     </tr>
+    <tr>
+        <td> 2 </td>
+        <td style="text-align:center"> Basic Robotics </td>
+        <td style="text-align:center" colspan="2">
+            <a href="./basic_robotics/README.md">basic_robotics</a>
+        </td>
+        <td>
+            <b> Basic Robotics </b>: RViZ introduction
+        </td>
+    </tr>
 </table>
 
 ## References
