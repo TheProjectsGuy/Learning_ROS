@@ -11,11 +11,17 @@ Basic Robotics related software provided in ROS. This package includes a brief o
     - [Tutorials](#tutorials)
         - [Tutorial 0: Getting Started with RViz](#tutorial-0-getting-started-with-rviz)
         - [Tutorial 1: Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz)
+        - [Tutorial 2: Building and visualizing robot models](#tutorial-2-building-and-visualizing-robot-models)
+    - [Launch Files](#launch-files)
     - [C++ Nodes](#c-nodes)
         - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
             - [Building](#building)
             - [Running](#running)
         - [TF Publisher (C++) for Tutorial 1](#tf-publisher-c-for-tutorial-1)
+    - [Python Nodes](#python-nodes)
+        - [Laser Scan Publisher (Python) for Tutorial 1](#laser-scan-publisher-python-for-tutorial-1)
+            - [Building](#building-1)
+            - [Running](#running-1)
     - [RViz configuration files](#rviz-configuration-files)
         - [LaserScan and TF for Tutorial 1](#laserscan-and-tf-for-tutorial-1)
     - [Reference](#reference)
@@ -43,6 +49,7 @@ Short tutorials included in this package made to cover essential concepts. They 
 | :--- | :--- | :--- |
 | 1 | [Getting Started with RViz](#tutorial-0-getting-started-with-rviz) | Launching RViz and terminologies |
 | 2 | [Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz) | Visualize `TF` and `LaserScan` using dummy publishers |
+| 3 | [Building and Visualizing Robot Models](#tutorial-2-building-and-visualizing-robot-models) | Building a four wheel robot using `URDF` and `XACRO`, then visualizing it using `RobotModel` |
 
 ### Tutorial 0: Getting Started with RViz
 
@@ -88,6 +95,12 @@ This tutorial uses the following resources of this package
 | :--- | :--- | :---: | :---- |
 | 1 | [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1) | RViz configuration file | The configuration file consisting of `LaserScan` and `TF` display and an `Axes` |
 | 2a | [t1_cpp_laser_scan_publisher](#laser-scan-publisher-c-for-tutorial-1) | C++ Publisher | Dummy publisher for `LaserScan` |
+| 2b | [t1_laser_scan_publisher.py](#laser-scan-publisher-python-for-tutorial-1) | Python Publisher | Dummy publisher for `LaserScan` |
+| 3 | []() | | |
+
+### Tutorial 2: Building and visualizing robot models
+
+## Launch Files
 
 ## C++ Nodes
 
@@ -174,6 +187,109 @@ rosrun rviz rviz -d ./rviz/LaserScan_TF_T1.rviz
 ```
 
 Now, under `LaserScan` in `Displays`, choose the `Topic` to be `/t1_laser_scan`. You'll see the `Status` soon turn to `Error` with the message under `Transform`, as shown below
+
+![RViz error on LaserScan](./media/pic3.png)
+
+The error message basically means that RViz could not find transformation from `global` to `map`. This is because the `Fixed Frame` is set to `map`. Change it to `global` and you'll see the points correctly being rendered (you can change the display properties under `LaserScan` display item). It must look something like this
+
+![RViz LaserScan output](./media/pic4.png)
+
+You may close the `RViz` GUI and save the configurations to the same file. More on this is described in the launch file and the tutorial description.
+
+### TF Publisher (C++) for Tutorial 1
+
+## Python Nodes
+
+### Laser Scan Publisher (Python) for Tutorial 1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t1_laser_scan_publisher.py` |
+| File | [scripts/t1_laser_scan_publisher.py](./scripts/t1_laser_scan_publisher.py) |
+
+This node is a simple publisher that publishes messages of type `sensor_msgs/LaserScan`. It accepts the publishing topic name, frequency and frame from the parameter server (as local parameters) and publishes messages to topic `/t1_laser_scan` (by default). See the code for more information.
+
+#### Building
+
+In your `CMakeLists.txt` file, add
+
+1. In the `find_package` function, add `std_msgs` and `sensor_msgs`. These are needed as dependencies for accessing built message headers. Your function `find_package` in `CMakeLists.txt` file must look somewhat like this
+
+    ```txt
+    find_package(catkin REQUIRED COMPONENTS
+        roscpp
+        rospy
+        std_msgs
+        sensor_msgs
+    )
+    ```
+
+    Notice the dependency on `rospy` as well. This is how you can add dependencies to a catkin package that was initialized with no dependencies. The `roscpp` dependency is not required if you do not have any `C++` nodes in your package.
+
+2. In the `catkin_package` function (under section `catkin specific configuration`), add the packages `rospy`, `std_msgs` and `sensor_msgs` as `CATKIN_DEPENDS` because these packages will be needed by others who create projects dependent on our package. It is good to have them so that the dependency tree is created for catkin. The function must end up looking somewhat like this
+
+    ```txt
+    catkin_package(
+    #  INCLUDE_DIRS include
+    #  LIBRARIES basic_robotics
+        CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs
+    #  DEPENDS system_lib
+    )
+    ```
+
+3. Next, add the following lines in your `CMakeLists.txt` file to create the executable
+
+    ```txt
+    catkin_install_python(PROGRAMS
+        scripts/t1_laser_scan_publisher.py
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    )
+    ```
+
+In your `package.xml` file, add
+
+1. `<build_depend>`, `<build_export_depend>` and `<exec_depend>` for each of `rospy`, `std_msgs` and `sensor_msgs`. Basically add the following lines at appropriate places
+
+    Add these right after `<buildtool_depend>` (catkin build tool)
+
+    ```xml
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>roscpp</build_depend>
+    <build_depend>rospy</build_depend>
+    <build_depend>std_msgs</build_depend>
+    <build_depend>sensor_msgs</build_depend>
+    <build_export_depend>roscpp</build_export_depend>
+    <build_export_depend>rospy</build_export_depend>
+    <build_export_depend>std_msgs</build_export_depend>
+    <build_export_depend>sensor_msgs</build_export_depend>
+    <exec_depend>roscpp</exec_depend>
+    <exec_depend>rospy</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    <exec_depend>sensor_msgs</exec_depend>
+    ```
+
+    You do not need `roscpp` if you do not have `C++` nodes in your package.
+
+Now, run `catkin_make` in the workspace directory
+
+#### Running
+
+This node will actually be run as a part of tutorial 1, but there are some important things you must infer from just this node.
+
+Run `roscore` first. To run this node, run the command
+
+```bash
+rosrun basic_robotics t1_laser_scan_publisher.py
+```
+
+You must now see `/t1_laser_scan` in `rostopic list`. Now run rviz using the following commands (the configuration file was made using [this](#laserscan-and-tf-for-tutorial-1))
+
+```bash
+roscd basic_robotics
+rosrun rviz rviz -d ./rviz/LaserScan_TF_T1.rviz
+```
+
+Now, under `LaserScan` in `Displays`, choose the `Topic` to be `/t1_laser_scan`. You'll see the `Status` soon turn to `Error` with the message under `Transform` (that is if you haven't applied any changes to the RViz configuration file), as shown below
 
 ![RViz error on LaserScan](./media/pic3.png)
 
