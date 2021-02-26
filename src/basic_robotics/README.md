@@ -10,6 +10,12 @@ Basic Robotics related software provided in ROS. This package includes a brief o
     - [Foreword](#foreword)
     - [Tutorials](#tutorials)
         - [Tutorial 0: Getting Started with RViz](#tutorial-0-getting-started-with-rviz)
+        - [Tutorial 1: Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz)
+    - [C++ Nodes](#c-nodes)
+        - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
+            - [Building](#building)
+            - [Running](#running)
+        - [TF Publisher (C++) for Tutorial 1](#tf-publisher-c-for-tutorial-1)
     - [RViz configuration files](#rviz-configuration-files)
         - [LaserScan and TF for Tutorial 1](#laserscan-and-tf-for-tutorial-1)
     - [Reference](#reference)
@@ -72,6 +78,110 @@ Most importantly, you may notice a topic to choose for many sensors (like `Camer
 
 Now that we know what RViz is and basics of a configuration file, you may simply close the Rviz GUI window. Choose to close without saving the changes.
 
+### Tutorial 1: Visualizing data in RViz
+
+In this tutorial, we explore how to visualize data on a topic in RViz. For this particular example, we will visualize `TF` (frame transformations) and a `LaserScan`. In the real world, sensor data is directly published by sensors (using hardware plugins for ROS). It is also possible to fetch this data from a simulator like `Gazebo` (more on that later). Here, we will create a dummy node that will publish this data on a topic and then we will configure RViz to subscribe to these topics.
+
+This tutorial uses the following resources of this package
+
+| S. No. | File | Purpose | Notes |
+| :--- | :--- | :---: | :---- |
+| 1 | [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1) | RViz configuration file | The configuration file consisting of `LaserScan` and `TF` display and an `Axes` |
+| 2a | [t1_cpp_laser_scan_publisher](#laser-scan-publisher-c-for-tutorial-1) | C++ Publisher | Dummy publisher for `LaserScan` |
+
+## C++ Nodes
+
+Nodes written in C++ for this package.
+
+### Laser Scan Publisher (C++) for Tutorial 1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t1_cpp_laser_scan_publisher` |
+| File | [src/t1_laser_scan_publisher.cpp](./src/t1_laser_scan_publisher.cpp) |
+
+This node is a simple publisher that publishes messages of type `sensor_msgs/LaserScan`. It accepts the publishing topic name, frequency and frame from the parameter server (as local parameters) and publishes messages to topic `/t1_laser_scan` (by default). See the code for more information.
+
+#### Building
+
+In your `CMakeLists.txt` file, add
+
+1. In the `find_package` function, add `std_msgs` and `sensor_msgs`. These are needed as dependencies for accessing built message headers. Your function `find_package` in `CMakeLists.txt` file must look somewhat like this
+
+    ```txt
+    find_package(catkin REQUIRED COMPONENTS
+        roscpp
+        std_msgs
+        sensor_msgs
+    )
+    ```
+
+    Notice the dependency on `roscpp` as well. This is how you can add dependencies to a catkin package that was initialized with no dependencies.
+
+2. In the `catkin_package` function (under section `catkin specific configuration`), add the packages `roscpp`, `std_msgs` and `sensor_msgs` as `CATKIN_DEPENDS` because these packages will be needed by others who create projects dependent on our package. It is good to have them so that the dependency tree is created for catkin. The function must end up looking somewhat like this
+
+    ```txt
+    catkin_package(
+    #  INCLUDE_DIRS include
+    #  LIBRARIES basic_robotics
+        CATKIN_DEPENDS roscpp std_msgs sensor_msgs
+    #  DEPENDS system_lib
+    )
+    ```
+
+3. Next, add the following lines in your `CMakeLists.txt` file to create the executable
+
+    ```txt
+    add_executable(t1_laser_scan_pub src/t1_laser_scan_publisher.cpp)
+    target_link_libraries(t1_laser_scan_pub ${catkin_LIBRARIES})
+    ```
+
+In your `package.xml` file, add
+
+1. `<build_depend>`, `<build_export_depend>` and `<exec_depend>` for each of `roscpp`, `std_msgs` and `sensor_msgs`. Basically add the following lines at appropriate places
+
+    Add these right after `<buildtool_depend>` (catkin build tool)
+
+    ```xml
+    <build_depend>roscpp</build_depend>
+    <build_depend>std_msgs</build_depend>
+    <build_depend>sensor_msgs</build_depend>
+    <build_export_depend>roscpp</build_export_depend>
+    <build_export_depend>std_msgs</build_export_depend>
+    <build_export_depend>sensor_msgs</build_export_depend>
+    <exec_depend>roscpp</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    <exec_depend>sensor_msgs</exec_depend>
+    ```
+
+Now, run `catkin_make` in the workspace directory
+
+#### Running
+
+This node will actually be run as a part of tutorial 1, but there are some important things you must infer from just this node.
+
+Run `roscore` first. To run this node, run the command
+
+```bash
+rosrun basic_robotics t1_laser_scan_pub
+```
+
+You must now see `/t1_laser_scan` in `rostopic list`. Now run rviz using the following commands (the configuration file was made using [this](#laserscan-and-tf-for-tutorial-1))
+
+```bash
+roscd basic_robotics
+rosrun rviz rviz -d ./rviz/LaserScan_TF_T1.rviz
+```
+
+Now, under `LaserScan` in `Displays`, choose the `Topic` to be `/t1_laser_scan`. You'll see the `Status` soon turn to `Error` with the message under `Transform`, as shown below
+
+![RViz error on LaserScan](./media/pic3.png)
+
+The error message basically means that RViz could not find transformation from `global` to `map`. This is because the `Fixed Frame` is set to `map`. Change it to `global` and you'll see the points correctly being rendered (you can change the display properties under `LaserScan` display item). It must look something like this
+
+![RViz LaserScan output](./media/pic4.png)
+
+You may close the `RViz` GUI and save the configurations to the same file. More on this is described in the launch file and the tutorial description.
 
 ## RViz configuration files
 
