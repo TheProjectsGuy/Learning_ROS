@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  tf2
+  tf2_ros
   sensor_msgs
 )
 
@@ -106,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES basic_robotics
-  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs tf2 tf2_ros
 #  DEPENDS system_lib
 )
 
@@ -136,6 +138,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/basic_robotics_node.cpp)
 add_executable(t1_laser_scan_pub src/t1_laser_scan_publisher.cpp)
+add_executable(t1_tf_broadcaster src/t1_tf_publisher.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -152,6 +155,7 @@ add_executable(t1_laser_scan_pub src/t1_laser_scan_publisher.cpp)
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(t1_laser_scan_pub ${catkin_LIBRARIES})
+target_link_libraries(t1_tf_broadcaster ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -168,6 +172,7 @@ target_link_libraries(t1_laser_scan_pub ${catkin_LIBRARIES})
 # )
 catkin_install_python(PROGRAMS
   scripts/t1_laser_scan_publisher.py
+  scripts/t1_tf_publisher.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

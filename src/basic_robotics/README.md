@@ -18,10 +18,15 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Building](#building)
             - [Running](#running)
         - [TF Publisher (C++) for Tutorial 1](#tf-publisher-c-for-tutorial-1)
-    - [Python Nodes](#python-nodes)
-        - [Laser Scan Publisher (Python) for Tutorial 1](#laser-scan-publisher-python-for-tutorial-1)
             - [Building](#building-1)
             - [Running](#running-1)
+    - [Python Nodes](#python-nodes)
+        - [Laser Scan Publisher (Python) for Tutorial 1](#laser-scan-publisher-python-for-tutorial-1)
+            - [Building](#building-2)
+            - [Running](#running-2)
+        - [TF Publisher (Python) for Tutorial 1](#tf-publisher-python-for-tutorial-1)
+            - [Building](#building-3)
+            - [Running](#running-3)
     - [RViz configuration files](#rviz-configuration-files)
         - [LaserScan and TF for Tutorial 1](#laserscan-and-tf-for-tutorial-1)
     - [Reference](#reference)
@@ -96,7 +101,7 @@ This tutorial uses the following resources of this package
 | 1 | [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1) | RViz configuration file | The configuration file consisting of `LaserScan` and `TF` display and an `Axes` |
 | 2a | [t1_cpp_laser_scan_publisher](#laser-scan-publisher-c-for-tutorial-1) | C++ Publisher | Dummy publisher for `LaserScan` |
 | 2b | [t1_laser_scan_publisher.py](#laser-scan-publisher-python-for-tutorial-1) | Python Publisher | Dummy publisher for `LaserScan` |
-| 3 | []() | | |
+| 3a | [t1_cpp_tf_broadcaster](#tf-publisher-c-for-tutorial-1) | C++ Transform Broadcaster | Dummy publisher / broadcaster for `TF` |
 
 ### Tutorial 2: Building and visualizing robot models
 
@@ -198,6 +203,52 @@ You may close the `RViz` GUI and save the configurations to the same file. More 
 
 ### TF Publisher (C++) for Tutorial 1
 
+| Field | Value |
+| :---- | :---- |
+| Name | `t1_cpp_tf_broadcaster` |
+| File | [src/t1_tf_publisher.cpp](./src/t1_tf_publisher.cpp) |
+
+This node is a transformation broadcaster. It basically publishes messages of type `tf2_msgs/TFMessage` on the topic `/tf` (which transmits all transformations in the system). The `tf2` framework is a wrapper to make handling transformation efficient.
+
+#### Building
+
+In `CMakeLists.txt` add the following
+
+1. In the `find_package` function, add `tf2` and `tf2_ros`
+2. In the `catkin_package` function under `CATKIN_DEPENDS`, add `tf2` and `tf2_ros`
+3. Add the following at appropriate places to build the node
+
+    ```txt
+    add_executable(t1_tf_broadcaster src/t1_tf_publisher.cpp)
+    target_link_libraries(t1_tf_broadcaster ${catkin_LIBRARIES})
+    ```
+
+After that, run `catkin_make` in the workspace directory
+
+#### Running
+
+This node is a part of tutorial 1. However, if you want to run this node in isolation, try running these commands and observe the output
+
+Run `roscore`, then start RViz with the [configuration](#laserscan-and-tf-for-tutorial-1) for this tutorial. Then start this node by running
+
+```bash
+rosrun basic_robotics t1_tf_broadcaster
+```
+
+The output on RViz must appear to be somewhat like this
+
+![Output of TF on RViz](./media/pic5.png)
+
+After running this, you can use `rqt_tf_tree` to inspect the transformation tree at any instant. Run it using
+
+```bash
+rosrun rqt_tf_tree rqt_tf_tree
+```
+
+The output must be something show a transformation tree somewhat like this
+
+![TF observed in rqt_tf_tree](./media/pic6.png)
+
 ## Python Nodes
 
 ### Laser Scan Publisher (Python) for Tutorial 1
@@ -298,6 +349,53 @@ The error message basically means that RViz could not find transformation from `
 ![RViz LaserScan output](./media/pic4.png)
 
 You may close the `RViz` GUI and save the configurations to the same file. More on this is described in the launch file and the tutorial description.
+
+### TF Publisher (Python) for Tutorial 1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t1_py_tf_broadcaster` |
+| File | [scripts/t1_tf_publisher.py](./scripts/t1_tf_publisher.py) |
+
+This node is a transformation broadcaster. It basically publishes messages of type `tf2_msgs/TFMessage` on the topic `/tf` (which transmits all transformations in the system). The `tf2` framework is a wrapper to make handling transformation efficient.
+
+#### Building
+
+In `CMakeLists.txt` add the following
+
+1. In the `find_package` function, add `tf2` and `tf2_ros`
+2. In the `catkin_package` function under `CATKIN_DEPENDS`, add `tf2` and `tf2_ros`
+3. Add the following to the `catkin_install_python` function
+
+    ```txt
+    scripts/t1_tf_publisher.py
+    ```
+
+After that, run `catkin_make` in the workspace directory
+
+#### Running
+
+This node is a part of tutorial 1. However, if you want to run this node in isolation, try running these commands and observe the output
+
+Run `roscore`, then start RViz with the [configuration](#laserscan-and-tf-for-tutorial-1) for this tutorial. Then start this node by running
+
+```bash
+rosrun basic_robotics t1_tf_publisher.py
+```
+
+The output on RViz must appear to be somewhat like this
+
+![Output of TF on RViz](./media/pic5.png)
+
+After running this, you can use `rqt_tf_tree` to inspect the transformation tree at any instant. Run it using
+
+```bash
+rosrun rqt_tf_tree rqt_tf_tree
+```
+
+The output must be something show a transformation tree somewhat like this
+
+![TF observed in rqt_tf_tree](./media/pic6.png)
 
 ## RViz configuration files
 
