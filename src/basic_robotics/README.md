@@ -120,7 +120,7 @@ This must open an RViz window as shown below
 
 ![RViz output for launch file of tutorial 1](./media/pic7.png)
 
-As you must have noticed, the laser scan is not attached to frame `f2` instead of `global`. If you want to attach it to `global`, then you could delete the `<param>` in the launch file, or you could more efficiently use the parameter mechanism that was created. Run the following command (after closing the previous launch by closing the RViz GUI)
+As you must have noticed, the laser scan is now attached to frame `f2` instead of `global` (the default configured in the code). If you want to attach it back to `global`, then you could delete the `<param>` in the launch file, or you could more efficiently use the parameter mechanism that was created. Run the following command (after closing the previous launch by closing the RViz GUI)
 
 ```bash
 roslaunch basic_robotics t1_cpp_everything.launch ls_frame:=global
