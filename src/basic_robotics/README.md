@@ -13,6 +13,8 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Tutorial 1: Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz)
         - [Tutorial 2: Building and visualizing robot models](#tutorial-2-building-and-visualizing-robot-models)
     - [Launch Files](#launch-files)
+        - [Launch C++ for Tutorial 1](#launch-c-for-tutorial-1)
+        - [Launch Python for Tutorial 1](#launch-python-for-tutorial-1)
     - [C++ Nodes](#c-nodes)
         - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
             - [Building](#building)
@@ -102,10 +104,63 @@ This tutorial uses the following resources of this package
 | 2a | [t1_cpp_laser_scan_publisher](#laser-scan-publisher-c-for-tutorial-1) | C++ Publisher | Dummy publisher for `LaserScan` |
 | 2b | [t1_laser_scan_publisher.py](#laser-scan-publisher-python-for-tutorial-1) | Python Publisher | Dummy publisher for `LaserScan` |
 | 3a | [t1_cpp_tf_broadcaster](#tf-publisher-c-for-tutorial-1) | C++ Transform Broadcaster | Dummy publisher / broadcaster for `TF` |
+| 3b | [t1_tf_publisher.py](#tf-publisher-python-for-tutorial-1) | Python Transform Broadcaster | Dummy publisher / broadcaster for `TF` |
+| 4a | [t1_cpp_everything.launch](#launch-c-for-tutorial-1) | Launch file (C++) | Launch file for launching all C++ nodes described above |
+| 4b | [t1_py_everything.launch](#launch-python-for-tutorial-1) | Launch file (Python) | Launch file for launching all Python nodes described above |
+
+To run everything in this tutorial, use the command
+
+```bash
+roslaunch basic_robotics t1_cpp_everything.launch
+```
+
+If you prefer on using `Python` instead of `C++`, then substitute `t1_cpp_everything.launch` with `t1_py_everything.launch` in the commands.
+
+This must open an RViz window as shown below
+
+![RViz output for launch file of tutorial 1](./media/pic7.png)
+
+As you must have noticed, the laser scan is not attached to frame `f2` instead of `global`. If you want to attach it to `global`, then you could delete the `<param>` in the launch file, or you could more efficiently use the parameter mechanism that was created. Run the following command (after closing the previous launch by closing the RViz GUI)
+
+```bash
+roslaunch basic_robotics t1_cpp_everything.launch ls_frame:=global
+```
+
+The sensor must now be in the `global` frame as shown below
+
+![RViz output for launch file of tutorial 1, modified ls_frame](./media/pic8.png)
 
 ### Tutorial 2: Building and visualizing robot models
 
 ## Launch Files
+
+### Launch C++ for Tutorial 1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t1_cpp_everything` |
+| File | [launch/t1_cpp_everything.launch](./launch/t1_cpp_everything.launch) |
+
+Launches all the C++ Nodes for tutorial 1, along with RViz and TF visualization node. The launch file launches the following nodes
+
+1. [t1_cpp_tf_broadcaster](#tf-publisher-c-for-tutorial-1)
+2. [t1_cpp_laser_scan_publisher](#laser-scan-publisher-c-for-tutorial-1)
+3. RViz with the configuration file for the tutorial: [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1)
+4. Node `rqt_tf_tree` of package `rqt_tf_tree`
+
+### Launch Python for Tutorial 1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t1_py_everything` |
+| File | [launch/t1_py_everything.launch](./launch/t1_py_everything.launch) |
+
+Launches all the Python Nodes for tutorial 1, along with RViz and TF visualization node. The launch file launches the following nodes
+
+1. [t1_py_laser_scan_publisher](#laser-scan-publisher-python-for-tutorial-1)
+2. [t1_py_tf_broadcaster](#tf-publisher-python-for-tutorial-1)
+3. RViz with the configuration file for the tutorial: [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1)
+4. Node `rqt_tf_tree` of package `rqt_tf_tree`
 
 ## C++ Nodes
 
@@ -255,7 +310,7 @@ The output must be something show a transformation tree somewhat like this
 
 | Field | Value |
 | :---- | :---- |
-| Name | `t1_laser_scan_publisher.py` |
+| Name | `t1_py_laser_scan_publisher` |
 | File | [scripts/t1_laser_scan_publisher.py](./scripts/t1_laser_scan_publisher.py) |
 
 This node is a simple publisher that publishes messages of type `sensor_msgs/LaserScan`. It accepts the publishing topic name, frequency and frame from the parameter server (as local parameters) and publishes messages to topic `/t1_laser_scan` (by default). See the code for more information.

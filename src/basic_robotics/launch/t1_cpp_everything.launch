@@ -1,0 +1,28 @@
+<!-- 
+    Launch file for Tutorial 1
+    Launches the following nodes
+        1. t1_laser_scan_pub: LaserScan publisher
+        2. t1_tf_broadcaster: TF broadcaster
+        3. RViz: Visualization GUI with configuration file in package
+        4. rqt_tf_tree GUI node
+-->
+<launch>
+    <!-- Arguments from command line -->
+    <!-- RViz configuration file -->
+    <arg name="rviz_config" default="$(find basic_robotics)/rviz/LaserScan_TF_T1.rviz" doc="Full path to Rviz configuration file" />
+    <!-- Publishing frame for LaserScan -->
+    <arg name="ls_frame" default="f2" doc="Publishing frame for LaserScan" />
+
+    <!-- Nodes to be launched -->
+    <!-- RViz Node -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config)" required="true" />
+    <!-- rqt_tf_tree Node -->
+    <node pkg="rqt_tf_tree" type="rqt_tf_tree" name="rqt_tf_tree"/>
+    <!-- C++ Node: t1_laser_scan_pub -->
+    <node pkg="basic_robotics" type="t1_laser_scan_pub" name="t1_laser_scan_pub">
+        <!-- Attach the sensor to `ls_frame` and not 'global' -->
+        <param name="pub_frame" type="str" value="$(arg ls_frame)" />
+    </node>
+    <!-- C++ Node: t1_tf_broadcaster -->
+    <node pkg="basic_robotics" type="t1_tf_broadcaster" name="t1_tf_broadcaster"/>
+</launch>
