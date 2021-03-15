@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!-- Robot consists of two links, connected by a revolute joint -->
+<robot name="two_link_robot">
+    <!-- Links -->
+    <link name="world">
+        <!-- This is a dummy link to attach to the 'world' frame -->
+    </link>
+    <link name="link_1">
+        <!-- Link 1: Big cube -->
+        <visual>
+            <geometry>
+                <box size="0.5 0.5 0.5" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="1" />
+            <inertia ixx="0.041667" ixy="0.0" ixz="0.0" 
+                            iyy="0.041667" iyz="0.0" 
+                                izz="0.041667" />
+        </inertial>
+    </link>
+    <link name="link_2">
+        <!-- Link 2: Smaller cube -->
+        <visual>
+            <geometry>
+                <box size="0.25 0.25 0.25" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="1" />
+            <inertia ixx="0.0104167" ixy="0.0" ixz="0.0" 
+                            iyy="0.0104167" iyz="0.0" 
+                                izz="0.0104167" />
+        </inertial>
+    </link>
+    <!-- Joints -->
+    <joint name="dummy_fj" type="fixed" >
+        <!-- A fixed joint of the dummy to the actual base -->
+        <parent link="world" />
+        <child link="link_1" />
+    </joint>
+    <joint name="l1_l2_rj" type="revolute">
+        <!-- Revolute joint between two links -->
+        <parent link="link_1"/>
+        <child link="link_2"/>
+        <origin xyz="0.0 0.0 0.375" rpy="0.0 0.0 0.0"/>
+        <!-- Rotate about Z axis -->
+        <axis xyz="0.0 0.0 1"/>
+        <!-- The effort and velocity are not important here, lower and upper are in radians -->
+        <limit lower="-3.14159" upper="3.14159" effort="1" velocity="1"/>
+    </joint>
+</robot>

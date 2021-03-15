@@ -1,0 +1,20 @@
+<launch>
+    <!-- Arguments -->
+    <arg name="rviz_config" default="$(find basic_robotics)/rviz/RobotViz_T2.rviz" doc="The .rviz configuration file" />
+    <arg name="robot_file" default="$(find basic_robotics)/urdf/two_blocks_t2.urdf" doc="A .urdf file to display" />
+    <!-- Parameters -->
+    <param name="robot_description" command="cat $(arg robot_file)" />
+    <!-- RViz node -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" required="true" />
+    <!-- Joint State Publisher (GUI) -->
+        <!-- This will publish the joint states (and will provide a GUI for jogging) -->
+        <!-- Package (old): https://wiki.ros.org/joint_state_publisher -->
+        <!-- Package (current): https://wiki.ros.org/joint_state_publisher_gui  -->
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <!-- Robot state publisher -->
+        <!-- This will calculate the kinematics and publish the paraemeters -->
+        <!-- Package: https://wiki.ros.org/robot_state_publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <!-- rqt_graph GUI -->
+    <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph" />
+</launch>

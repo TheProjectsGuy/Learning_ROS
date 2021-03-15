@@ -12,9 +12,13 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Tutorial 0: Getting Started with RViz](#tutorial-0-getting-started-with-rviz)
         - [Tutorial 1: Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz)
         - [Tutorial 2: Building and visualizing robot models](#tutorial-2-building-and-visualizing-robot-models)
+            - [Part 1: Visualizing a single link](#part-1-visualizing-a-single-link)
+            - [Part 2: Jogging a two link manipulator](#part-2-jogging-a-two-link-manipulator)
     - [Launch Files](#launch-files)
         - [Launch C++ for Tutorial 1](#launch-c-for-tutorial-1)
         - [Launch Python for Tutorial 1](#launch-python-for-tutorial-1)
+        - [Launch single link for Tutorial 2](#launch-single-link-for-tutorial-2)
+        - [Visualize Jogging URDF robot for Tutorial 2](#visualize-jogging-urdf-robot-for-tutorial-2)
     - [C++ Nodes](#c-nodes)
         - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
             - [Building](#building)
@@ -31,6 +35,11 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Running](#running-3)
     - [RViz configuration files](#rviz-configuration-files)
         - [LaserScan and TF for Tutorial 1](#laserscan-and-tf-for-tutorial-1)
+        - [RobotDescription and TF for Tutorial 2](#robotdescription-and-tf-for-tutorial-2)
+    - [URDF Files](#urdf-files)
+        - [Single block for Tutorial 2](#single-block-for-tutorial-2)
+        - [Two Blocks for Tutorial 2](#two-blocks-for-tutorial-2)
+            - [Checking URDFs](#checking-urdfs)
     - [Reference](#reference)
 
 ## Creating this package
@@ -132,6 +141,61 @@ The sensor must now be in the `global` frame as shown below
 
 ### Tutorial 2: Building and visualizing robot models
 
+In this tutorial, we explore how to create a `RobotModel` and visualize it in RViz. We will also see how to manually jog the robot (that is, visualize different joints rotating). Keep in mind that RViz is not a simulation tool, it is only a visualization tool. It cannot simulate physics (a simulator like Gazebo will be required for that), it can only display what's given to it by the user. In this tutorial, we will build a simple four wheel robot and visualize it. We shall also see how to jog the robot and visualize that through the model as well as tf (move the joints).
+
+This tutorial uses the following resources of this package
+
+| S. No. | File | Purpose | Notes |
+| :--- | :--- | :---: | :---- |
+| 1 | [RobotViz_T2](#robotdescription-and-tf-for-tutorial-2) | RViz configuration file | The configuration file consisting of `RobotDescription` and `TF` |
+| 2 | [single_block_t2.urdf](#single-block-for-tutorial-2) | URDF File 1 | URDF file containing a single link to be displayed |
+| 3 | [t2_single_link_viz](#launch-single-link-for-tutorial-2) | Launch File 1 | Launch file for the single link demo |
+
+#### Part 1: Visualizing a single link
+
+Here, we'll visualize a very simple robot (one link only). Run the following `roslaunch` command
+
+```bash
+roslaunch basic_robotics t2_single_link_viz.launch
+```
+
+This will launch the RViz GUI like shown below
+
+![RViz window for single link](./media/pic9.png)
+
+This is the [single_block_t2.urdf](#single-block-for-tutorial-2) file. This file is actually loaded into the ROS parameter called `robot_description` (check the launch file code). Close this launch and now we shall inspect the jogging of joints.
+
+#### Part 2: Jogging a two link manipulator
+
+Here, we will see how to manually move joints and visualize them moving (that is what is called jogging). There is no simulation physics happening, only visualization. Run the following `roslaunch` command
+
+```bash
+roslaunch basic_robotics t2_urdf_bot_viz.launch
+```
+
+This must open RViz with the robot (just two links) and must also create a GUI as shown below
+
+![RViz and joint_state_publisher GUI](./media/pic11.png)
+
+This is the rviz GUI and the GUI created by `joint_state_publisher`. The `rqt_graph` GUI must look like this
+
+![rqt_graph GUI](./media/pic12.png)
+
+To understand what's happening, comment out the nodes `joint_state_publisher_gui` and `robot_state_publisher` in the launch and relaunch everything. The window now must be something like this
+
+![Error in RViz in tutorial 2 part 2](./media/pic13.png)
+
+This error is because there is nothing publishing the `/tf` frame transformations. We could create one for the primitive bot that we made, but that's impractical from large sophisticated robots. We also would like a GUI which would allow us to move the joint and inspect what's happening. Doing that using rqt for every robot we make is also hard. Therefore, ros has two solutions for these tasks
+
+1. Node `joint_state_publisher_gui` (package name is also the same): This node will parse the `robot_description` ROS parameter from the parameter server, the identify the joints, then create a GUI for publishing these joint values on a topic called `/joint_states`. The published messages are not to be confused with `/tf` as these are of type `sensor_msgs/JointState` (essentially an array of joint names, position, velocity, effort, etc.).
+2. Node `robot_state_publisher` (package name is also the same): This node will subscribe to a topic called `/joint_state`, read the ROS parameter `robot_description` and then create a forward kinematics model (which can convert joint positions to actual frame transformations). This node, through this model of forward kinematics, publishes `/tf`. It also notices static (fixed) joints and publishes their information on topic `/tf_static` which persist and reduce the load on `/tf` topic.
+
+This communication process is observed through the `rqt_graph` GUI shown above. Uncomment the previously commented files and try jogging (moving joints). The output must look similar to this
+
+![RViz jogging joints](./media/pic14.png)
+
+You must also observe the messages on topics `/joint_states` and `/tf` (notice that they are published continuously). You may close the files as we will now be exploring a much more sophisticated robot.
+
 ## Launch Files
 
 ### Launch C++ for Tutorial 1
@@ -161,6 +225,29 @@ Launches all the Python Nodes for tutorial 1, along with RViz and TF visualizati
 2. [t1_py_tf_broadcaster](#tf-publisher-python-for-tutorial-1)
 3. RViz with the configuration file for the tutorial: [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1)
 4. Node `rqt_tf_tree` of package `rqt_tf_tree`
+
+### Launch single link for Tutorial 2
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t2_single_link_viz` |
+| File | [launch/t2_single_link_viz.launch](./launch/t2_single_link_viz.launch) |
+
+Launch a single link on RViz. Includes the [RobotViz_T2.rviz](#robotdescription-and-tf-for-tutorial-2) `rviz` file launch, and sets the `robot_description` parameter to the contents of the URDF file [single_block_t2.urdf](#single-block-for-tutorial-2).
+
+### Visualize Jogging URDF robot for Tutorial 2
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t2_urdf_bot_viz` |
+| File | [](./launch/t2_urdf_bot_viz.launch) |
+
+Launch a URDF robot and visualize it by jogging (moving by rotation or translation, depending on the joint type) different joints. Includes launching the following nodes
+
+1. RViz node with the configuration [RobotViz_T2.rviz](#robotdescription-and-tf-for-tutorial-2)
+2. Node `joint_state_publisher_gui` which will create a GUI for us to jog the joints
+3. Node `robot_state_publisher` which will produce frame transformations on the topic `/tf`
+4. GUI Node `rqt_graph` to see what is happening
 
 ## C++ Nodes
 
@@ -477,11 +564,74 @@ This file is made for Tutorial 1. It is to view a `LaserScan` and a `TF`. Here's
 
     This would open `rviz` with the configuration that we saved. To know more about `-d` and other options, run `rviz --help`.
 
-Hereon, only the things added will be briefly mentioned.
+Hereon, only the things added will be briefly mentioned. This file may be modified throughout the tutorial.
+
+### RobotDescription and TF for Tutorial 2
+
+| Field | Value |
+| :---- | :---- |
+| Name | `RobotViz_T2.rviz` |
+| File | [rviz/RobotViz_T2.rviz](./rviz/RobotViz_T2.rviz) |
+
+This file is made for Tutorial 2. It is to view a `RobotDescription` (a robot model) and the transformations happening in real time (visualization). Here's how to create it.
+
+1. Launch `rviz`
+2. Add the following display types
+    1. `Axes` for the global frame
+    2. `TF` for transformations
+    3. `RobotDescription` for visualizing a robot made using URDF
+3. Change the `Fixed Frame` to `world`
+4. Save the configuration in the folder `rviz` inside the workspace (the file is linked above).
+
+This file may be modified throughout the tutorial.
+
+## URDF Files
+
+These are files created for robot description. The file format stands for *Unified Robot Description Format* (URDF). It provides creation of robot models in XML type files, having hierarchies of their own.
+
+### Single block for Tutorial 2
+
+| Field | Value |
+| :---- | :---- |
+| Name | `single_block_t2.urdf` |
+| File | [urdf/single_block_t2.urdf](./urdf/single_block_t2.urdf) |
+
+This is a file to introduce the concept of URDF and show how a rudimentary URDF file (with a robot) can be visualized in RViz.
+
+### Two Blocks for Tutorial 2
+
+| Field | Value |
+| :---- | :---- |
+| Name | `two_blocks_t2.urdf` |
+| File | [urdf/two_blocks_t2.urdf](./urdf/two_blocks_t2.urdf) |
+
+This is a file containing two blocks connected using a revolute joint. This is a part of the tutorial.
+
+#### Checking URDFs
+
+To check if a URDF file can be parsed correctly, there are several tools available. First, install liburdfdom. On systems with `apt`, the instruction is
+
+```bash
+sudo apt install liburdfdom-tools
+```
+
+This will install tools for inspecting URDFs. To inspect this file, run the following commands
+
+```bash
+roscd basic_robotics/urdf/
+check_urdf ./two_blocks_t2.urdf
+```
+
+This will produce an output like following
+
+![Check URDF output](./media/pic10.png)
+
+Another important visualization tool (which will create a graphical visualization) is 
 
 ## Reference
 
 - [RViz on roswiki](https://wiki.ros.org/rviz)
     - [User Guide](https://wiki.ros.org/rviz/UserGuide)
-    - [Display Types](https://wiki.ros.org/rviz/DisplayTypes)
+    - Built in [Display Types](https://wiki.ros.org/rviz/DisplayTypes)
 - [RViz introduction YouTube](https://www.youtube.com/watch?v=i--Sd4xH9ZE&feature=emb_logo)
+- [URDF on roswiki](https://wiki.ros.org/urdf)

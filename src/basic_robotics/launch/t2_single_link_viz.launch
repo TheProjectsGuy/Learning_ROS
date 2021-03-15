@@ -1,0 +1,9 @@
+<launch>
+    <!-- Arguments -->
+    <arg name="rviz_config" default="$(find basic_robotics)/rviz/RobotViz_T2.rviz" doc="The .rviz configuration file" />
+    <arg name="robot_file" default="$(find basic_robotics)/urdf/single_block_t2.urdf" doc="A .urdf file to display" />
+    <!-- Parameters -->
+    <param name="robot_description" command="cat $(arg robot_file)" />
+    <!-- RViz node -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" required="true" />
+</launch>

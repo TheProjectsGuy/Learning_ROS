@@ -1,0 +1,3 @@
+# Ignore the urdf_to_graphiz
+*.gv
+*.pdf

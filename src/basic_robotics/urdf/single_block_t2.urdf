@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!-- The first line is a line specifying the XML version. Every URDF file is an XML file -->
+<!-- All XML tag reference: https://wiki.ros.org/urdf/XML -->
+<!-- <robot> is used for describing a robot -->
+<robot name="single_link">
+    <!-- <link> is used for creating a link. Note that the name is same as the `Fixed Frame` in RViz -->
+    <link name="world">
+        <!-- How the link look -->
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="1 0.5 0.25" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="1" />
+            <!-- Most programs give the inertia matrix, you can find one for primitive shapes on Wikipedia
+                Link: https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors -->
+            <inertia ixx="0.026041" ixy="0" ixz="0"
+                                    iyy="0.088541" iyz="0" 
+                                                   izz="0.104166" />
+        </inertial>
+    </link>
+</robot>
