@@ -8,6 +8,7 @@ All the packages in this repository.
     - [Table of contents](#table-of-contents)
     - [Foreword](#foreword)
     - [Basic Packages](#basic-packages)
+        - [Miscellaneous](#miscellaneous)
     - [References](#references)
 
 ## Foreword
@@ -44,6 +45,29 @@ Essential packages that every beginner must know before proceeding with any ROS 
         </td>
         <td>
             <b> Basic Robotics </b>: RViz introduction
+        </td>
+    </tr>
+</table>
+
+### Miscellaneous
+
+Packages that could be traversed in any order
+
+<table>
+    <tr>
+        <th> S.No. </th>
+        <th> Title </th>
+        <th colspan="2" style="text-align:center"> Package </th>
+        <th> Description </th>
+    </tr>
+    <tr>
+        <td> 1 </td>
+        <td style="text-align:center"> Shared Libraries </td>
+        <td style="text-align:center" colspan="2">
+            <a href="./shared_libs/README.md">shared_libs</a>
+        </td>
+        <td>
+            <b> Shared Libraries </b>: Python modules and C++ libraries in ROS Packages
         </td>
     </tr>
 </table>
