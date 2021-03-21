@@ -8,3 +8,6 @@ test_*/
 
 # Ignore the test files
 test_*
+
+# Ignore the python cache files
+*.pyc

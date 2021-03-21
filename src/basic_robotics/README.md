@@ -185,9 +185,9 @@ To understand what's happening, comment out the nodes `joint_state_publisher_gui
 
 ![Error in RViz in tutorial 2 part 2](./media/pic13.png)
 
-This error is because there is nothing publishing the `/tf` frame transformations. We could create one for the primitive bot that we made, but that's impractical from large sophisticated robots. We also would like a GUI which would allow us to move the joint and inspect what's happening. Doing that using rqt for every robot we make is also hard. Therefore, ros has two solutions for these tasks
+This error is because there is nothing publishing the `/tf` frame transformations. We could create one for the primitive bot that we made, but that's impractical for large sophisticated robots. We also would like a GUI which would allow us to move the joints and inspect what is happening. Doing that using rqt for every robot we make is also hard. Therefore ros has two solutions for these tasks
 
-1. Node `joint_state_publisher_gui` (package name is also the same): This node will parse the `robot_description` ROS parameter from the parameter server, the identify the joints, then create a GUI for publishing these joint values on a topic called `/joint_states`. The published messages are not to be confused with `/tf` as these are of type `sensor_msgs/JointState` (essentially an array of joint names, position, velocity, effort, etc.).
+1. Node `joint_state_publisher_gui` (package name is also the same): This node will parse the `robot_description` ROS parameter from the parameter server, identify the joints, then create a GUI for publishing these joint values on a topic called `/joint_states`. The published messages are not to be confused with `/tf` as these are of type `sensor_msgs/JointState` (essentially an array of joint names, position, velocity, effort, etc.).
 2. Node `robot_state_publisher` (package name is also the same): This node will subscribe to a topic called `/joint_state`, read the ROS parameter `robot_description` and then create a forward kinematics model (which can convert joint positions to actual frame transformations). This node, through this model of forward kinematics, publishes `/tf`. It also notices static (fixed) joints and publishes their information on topic `/tf_static` which persist and reduce the load on `/tf` topic.
 
 This communication process is observed through the `rqt_graph` GUI shown above. Uncomment the previously commented files and try jogging (moving joints). The output must look similar to this
@@ -609,7 +609,7 @@ This is a file containing two blocks connected using a revolute joint. This is a
 
 #### Checking URDFs
 
-To check if a URDF file can be parsed correctly, there are several tools available. First, install liburdfdom. On systems with `apt`, the instruction is
+To check if a URDF file can be parsed correctly, there are several tools available. First, install `liburdfdom`. On systems with `apt`, the instruction is
 
 ```bash
 sudo apt install liburdfdom-tools
