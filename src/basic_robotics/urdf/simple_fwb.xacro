@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- A four wheel robot -->
+<!-- 
+    XACRO (XML Macro) is a powerful way of writing robot description files. These files can be later build as URDF
+    files. They allow modularization (where you can include other XACRO files for the same robot, distributing a lot
+    of load) and provide methods of creating and calling functions.
+
+    Snippet reference page: https://wiki.ros.org/xacro
+
+    Remember to include the xmlns for XACRO (so that the tags can be recognized).
+-->
 <robot name="fw_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- Include the properties file -->
     <xacro:include filename="$(find basic_robotics)/urdf/fwb_parameters.xacro" />
