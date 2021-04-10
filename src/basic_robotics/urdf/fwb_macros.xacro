@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!-- This file contains different macros for four wheel robot -->
+<robot name="fw_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- List of 3D inertia tensors -->
+    <!-- Link: https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors -->
+    <!-- Inertia Matrix of a Cuboid -->
+    <!-- Parameters:
+            - m: Mass of cuboid
+            - sx: Side length along X axis
+            - sy: Side length along Y axis
+            - sz: Side length along Z axis
+        Returns:
+            The <inertia> element
+    -->
+    <xacro:macro name="inertia_cuboid" params="m sx sy sz">
+        <inertia ixx="${(1/12) * m * (sy ** 2 + sz ** 2)}" ixy="0.0" ixz="0.0" 
+                        iyy="${(1/12) * m * (sx ** 2 + sz ** 2)}" iyz="0.0" 
+                                izz="${(1/12) * m * (sy ** 2 + sx ** 2)}"/>
+    </xacro:macro>
+    <!-- Inertia Matrix of a Cube -->
+    <!-- Parameters:
+            - m: Mass of cube
+            - sl: Side length of the cube
+        Returns:
+            The <inertia> element
+    -->
+    <xacro:macro name="inertia_cube" params="m sl">
+        <xacro:inertia_cuboid m="${m}" sx="${sl}" sy="${sl}" sz="${sl}" />
+    </xacro:macro>
+    <!-- Inertia Matrix of a Cylinder -->
+    <!-- Parameters:
+            - m: Mass of the cylinder
+            - r: Radius of the cylinder
+            - h: Height of the cylinder
+        Returns:
+            The <inertia> element
+    -->
+    <xacro:macro name="inertia_cylinder" params="m r h">
+        <inertia ixx="${(1/12) * m * (3 * (r ** 2) + h ** 2)}" ixy="0.0" ixz="0.0" 
+                        iyy="${(1/12) * m * (3 * (r ** 2) + h ** 2)}" iyz="0.0" 
+                                izz="${(1/2) * m * (r ** 2)}"/>
+    </xacro:macro>
+
+    <!-- Macros for the program -->
+    <!-- Insert an entire wheel -->
+    <!-- Parameters:
+            - sx: Displacement along +X (longitudinal) axis
+            - sy: Displacement along +Y (lateral) axis
+            - sz: Displacement along +Z axis
+            - lname: Name of the link
+            - jname: Name of the joint
+            - m: Mass of the wheel
+            - r: Radius of wheel
+            - h: Height / Depth of wheel
+    -->
+    <xacro:macro name="add_wheel" params="sx sy sz lname jname m r h">
+        <!-- Link -->
+        <link name="${lname}">
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mass value="${m}"/>
+                <xacro:inertia_cylinder m="${m}" r="${r}" h="${h}" />
+            </inertial>
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="${r}" length="${h}"/>
+                </geometry>
+            </visual>
+        </link>
+        <!-- Joint from wheel to body -->
+        <joint name="${jname}" type="continuous">
+            <origin xyz="${sx} ${sy} ${sz}" rpy="${radians(-90)} 0.0 0.0"/>
+            <parent link="body"/>
+            <child link="${lname}"/>
+            <axis xyz="0.0 0.0 1.0"/>
+        </joint>
+    </xacro:macro>
+</robot>

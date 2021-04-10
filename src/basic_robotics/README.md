@@ -626,8 +626,6 @@ This will produce an output like following
 
 ![Check URDF output](./media/pic10.png)
 
-Another important visualization tool (which will create a graphical visualization) is 
-
 ## Reference
 
 - [RViz on roswiki](https://wiki.ros.org/rviz)
