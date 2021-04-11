@@ -48,6 +48,10 @@ Basic Python Nodes to understand essential concepts and the build procedure for 
         - [Simple Dynamic Reconfiguration Client](#simple-dynamic-reconfiguration-client)
             - [Building](#building-11)
             - [Running](#running-8)
+        - [Simple Module Node](#simple-module-node)
+            - [Building and Running](#building-and-running)
+        - [Basic Math Node](#basic-math-node)
+            - [Building and Running](#building-and-running-1)
     - [Services](#services)
         - [AddAllFloat64Numbers_py](#addallfloat64numbers_py)
             - [Building services and messages](#building-services-and-messages)
@@ -81,7 +85,7 @@ catkin_create_pkg py_basic_nodes rospy
 
 ## Foreword
 
-This is teh first package and hence things are described in a little more detail here. The source code has comments describing the contents that are new.
+This is the first package and hence things are described in a little more detail here. The source code has comments describing the contents that are new.
 
 When reading this file, you may either traverse from top to bottom (recommended for beginners) or navigate through [table of contents](#table-of-contents). If you are a beginner, you're suggested to navigate the package using the [contents](#contents) section. In the [Nodes](#nodes) section, the nodes are described starting with a table (to lead you to the source code). Same is done for other sections hereon.
 
@@ -113,6 +117,8 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 18 | `FirstDR` Dynamic Reconfiguration file | [Dynamic Reconfiguration Files > FirstDR](#firstdr) | Creating a `.cfg` file for parameters that can be dynamically reconfigured |
 | 19 | Dynamic Reconfiguration Server (Simple) | [Nodes > Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server) | Creating a server node that will contain the modifiable parameters for dynamic reconfiguration `FirstDR` |
 | 20 | Dynamic Reconfiguration Client (Simple) | [Nodes > Simple Dynamic Reconfiguration Client](#simple-dynamic-reconfiguration-client) | Creating a client node that will modify parameters of `FirstDR` on the server |
+| 21 | Simple Module Node | [Nodes > Simple Module Node](#simple-module-node) | Using [simple_module](../basic_py_libs/src/simple_module/README.md), a Python module belonging to another package |
+| 22 | Basic Math Node | [Nodes > Basic Math Node](#basic-math-node) | Using [basic_math](../basic_py_libs/src/basic_math/README.md), a more sophisticated module belonging to another package |
 
 ## Nodes
 
@@ -701,6 +707,42 @@ The output on the server node may be the following
 ![Output of Server node](./media/pic8.png)
 
 You may check the service `/simple_py_firstdr_server/set_parameters` and may also see the output of `rosrun rqt_graph rqt_graph`. What may be more interesting is that running `rosrun rqt_reconfigure rqt_reconfigure` opens the same GUI window as it did earlier in the case of server, but it also shows the updates in parameters in real time. This synchronization is handled in the background by the `dynamic_reconfigure` package.
+
+### Simple Module Node
+
+| Field | Value |
+| :--- | :--- |
+| Name | `simple_module_node` |
+| File | [scripts/simple_module_node.py](./scripts/simple_module_node.py) |
+| Module | [simple_module](../basic_py_libs/src/simple_module/README.md) |
+
+This node simply includes the functionality of the `simple_module` python module. Before understanding this, you might want to understand the `basic_py_libs` [package](../basic_py_libs/README.md) (up to the definition of this module).
+
+#### Building and Running
+
+Add the `scripts/simple_module_node.py` file to the `catkin_install_python` function. Then, run `catkin_make` in the workspace directory. To run this node, ensure that `roscore` is running first and then run
+
+```bash
+rosrun basic_py_libs simple_module_node.py
+```
+
+### Basic Math Node
+
+| Field | Value |
+| :--- | :--- |
+| Name | `basic_math_node` |
+| File | [scripts/basic_math_node.py](./scripts/basic_math_node.py) |
+| Module | [basic_math](../basic_py_libs/src/basic_math/README.md) |
+
+This node simply demonstrates how to access functionality of the `basic_math` python module. Before understanding this, you might want to understand the `basic_py_libs` [package](../basic_py_libs/README.md) (up to the definition of this module).
+
+#### Building and Running
+
+Add the script `script/basic_math_node.py` to `catkin_install_python` function in CMakeLists.txt and run `catkin_make` in the workspace directory. To run this node, first run `roscore` and then run
+
+```bash
+rosrun basic_py_libs basic_math_node.py
+```
 
 ## Services
 

@@ -13,6 +13,9 @@ devel/
 build/
 .catkin_workspace
 
+# Ignore Python compiled files
+*.pyc
+
 # Ignore previous and archive files
 prev_*
 ARCHIVE/
