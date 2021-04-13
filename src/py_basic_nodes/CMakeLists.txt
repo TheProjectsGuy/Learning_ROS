@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   genmsg
   actionlib_msgs
   dynamic_reconfigure
+  basic_py_libs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -64,8 +65,8 @@ find_package(catkin REQUIRED COMPONENTS
 #   Service2.srv
 # )
 add_service_files(
-    FILES
-    AddAllFloat64Numbers_py.srv
+  FILES
+  AddAllFloat64Numbers_py.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -75,8 +76,8 @@ add_service_files(
 #   Action2.action
 # )
 add_action_files(
-    FILES
-    CountNumbers_py.action
+  FILES
+  CountNumbers_py.action
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -85,9 +86,9 @@ add_action_files(
 #   std_msgs  # Or other packages containing msgs
 # )
 generate_messages(
-    DEPENDENCIES
-    std_msgs    # Float64
-    actionlib_msgs
+  DEPENDENCIES
+  std_msgs    # Float64
+  actionlib_msgs
 )
 
 ################################################
@@ -184,20 +185,22 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 catkin_install_python(PROGRAMS
-    scripts/simple_hello_world.py
-    scripts/simple_publisher.py
-    scripts/simple_subscriber.py
-    scripts/simple_service_server.py
-    scripts/simple_service_client.py
-    scripts/simple_action_server.py
-    scripts/simple_action_client.py
-    scripts/simple_parameter_server.py
-    scripts/launch1_publisher.py
-    scripts/launch1_subscriber.py
-    scripts/launch1_parameters.py
-    scripts/simple_FirstDR_server.py
-    scripts/simple_FirstDR_client.py
-    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  scripts/simple_hello_world.py
+  scripts/simple_publisher.py
+  scripts/simple_subscriber.py
+  scripts/simple_service_server.py
+  scripts/simple_service_client.py
+  scripts/simple_action_server.py
+  scripts/simple_action_client.py
+  scripts/simple_parameter_server.py
+  scripts/launch1_publisher.py
+  scripts/launch1_subscriber.py
+  scripts/launch1_parameters.py
+  scripts/simple_FirstDR_server.py
+  scripts/simple_FirstDR_client.py
+  scripts/simple_module_node.py
+  scripts/basic_math_node.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 ## Mark executables for installation

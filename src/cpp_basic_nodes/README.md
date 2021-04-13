@@ -48,6 +48,10 @@ Basic C++ Nodes to understand essential concepts and the build procedure for a C
         - [Simple Dynamic Reconfiguration Client](#simple-dynamic-reconfiguration-client)
             - [Building](#building-11)
             - [Running](#running-8)
+        - [Simple Library Node](#simple-library-node)
+            - [Building and Running](#building-and-running)
+        - [Basic Math Node](#basic-math-node)
+            - [Building and Running](#building-and-running-1)
     - [Services](#services)
         - [AddAllFloat64Numbers_cpp](#addallfloat64numbers_cpp)
             - [Building services and messages](#building-services-and-messages)
@@ -113,6 +117,8 @@ Suggested order of traversal for the items in this package (specially for beginn
 | 18 | `FirstDR` Dynamic Reconfiguration file | [Dynamic Reconfiguration Files > FirstDR](#firstdr) | Creating a `.cfg` file for parameters that can be dynamically reconfigured |
 | 19 | Dynamic Reconfiguration Server (Simple) | [Nodes > Simple Dynamic Reconfiguration Server](#simple-dynamic-reconfiguration-server) | Creating a node that will contain the modifiable parameters for dynamic reconfiguration `FirstDR` |
 | 20 | Dynamic Reconfiguration Client (Simple) | [Nodes > Simple Dynamic Reconfiguration Client](#simple-dynamic-reconfiguration-client) | Creating a client node that will modify parameters of `FirstDR` on the server |
+| 21 | Simple Library Node | [Nodes > Simple Library Node](#simple-library-node) | A node that uses `simple_library` from package `basic_cpp_libs` (a simple library) |
+| 22 | Basic Math Node | [Nodes > Basic Math Node](#basic-math-node) | A node that uses `basic_math` library from package `basic_cpp_libs` (a relatively more sophisticated library) |
 
 ## Nodes
 
@@ -765,6 +771,66 @@ The output on the server node may be the following
 ![Output of Server node](./media/pic8.png)
 
 You may check the service `/simple_cpp_firstdr_server/set_parameters` and may also see the output of `rosrun rqt_graph rqt_graph`. What may be more interesting is that running `rosrun rqt_reconfigure rqt_reconfigure` opens the same GUI window as it did earlier in the case of server, but it also shows the updates in parameters in real time. This synchronization is handled in the background by the `dynamic_reconfigure` package.
+
+### Simple Library Node
+
+| Field | Value |
+| :---- | :---- |
+| Name | `simple_library_node` |
+| File | [src/simple_library_node.cpp](./src/simple_library_node.cpp) |
+| Library | `simple_library` [library](./../basic_cpp_libs/README.md) |
+
+A node made to demonstrate how to use a simple library of another package, here the library is `simple_library` in `basic_cpp_libs` package. You might want to explore the library and its building procedures first (before proceeding here).
+
+#### Building and Running
+
+Add the dependency on `basic_cpp_libs` by
+
+1. Add the `<depend>basic_cpp_libs</depend>` line in the `package.xml`
+2. Add `basic_cpp_libs` to the list of packages in `find_package(catkin REQUIRED COMPONENTS ...)` function in the `CMakeLists.txt` file
+
+To install this node, add the following in the `CMakeLists.txt` at the appropriate places
+
+```makefile
+add_executable(cpp_simple_library_node src/simple_library_node.cpp)
+target_link_libraries(cpp_simple_library_node ${catkin_LIBRARIES})
+```
+
+To run this node, first run `roscore` and then run
+
+```bash
+rosrun cpp_basic_nodes cpp_simple_library_node
+```
+
+### Basic Math Node
+
+| Field | Value |
+| :---- | :---- |
+| Name | `basic_math_node` |
+| File | [src/basic_math_node.cpp](./src/basic_math_node.cpp) |
+| Library | `basic_math` [library](./../basic_cpp_libs/README.md) |
+
+A node made to demonstrate how to use a relative complex library from another package, here the library is `basic_math` from `basic_cpp_libs` package. You might want to explore the library and its building procedures first (before proceeding here).
+
+#### Building and Running
+
+Add the dependency on `basic_cpp_libs` by
+
+1. Add the `<depend>basic_cpp_libs</depend>` line in the `package.xml`
+2. Add `basic_cpp_libs` to the list of packages in `find_package(catkin REQUIRED COMPONENTS ...)` function in the `CMakeLists.txt` file
+
+To install this node, add the following in the `CMakeLists.txt` at the appropriate places
+
+```makefile
+add_executable(cpp_basic_math_node src/basic_math_node.cpp)
+target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
+```
+
+To run this node, first run `roscore` and the run
+
+```bash
+rosrun cpp_basic_nodes cpp_basic_math_node
+```
 
 ## Services
 

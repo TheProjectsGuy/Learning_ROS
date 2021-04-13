@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(cpp_basic_nodes)
+project(basic_cpp_libs)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -9,13 +9,6 @@ project(cpp_basic_nodes)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  message_generation
-  std_msgs
-  actionlib
-  genmsg
-  actionlib_msgs
-  dynamic_reconfigure
-  basic_cpp_libs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -64,10 +57,6 @@ find_package(catkin REQUIRED COMPONENTS
 #   Service1.srv
 #   Service2.srv
 # )
-add_service_files(
-    FILES
-    AddAllFloat64Numbers_cpp.srv
-)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -75,21 +64,12 @@ add_service_files(
 #   Action1.action
 #   Action2.action
 # )
-add_action_files(
-    FILES
-    CountNumbers_cpp.action
-)
 
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
 #   std_msgs  # Or other packages containing msgs
 # )
-generate_messages(
-    DEPENDENCIES
-    std_msgs    # Float64
-    actionlib_msgs
-)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -110,9 +90,6 @@ generate_messages(
 #   cfg/DynReconf1.cfg
 #   cfg/DynReconf2.cfg
 # )
-generate_dynamic_reconfigure_options(
-  cfg/FirstDR.cfg
-)
 
 ###################################
 ## catkin specific configuration ##
@@ -124,9 +101,9 @@ generate_dynamic_reconfigure_options(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES cpp_basic_nodes
-  CATKIN_DEPENDS roscpp message_runtime std_msgs actionlib_msgs
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME} ${PROJECT_NAME}_basic_math
+  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
 
@@ -137,14 +114,21 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/cpp_basic_nodes.cpp
+#   src/${PROJECT_NAME}/basic_cpp_libs.cpp
 # )
+add_library(${PROJECT_NAME}
+  src/simple_library.cpp
+)
+add_library(${PROJECT_NAME}_basic_math
+  # Important functions (source code)
+  src/basic_math/imp_functions/factorial.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -154,22 +138,9 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/cpp_basic_nodes_node.cpp)
-add_executable(simple_hello_world src/simple_hello_world.cpp)
-add_executable(simple_cpp_publisher src/simple_publisher.cpp)
-add_executable(simple_cpp_subscriber src/simple_subscriber.cpp)
-add_executable(simple_cpp_service_server src/simple_service_server.cpp)
-add_executable(simple_cpp_service_client src/simple_service_client.cpp)
-add_executable(simple_cpp_action_server src/simple_action_server.cpp)
-add_executable(simple_cpp_action_client src/simple_action_client.cpp)
-add_executable(simple_cpp_parameter_node src/simple_parameter_server.cpp)
-add_executable(launch1_publisher src/launch1_publisher.cpp)
-add_executable(launch1_subscriber src/launch1_subscriber.cpp)
-add_executable(launch1_parameters src/launch1_parameters.cpp)
-add_executable(simple_cpp_firstdr_server src/simple_FirstDR_server.cpp)
-add_executable(simple_cpp_firstdr_client src/simple_FirstDR_client.cpp)
-add_executable(cpp_simple_library_node src/simple_library_node.cpp)
-add_executable(cpp_basic_math_node src/basic_math_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/basic_cpp_libs_node.cpp)
+add_executable(simple_library_node src/simple_library_node.cpp)
+add_executable(basic_math_node src/basic_math_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -180,32 +151,17 @@ add_executable(cpp_basic_math_node src/basic_math_node.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_service_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_service_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_action_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_action_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_firstdr_server ${PROJECT_NAME}_gencfg)
-add_dependencies(simple_cpp_firstdr_client ${PROJECT_NAME}_gencfg)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(simple_hello_world ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_publisher ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_subscriber ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_service_server ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_service_client ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_action_server ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_action_client ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_parameter_node ${catkin_LIBRARIES})
-target_link_libraries(launch1_publisher ${catkin_LIBRARIES})
-target_link_libraries(launch1_subscriber ${catkin_LIBRARIES})
-target_link_libraries(launch1_parameters ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_firstdr_server ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_firstdr_client ${catkin_LIBRARIES})
-target_link_libraries(cpp_simple_library_node ${catkin_LIBRARIES})
-target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
+# Libraries in this package
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_basic_math ${catkin_LIBRARIES})
+# Nodes in the package
+target_link_libraries(simple_library_node ${catkin_LIBRARIES} ${PROJECT_NAME})
+target_link_libraries(basic_math_node ${catkin_LIBRARIES} ${PROJECT_NAME}_basic_math)
 
 #############
 ## Install ##
@@ -234,6 +190,11 @@ target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 # )
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_basic_math
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+)
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
@@ -241,6 +202,16 @@ target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
 #   FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
 # )
+# simple_library library
+install(
+  DIRECTORY include/${PROJECT_NAME}
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+# basic_math library
+install(
+  DIRECTORY include/basic_math
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/basic_math
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
@@ -254,7 +225,7 @@ target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_cpp_basic_nodes.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_basic_cpp_libs.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

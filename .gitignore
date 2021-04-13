@@ -11,7 +11,12 @@
 # Ignore the build, devel and .catkin_workspace files
 devel/
 build/
+logs/
+.catkin_tools/
 .catkin_workspace
+
+# Ignore Python compiled files
+*.pyc
 
 # Ignore previous and archive files
 prev_*

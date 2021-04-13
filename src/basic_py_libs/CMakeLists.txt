@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(cpp_basic_nodes)
+project(basic_py_libs)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,14 +8,7 @@ project(cpp_basic_nodes)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  message_generation
-  std_msgs
-  actionlib
-  genmsg
-  actionlib_msgs
-  dynamic_reconfigure
-  basic_cpp_libs
+  rospy
 )
 
 ## System dependencies are found with CMake's conventions
@@ -26,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 # catkin_python_setup()
+catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -64,10 +58,6 @@ find_package(catkin REQUIRED COMPONENTS
 #   Service1.srv
 #   Service2.srv
 # )
-add_service_files(
-    FILES
-    AddAllFloat64Numbers_cpp.srv
-)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -75,21 +65,12 @@ add_service_files(
 #   Action1.action
 #   Action2.action
 # )
-add_action_files(
-    FILES
-    CountNumbers_cpp.action
-)
 
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
 #   std_msgs  # Or other packages containing msgs
 # )
-generate_messages(
-    DEPENDENCIES
-    std_msgs    # Float64
-    actionlib_msgs
-)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -110,9 +91,6 @@ generate_messages(
 #   cfg/DynReconf1.cfg
 #   cfg/DynReconf2.cfg
 # )
-generate_dynamic_reconfigure_options(
-  cfg/FirstDR.cfg
-)
 
 ###################################
 ## catkin specific configuration ##
@@ -125,8 +103,8 @@ generate_dynamic_reconfigure_options(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES cpp_basic_nodes
-  CATKIN_DEPENDS roscpp message_runtime std_msgs actionlib_msgs
+#  LIBRARIES basic_py_libs
+#  CATKIN_DEPENDS rospy
 #  DEPENDS system_lib
 )
 
@@ -143,7 +121,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/cpp_basic_nodes.cpp
+#   src/${PROJECT_NAME}/basic_py_libs.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -154,22 +132,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/cpp_basic_nodes_node.cpp)
-add_executable(simple_hello_world src/simple_hello_world.cpp)
-add_executable(simple_cpp_publisher src/simple_publisher.cpp)
-add_executable(simple_cpp_subscriber src/simple_subscriber.cpp)
-add_executable(simple_cpp_service_server src/simple_service_server.cpp)
-add_executable(simple_cpp_service_client src/simple_service_client.cpp)
-add_executable(simple_cpp_action_server src/simple_action_server.cpp)
-add_executable(simple_cpp_action_client src/simple_action_client.cpp)
-add_executable(simple_cpp_parameter_node src/simple_parameter_server.cpp)
-add_executable(launch1_publisher src/launch1_publisher.cpp)
-add_executable(launch1_subscriber src/launch1_subscriber.cpp)
-add_executable(launch1_parameters src/launch1_parameters.cpp)
-add_executable(simple_cpp_firstdr_server src/simple_FirstDR_server.cpp)
-add_executable(simple_cpp_firstdr_client src/simple_FirstDR_client.cpp)
-add_executable(cpp_simple_library_node src/simple_library_node.cpp)
-add_executable(cpp_basic_math_node src/basic_math_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/basic_py_libs_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -180,32 +143,11 @@ add_executable(cpp_basic_math_node src/basic_math_node.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_service_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_service_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_action_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_action_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(simple_cpp_firstdr_server ${PROJECT_NAME}_gencfg)
-add_dependencies(simple_cpp_firstdr_client ${PROJECT_NAME}_gencfg)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(simple_hello_world ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_publisher ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_subscriber ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_service_server ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_service_client ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_action_server ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_action_client ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_parameter_node ${catkin_LIBRARIES})
-target_link_libraries(launch1_publisher ${catkin_LIBRARIES})
-target_link_libraries(launch1_subscriber ${catkin_LIBRARIES})
-target_link_libraries(launch1_parameters ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_firstdr_server ${catkin_LIBRARIES})
-target_link_libraries(simple_cpp_firstdr_client ${catkin_LIBRARIES})
-target_link_libraries(cpp_simple_library_node ${catkin_LIBRARIES})
-target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -220,6 +162,11 @@ target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
+catkin_install_python(PROGRAMS
+  scripts/simple_module_node.py
+  scripts/basic_math_node.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
@@ -254,7 +201,7 @@ target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_cpp_basic_nodes.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_basic_py_libs.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

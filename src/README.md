@@ -8,7 +8,6 @@ All the packages in this repository.
     - [Table of contents](#table-of-contents)
     - [Foreword](#foreword)
     - [Basic Packages](#basic-packages)
-        - [Miscellaneous](#miscellaneous)
     - [References](#references)
 
 ## Foreword
@@ -31,43 +30,27 @@ Essential packages that every beginner must know before proceeding with any ROS 
     <tr>
         <td> 1 </td>
         <td style="text-align:center"> Basic Nodes </td>
-        <td> <a href="./cpp_basic_nodes/README.md">cpp_basic_nodes</a> </td>
-        <td> <a href="./py_basic_nodes/README.md">py_basic_nodes</a> </td>
+        <td> <a href="./cpp_basic_nodes/README.md"> cpp_basic_nodes </a> </td>
+        <td> <a href="./py_basic_nodes/README.md"> py_basic_nodes </a> </td>
         <td>
             <b> Basic Nodes</b>: Hello world, Publisher, Subscriber, Service (Server and Client), Actions (Server and Client), Parameters, Dynamic Reconfigure
         </td>
     </tr>
     <tr>
         <td> 2 </td>
+        <td style="text-align:center"> External Libraries </td>
+        <td> <a href="./basic_cpp_libs/README.md"> basic_cpp_libs </a> </td>
+        <td> <a href="./basic_py_libs/README.md"> basic_py_libs </a> </td>
+        <td>
+            <b> Basic Libraries and Modules </b>: A simple library (to compartmentalize complex codes and keep nodes simple)
+        </td>
+    </tr>
+    <tr>
+        <td> 3 </td>
         <td style="text-align:center"> Basic Robotics </td>
-        <td style="text-align:center" colspan="2">
-            <a href="./basic_robotics/README.md">basic_robotics</a>
-        </td>
+        <td colspan="2" style="text-align:center"> <a href="./basic_robotics/README.md"> basic_robotics </a> </td>
         <td>
-            <b> Basic Robotics </b>: RViz introduction
-        </td>
-    </tr>
-</table>
-
-### Miscellaneous
-
-Packages that could be traversed in any order
-
-<table>
-    <tr>
-        <th> S.No. </th>
-        <th> Title </th>
-        <th colspan="2" style="text-align:center"> Package </th>
-        <th> Description </th>
-    </tr>
-    <tr>
-        <td> 1 </td>
-        <td style="text-align:center"> Shared Libraries </td>
-        <td style="text-align:center" colspan="2">
-            <a href="./shared_libs/README.md">shared_libs</a>
-        </td>
-        <td>
-            <b> Shared Libraries </b>: Python modules and C++ libraries in ROS Packages
+            <b>Basic Robotics</b>: RViz introduction
         </td>
     </tr>
 </table>
