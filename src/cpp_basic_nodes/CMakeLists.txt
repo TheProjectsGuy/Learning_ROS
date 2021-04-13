@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   genmsg
   actionlib_msgs
   dynamic_reconfigure
+  basic_cpp_libs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -167,6 +168,8 @@ add_executable(launch1_subscriber src/launch1_subscriber.cpp)
 add_executable(launch1_parameters src/launch1_parameters.cpp)
 add_executable(simple_cpp_firstdr_server src/simple_FirstDR_server.cpp)
 add_executable(simple_cpp_firstdr_client src/simple_FirstDR_client.cpp)
+add_executable(cpp_simple_library_node src/simple_library_node.cpp)
+add_executable(cpp_basic_math_node src/basic_math_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -201,6 +204,8 @@ target_link_libraries(launch1_subscriber ${catkin_LIBRARIES})
 target_link_libraries(launch1_parameters ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_firstdr_server ${catkin_LIBRARIES})
 target_link_libraries(simple_cpp_firstdr_client ${catkin_LIBRARIES})
+target_link_libraries(cpp_simple_library_node ${catkin_LIBRARIES})
+target_link_libraries(cpp_basic_math_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
