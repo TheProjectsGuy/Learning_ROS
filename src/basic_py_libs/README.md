@@ -1,6 +1,6 @@
 # Python Libraries
 
-Basic python libraries
+Basic python libraries to demonstrate creating modules in ROS packages.
 
 ## Table of content
 
@@ -41,12 +41,19 @@ Suggested order of traversal for the items in this package (specially for beginn
 | S. No. | Name | Link | Description |
 | :---- | :---: | :--- | :---- |
 | 1 | Simple Module | [Modules > SimpleModule](#simplemodule) | A basic module for demonstrating modules |
+| 2 | Node: Simple Module | [Nodes > SimpleModuleNode](#simplemodulenode) | A node to demonstrate using the `simple_module` library |
+| 3 | Basic Math Module | [Modules > BasicMath](#basicmath) | A basic math module, created to demonstrate sub-modules |
+| 4 | Node: Basic Math Module | [Node > BasicMathNode](#basicmathnode) | A node to demonstrate using the `basic_math` library |
 
 ## Modules
 
 Modules defined in this package. As a convention, modules are put inside the `src` folder.
 
 ### SimpleModule
+
+| Field | Value |
+| :--- | :--- |
+| Path | [src/simple_module](./src/simple_module/README.md) |
 
 A module to only demonstrate how python modules can be created in packages.
 
@@ -88,13 +95,19 @@ Python code usually do not require building, but to make your created modules im
 
 3. Run `catkin_make` in the workspace directory to build your workspace.
 
-After a successful build, you must see a folder `devel/lib/python3/dist-packages/simple_module` in your workspace. This is the module that can be imported by nodes (it is a wrapper around your actual module). A sample node is written in this package. You may have to source your ROS workspace again, do it by running the following in the workspace directory
+After a successful build, you must see a folder `devel/lib/python3/dist-packages/simple_module` in your workspace. This is the module that can be imported by nodes (it is a wrapper around your actual module) and the generation of this is what is implied by _installation_ of a Python library. 
+
+A [sample node](#simplemodulenode) is written in this package. You may have to source your ROS workspace again, do it by running the following in the workspace directory
 
 ```bash
 source ./devel/setup.bash
 ```
 
 ### BasicMath
+
+| Field | Value |
+| :--- | :--- |
+| Path | [src/basic_math](./src/basic_math/README.md) |
 
 A module made to demonstrate how submodules can be made and imported. The module's tree is as follows
 
@@ -127,7 +140,9 @@ setup_args = generate_distutils_setup(
 )
 ```
 
-Then, run `catkin_make` in the workspace directory.
+Then, run `catkin_make` in the workspace directory. Just like in the case of `simple_module` library, you must now see a `basic_math` module under `devel/lib/python3/dist-packages/` folder. This means that the library is successfully installed.
+
+A [sample node](#basicmathnode) is written in this package. You may have to source the workspace after building this library.
 
 ## Nodes
 

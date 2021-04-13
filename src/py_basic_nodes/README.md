@@ -720,7 +720,12 @@ This node simply includes the functionality of the `simple_module` python module
 
 #### Building and Running
 
-Add the `scripts/simple_module_node.py` file to the `catkin_install_python` function. Then, run `catkin_make` in the workspace directory. To run this node, ensure that `roscore` is running first and then run
+Add the dependency on `basic_py_libs` by
+
+1. Adding the `<depend>basic_py_libs</depend>` line in `package.xml`
+2. Adding `basic_py_libs` in the `find_package(catkin REQUIRED COMPONENTS ...` list
+
+To install the script, add the `scripts/simple_module_node.py` file to the `catkin_install_python` function in `CMakeLists.txt`. Then, run `catkin_make` in the workspace directory. To run this node, ensure that `roscore` is running first and then run
 
 ```bash
 rosrun basic_py_libs simple_module_node.py
@@ -738,7 +743,12 @@ This node simply demonstrates how to access functionality of the `basic_math` py
 
 #### Building and Running
 
-Add the script `script/basic_math_node.py` to `catkin_install_python` function in CMakeLists.txt and run `catkin_make` in the workspace directory. To run this node, first run `roscore` and then run
+Add the dependency on `basic_py_libs` by
+
+1. Adding the `<depend>basic_py_libs</depend>` line in `package.xml`
+2. Adding `basic_py_libs` in the `find_package(catkin REQUIRED COMPONENTS ...` list
+
+To install the script, add the script `script/basic_math_node.py` to `catkin_install_python` function in `CMakeLists.txt` and run `catkin_make` in the workspace directory. To run this node, first run `roscore` and then run
 
 ```bash
 rosrun basic_py_libs basic_math_node.py
