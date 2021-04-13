@@ -14,6 +14,6 @@ def factorial(num):
             The result, which is num!
     """
     res = 1
-    for num in range(2, num + 1):
-        res *= num
+    for n in range(2, num + 1):
+        res *= n
     return res

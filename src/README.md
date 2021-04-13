@@ -36,6 +36,15 @@ Essential packages that every beginner must know before proceeding with any ROS 
             <b> Basic Nodes</b>: Hello world, Publisher, Subscriber, Service (Server and Client), Actions (Server and Client), Parameters, Dynamic Reconfigure
         </td>
     </tr>
+    <tr>
+        <td> 2 </td>
+        <td style="text-align:center"> External Libraries </td>
+        <td> <a href="./basic_cpp_libs/README.md"> basic_cpp_libs </a> </td>
+        <td> <a href="./basic_py_libs/README.md"> basic_py_libs </a> </td>
+        <td>
+            <b> Basic Libraries and Modules </b>: A simple library (to compartmentalize complex codes and keep nodes simple)
+        </td>
+    </tr>
 </table>
 
 ## References
