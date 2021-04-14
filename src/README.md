@@ -7,7 +7,8 @@ All the packages in this repository.
 - [Packages for Learning ROS](#packages-for-learning-ros)
     - [Table of contents](#table-of-contents)
     - [Foreword](#foreword)
-    - [Basic Packages](#basic-packages)
+    - [Packages](#packages)
+        - [Basic Packages](#basic-packages)
     - [References](#references)
 
 ## Foreword
@@ -16,7 +17,11 @@ This folder contains all the packages in this repository made for the purpose of
 
 For most of the packages, specially those which have traditional coding involved, a C++ and a Python version are made as separate packages.
 
-## Basic Packages
+## Packages
+
+Packages included in this repository
+
+### Basic Packages
 
 Essential packages that every beginner must know before proceeding with any ROS application
 
