@@ -25,4 +25,6 @@
     </node>
     <!-- C++ Node: t1_tf_broadcaster -->
     <node pkg="basic_robotics" type="t1_tf_broadcaster" name="t1_tf_broadcaster"/>
+    <!-- C++ Node: t1_markers_publisher -->
+    <node pkg="basic_robotics" type="t1_markers_publisher" name="t1_markers_publisher"/>
 </launch>

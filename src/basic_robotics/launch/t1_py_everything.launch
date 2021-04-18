@@ -25,4 +25,6 @@
     </node>
     <!-- Python Node: t1_tf_publisher.py -->
     <node pkg="basic_robotics" type="t1_tf_publisher.py" name="t1_py_tf_broadcaster"/>
+    <!-- Python Node: t1_markers_publisher.py -->
+    <node pkg="basic_robotics" type="t1_markers_publisher.py" name="t1_markers_publisher"/>
 </launch>

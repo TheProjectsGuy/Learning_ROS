@@ -26,6 +26,8 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [TF Publisher (C++) for Tutorial 1](#tf-publisher-c-for-tutorial-1)
             - [Building](#building-1)
             - [Running](#running-1)
+        - [Marker and Static TF Publisher (C++) for Tutorial 1](#marker-and-static-tf-publisher-c-for-tutorial-1)
+            - [Building and Running](#building-and-running)
     - [Python Nodes](#python-nodes)
         - [Laser Scan Publisher (Python) for Tutorial 1](#laser-scan-publisher-python-for-tutorial-1)
             - [Building](#building-2)
@@ -33,6 +35,8 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [TF Publisher (Python) for Tutorial 1](#tf-publisher-python-for-tutorial-1)
             - [Building](#building-3)
             - [Running](#running-3)
+        - [Marker and Static TF Publisher (Python) for Tutorial 1](#marker-and-static-tf-publisher-python-for-tutorial-1)
+            - [Building and Running](#building-and-running-1)
     - [RViz configuration files](#rviz-configuration-files)
         - [LaserScan and TF for Tutorial 1](#laserscan-and-tf-for-tutorial-1)
         - [RobotDescription and TF for Tutorial 2](#robotdescription-and-tf-for-tutorial-2)
@@ -64,7 +68,7 @@ Short tutorials included in this package made to cover essential concepts. They 
 | S. No. | Name | Notes |
 | :--- | :--- | :--- |
 | 1 | [Getting Started with RViz](#tutorial-0-getting-started-with-rviz) | Launching RViz and terminologies |
-| 2 | [Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz) | Visualize `TF` and `LaserScan` using dummy publishers |
+| 2 | [Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz) | Visualize `TF`, `Marker` and `LaserScan` using dummy publishers |
 | 3 | [Building and Visualizing Robot Models](#tutorial-2-building-and-visualizing-robot-models) | Building a four wheel robot using `URDF` and `XACRO`, then visualizing it using `RobotModel` |
 
 ### Tutorial 0: Getting Started with RViz
@@ -107,15 +111,17 @@ In this tutorial, we explore how to visualize data on a topic in RViz. For this 
 
 This tutorial uses the following resources of this package
 
-| S. No. | File | Purpose | Notes |
+| S. No. | File / Node name | Purpose | Notes |
 | :--- | :--- | :---: | :---- |
 | 1 | [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1) | RViz configuration file | The configuration file consisting of `LaserScan` and `TF` display and an `Axes` |
 | 2a | [t1_cpp_laser_scan_publisher](#laser-scan-publisher-c-for-tutorial-1) | C++ Publisher | Dummy publisher for `LaserScan` |
 | 2b | [t1_laser_scan_publisher.py](#laser-scan-publisher-python-for-tutorial-1) | Python Publisher | Dummy publisher for `LaserScan` |
 | 3a | [t1_cpp_tf_broadcaster](#tf-publisher-c-for-tutorial-1) | C++ Transform Broadcaster | Dummy publisher / broadcaster for `TF` |
 | 3b | [t1_tf_publisher.py](#tf-publisher-python-for-tutorial-1) | Python Transform Broadcaster | Dummy publisher / broadcaster for `TF` |
-| 4a | [t1_cpp_everything.launch](#launch-c-for-tutorial-1) | Launch file (C++) | Launch file for launching all C++ nodes described above |
-| 4b | [t1_py_everything.launch](#launch-python-for-tutorial-1) | Launch file (Python) | Launch file for launching all Python nodes described above |
+| 4a | [t1_cpp_markers_publisher](#marker-and-static-tf-publisher-c-for-tutorial-1) | C++ Marker and Static Transform publisher | Dummy publisher for `/tf_static` and a sphere marker in RViz |
+| 4b | [t1_markers_publisher.py](#marker-and-static-tf-publisher-python-for-tutorial-1) | Python Marker and Static Transform publisher | Dummy publisher for `/tf_static` and a sphere marker in RViz |
+| 5a | [t1_cpp_everything.launch](#launch-c-for-tutorial-1) | Launch file (C++) | Launch file for launching all C++ nodes described above |
+| 5b | [t1_py_everything.launch](#launch-python-for-tutorial-1) | Launch file (Python) | Launch file for launching all Python nodes described above |
 
 To run everything in this tutorial, use the command
 
@@ -209,8 +215,9 @@ Launches all the C++ Nodes for tutorial 1, along with RViz and TF visualization 
 
 1. [t1_cpp_tf_broadcaster](#tf-publisher-c-for-tutorial-1)
 2. [t1_cpp_laser_scan_publisher](#laser-scan-publisher-c-for-tutorial-1)
-3. RViz with the configuration file for the tutorial: [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1)
-4. Node `rqt_tf_tree` of package `rqt_tf_tree`
+3. [t1_cpp_markers_publisher](#marker-and-static-tf-publisher-c-for-tutorial-1)
+4. RViz with the configuration file for the tutorial: [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1)
+5. Node `rqt_tf_tree` of package `rqt_tf_tree`
 
 ### Launch Python for Tutorial 1
 
@@ -223,8 +230,9 @@ Launches all the Python Nodes for tutorial 1, along with RViz and TF visualizati
 
 1. [t1_py_laser_scan_publisher](#laser-scan-publisher-python-for-tutorial-1)
 2. [t1_py_tf_broadcaster](#tf-publisher-python-for-tutorial-1)
-3. RViz with the configuration file for the tutorial: [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1)
-4. Node `rqt_tf_tree` of package `rqt_tf_tree`
+3. [t1_py_markers_publisher](#marker-and-static-tf-publisher-python-for-tutorial-1)
+4. RViz with the configuration file for the tutorial: [LaserScan_TF_T1](#laserscan-and-tf-for-tutorial-1)
+5. Node `rqt_tf_tree` of package `rqt_tf_tree`
 
 ### Launch single link for Tutorial 2
 
@@ -391,6 +399,31 @@ The output must be something show a transformation tree somewhat like this
 
 ![TF observed in rqt_tf_tree](./media/pic6.png)
 
+### Marker and Static TF Publisher (C++) for Tutorial 1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t1_cpp_markers_publisher` |
+| File | [src/t1_markers_publilsher.cpp](./src/t1_markers_publilsher.cpp) |
+
+This node publishes static transformations on the `/tf_static` topic. It also publishes a sphere marker. This node is included in the [launch file](#launch-c-for-tutorial-1) for [tutorial 1](#tutorial-1-visualizing-data-in-rviz).
+
+#### Building and Running
+
+In `CMakeLists.txt` add the following
+
+1. In the `find_package` function, add dependency on `geometry_msgs` and `visualization_msgs`. Add them also to the `CATKIN_DEPENDS` list in `catkin_package` function.
+2. Add the following lines at appropriate places for building the executables
+
+    ```makefile
+    add_executable(t1_markers_publisher src/t1_markers_publilsher.cpp)
+    target_link_libraries(t1_markers_publisher ${catkin_LIBRARIES})
+    ```
+
+In the `package.xml` file, add `<build_depend>`, `<exec_depend>` and `<build_export_depend>` tags for `geometry_msgs` and `visualization_msgs` package (dependencies).
+
+Build the package using `catkin_make` in the workspace directory. This node is included in the [launch file](#launch-c-for-tutorial-1) for [tutorial 1](#tutorial-1-visualizing-data-in-rviz).
+
 ## Python Nodes
 
 ### Laser Scan Publisher (Python) for Tutorial 1
@@ -539,6 +572,26 @@ The output must be something show a transformation tree somewhat like this
 
 ![TF observed in rqt_tf_tree](./media/pic6.png)
 
+### Marker and Static TF Publisher (Python) for Tutorial 1
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t1_py_markers_publisher` |
+| File | [scripts/t1_markers_publisher.py](./scripts/t1_markers_publisher.py) |
+
+This node publishes static transformations on the `/tf_static` topic. It also publishes a sphere marker. This node is included in the [launch file](#launch-python-for-tutorial-1) for [tutorial 1](#tutorial-1-visualizing-data-in-rviz).
+
+#### Building and Running
+
+In `CMakeLists.txt` add the following
+
+1. In the `find_package` function, add dependency on `geometry_msgs` and `visualization_msgs`. Add them also to the `CATKIN_DEPENDS` list in `catkin_package` function.
+2. Add `scripts/t1_markers_publisher.py` to `PROGRAMS` in the `catkin_install_python` function.
+
+In the `package.xml` file, add `<build_depend>`, `<exec_depend>` and `<build_export_depend>` tags for `geometry_msgs` and `visualization_msgs` package (dependencies).
+
+Build the package using `catkin_make` in the workspace directory. This node is included in the [launch file](#launch-python-for-tutorial-1) for [tutorial 1](#tutorial-1-visualizing-data-in-rviz).
+
 ## RViz configuration files
 
 ### LaserScan and TF for Tutorial 1
@@ -554,8 +607,9 @@ This file is made for Tutorial 1. It is to view a `LaserScan` and a `TF`. Here's
 2. Add an `Axes` on the frame. This will serve as a reference frame (to know where the X, Y and Z of the world frame are). Customize it to your liking.
 3. Add a `LaserScan`. This will be used to display a 2D laser scan in the frame. For now, let the topic be empty.
 4. Add a `TF`. This will enable us to visualize the transformation tree on a topic called `/tf`.
-5. Save the configuration in the folder `rviz` inside the workspace (the file is linked above).
-6. Close rviz and try running the following commands to test if everything is working
+5. Add a `Marker` and set the topic to `/visualization_marker` for source.
+6. Save the configuration in the folder `rviz` inside the workspace (the file is linked above).
+7. Close rviz and try running the following commands to test if everything is working
 
     ```bash
     roscd basic_robotics
