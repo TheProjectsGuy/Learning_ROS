@@ -5,7 +5,7 @@
  * 
  * This node takes the following paraemters
  *  - ~/pub_topic (string): Publishing topic name (default: /t1_laser_scan)
- *  - ~/pub_freq (double): Publishing frequency in Hz (default: 10 Hz)
+ *  - ~/pub_freq (double): Publishing frequency in Hz (default: 5 Hz)
  *  - ~/pub_frame (string): Frame for header (header -> frame_id) (default: global)
  */
 
@@ -53,11 +53,11 @@ int main(int argc, char **argv)
         if (nh.getParam("pub_freq", pub_frequency)) {
             ROS_INFO_STREAM("Publishing frequency set to '" << pub_frequency << " Hz'");
         } else {
-            pub_frequency = 10;
+            pub_frequency = 5;
             ROS_WARN_STREAM("Publishing frequency could not be parsed to double, using default '" << pub_frequency << " Hz'");
         }
     } else {
-        pub_frequency = 10;
+        pub_frequency = 5;
         ROS_INFO_STREAM("Publishing frequency set to '" << pub_frequency << " Hz'");
     }
     // Configure the publishing frame

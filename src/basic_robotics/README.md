@@ -194,7 +194,7 @@ This communication process is observed through the `rqt_graph` GUI shown above. 
 
 ![RViz jogging joints](./media/pic14.png)
 
-You must also observe the messages on topics `/joint_states` and `/tf` (notice that they are published continuously). You may close the files as we will now be exploring a much more sophisticated robot.
+You must also observe the messages on topics `/joint_states` and `/tf` (notice that they are published continuously). Note that you could also create a publisher for `/tf` (like we did in [tutorial 1](#tutorial-1-visualizing-data-in-rviz)) instead of using the joint state and robot state publisher. You may close the files as we will now be exploring a much more sophisticated robot.
 
 ## Launch Files
 

@@ -5,7 +5,7 @@
     
     This node takes the following paraemters
         - ~/pub_topic (string): Publishing topic name (default: /t1_laser_scan)
-        - ~/pub_freq (double): Publishing frequency in Hz (default: 10 Hz)
+        - ~/pub_freq (double): Publishing frequency in Hz (default: 5 Hz)
         - ~/pub_frame (string): Frame for header (header -> frame_id) (default: global)
 """
 
@@ -33,7 +33,7 @@ def main():
             rospy.logwarn("Publishing topic could not be parsed to string, using default (error: {})".format(err))
     rospy.loginfo("Publishing topic set to '{0}'".format(pub_topic_name))
     # Configure the publishing frequency
-    pub_frequency = 10
+    pub_frequency = 5
     if rospy.has_param("{nm}/pub_freq".format(nm=rospy.get_name())):
         try:
             pub_frequency = float(rospy.get_param("{nm}/pub_freq".format(nm=rospy.get_name())))

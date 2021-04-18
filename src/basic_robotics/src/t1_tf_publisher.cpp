@@ -12,6 +12,7 @@
  * abstract and the whole process would become easier to deal with.
  * 
  * Docs (C++ API): https://docs.ros.org/en/latest/api/tf2_ros/html/c++/
+ * Docs (TransformBroadcaster class): https://docs.ros.org/en/latest/api/tf2_ros/html/c++/classtf2__ros_1_1TransformBroadcaster.html
  */
 #include <tf2_ros/transform_broadcaster.h>
 // Include the header file for creating quaternions
