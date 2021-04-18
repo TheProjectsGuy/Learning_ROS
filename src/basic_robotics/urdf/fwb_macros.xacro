@@ -53,6 +53,8 @@
             - m: Mass of the wheel
             - r: Radius of wheel
             - h: Height / Depth of wheel
+        Returns:
+            The <link> and <joint> elements for the wheel
     -->
     <xacro:macro name="add_wheel" params="sx sy sz lname jname m r h">
         <!-- Link -->

@@ -1,9 +1,9 @@
 <launch>
     <!-- Arguments -->
     <arg name="rviz_config" default="$(find basic_robotics)/rviz/RobotViz_T3.rviz" doc="The .rviz configuration file" />
-    <arg name="robot_file" default="$(find basic_robotics)/urdf/simple_fwb.xacro" doc="A .xacro file to display (full path)" />
+    <arg name="xacro_file" default="$(find basic_robotics)/urdf/simple_fwb.xacro" doc="A .xacro file to display (full path)" />
     <!-- Parameters -->
-    <param name="robot_description" command="xacro $(arg robot_file)" />
+    <param name="robot_description" command="xacro $(arg xacro_file)" />
     <!-- RViz node -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" required="true" />
     <!-- Joint State Publisher (GUI) -->
@@ -17,4 +17,6 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <!-- rqt_graph GUI -->
     <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph" />
+    <!-- View tf tree -->
+    <node name="rqt_tf_tree" pkg="rqt_tf_tree" type="rqt_tf_tree" />
 </launch>

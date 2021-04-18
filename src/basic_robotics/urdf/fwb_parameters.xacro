@@ -2,12 +2,12 @@
 <!-- This file contains parameters for the four wheel robot -->
 <robot name="fw_robot" xmlns:xacro="http://www.ros.org/wiki/xacro" >
     <!-- Parameters for the robot body (cuboid) -->
-    <xacro:property name="body_m" value="2.0" />    <!-- Mass -->
-    <xacro:property name="body_sx" value="1" /> <!-- Side Length: X Axis -->
-    <xacro:property name="body_sy" value="0.5" /> <!-- Side Length: Y Axis -->
-    <xacro:property name="body_sz" value="0.25" /> <!-- Side Length: Z Axis -->
+    <xacro:property name="body_m" value="20" />    <!-- Mass (kg) -->
+    <xacro:property name="body_sx" value="0.544" /> <!-- Side Length: X Axis (m) -->
+    <xacro:property name="body_sy" value="0.420" /> <!-- Side Length: Y Axis (m) -->
+    <xacro:property name="body_sz" value="0.260" /> <!-- Side Length: Z Axis (m) -->
     <!-- Parameters for robot wheels (cylinders) -->
-    <xacro:property name="wheel_m" value="0.25" />  <!-- Mass -->
-    <xacro:property name="wheel_r" value="0.125" /> <!-- Wheel radius -->
-    <xacro:property name="wheel_h" value="0.0625" /> <!-- Wheel height -->
+    <xacro:property name="wheel_m" value="1" />  <!-- Mass (kg) -->
+    <xacro:property name="wheel_r" value="0.165" /> <!-- Wheel radius (m) -->
+    <xacro:property name="wheel_h" value="0.125" /> <!-- Wheel height (m) -->
 </robot>

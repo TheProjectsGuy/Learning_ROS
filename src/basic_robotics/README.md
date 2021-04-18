@@ -14,6 +14,8 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Tutorial 2: Building and visualizing robot models](#tutorial-2-building-and-visualizing-robot-models)
             - [Part 1: Visualizing a single link](#part-1-visualizing-a-single-link)
             - [Part 2: Jogging a two link manipulator](#part-2-jogging-a-two-link-manipulator)
+        - [Tutorial 3: Gazebo and a Four Wheel Robot](#tutorial-3-gazebo-and-a-four-wheel-robot)
+            - [Part 1: Simple Four Wheel Robot and Gazebo World](#part-1-simple-four-wheel-robot-and-gazebo-world)
     - [Launch Files](#launch-files)
         - [Launch C++ for Tutorial 1](#launch-c-for-tutorial-1)
         - [Launch Python for Tutorial 1](#launch-python-for-tutorial-1)
@@ -44,6 +46,8 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Single block for Tutorial 2](#single-block-for-tutorial-2)
         - [Two Blocks for Tutorial 2](#two-blocks-for-tutorial-2)
             - [Checking URDFs](#checking-urdfs)
+    - [XACRO Files](#xacro-files)
+        - [Simple Four Wheel Bot for Tutorial 3](#simple-four-wheel-bot-for-tutorial-3)
     - [Reference](#reference)
 
 ## Creating this package
@@ -69,7 +73,8 @@ Short tutorials included in this package made to cover essential concepts. They 
 | :--- | :--- | :--- |
 | 1 | [Getting Started with RViz](#tutorial-0-getting-started-with-rviz) | Launching RViz and terminologies |
 | 2 | [Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz) | Visualize `TF`, `Marker` and `LaserScan` using dummy publishers |
-| 3 | [Building and Visualizing Robot Models](#tutorial-2-building-and-visualizing-robot-models) | Building a four wheel robot using `URDF` and `XACRO`, then visualizing it using `RobotModel` |
+| 3 | [Building and Visualizing Robot Models](#tutorial-2-building-and-visualizing-robot-models) | Building a simple robot using `URDF`, then visualizing it in RViz using `RobotModel` |
+| 4 | [Gazebo and a Four Wheel Robot](#tutorial-3-gazebo-and-a-four-wheel-robot) | Creating a four wheel robot and simulating it in Gazebo |
 
 ### Tutorial 0: Getting Started with RViz
 
@@ -194,13 +199,44 @@ To understand what's happening, comment out the nodes `joint_state_publisher_gui
 This error is because there is nothing publishing the `/tf` frame transformations. We could create one for the primitive bot that we made, but that's impractical for large sophisticated robots. We also would like a GUI which would allow us to move the joints and inspect what is happening. Doing that using rqt for every robot we make is also hard. Therefore ros has two solutions for these tasks
 
 1. Node `joint_state_publisher_gui` (package name is also the same): This node will parse the `robot_description` ROS parameter from the parameter server, identify the joints, then create a GUI for publishing these joint values on a topic called `/joint_states`. The published messages are not to be confused with `/tf` as these are of type `sensor_msgs/JointState` (essentially an array of joint names, position, velocity, effort, etc.).
+
+    > More about `joint_state_publisher` [here](https://wiki.ros.org/joint_state_publisher) and `joint_state_publisher_gui` [here](https://wiki.ros.org/joint_state_publisher_gui).
+
 2. Node `robot_state_publisher` (package name is also the same): This node will subscribe to a topic called `/joint_state`, read the ROS parameter `robot_description` and then create a forward kinematics model (which can convert joint positions to actual frame transformations). This node, through this model of forward kinematics, publishes `/tf`. It also notices static (fixed) joints and publishes their information on topic `/tf_static` which persist and reduce the load on `/tf` topic.
+
+    > More about `robot_state_publisher` [here](https://wiki.ros.org/robot_state_publisher)
 
 This communication process is observed through the `rqt_graph` GUI shown above. Uncomment the previously commented files and try jogging (moving joints). The output must look similar to this
 
 ![RViz jogging joints](./media/pic14.png)
 
-You must also observe the messages on topics `/joint_states` and `/tf` (notice that they are published continuously). Note that you could also create a publisher for `/tf` (like we did in [tutorial 1](#tutorial-1-visualizing-data-in-rviz)) instead of using the joint state and robot state publisher. You may close the files as we will now be exploring a much more sophisticated robot.
+You must also observe the messages on topics `/joint_states` and `/tf` (notice that they are published continuously). Note that you could also create a publisher for `/tf` (like we did in [tutorial 1](#tutorial-1-visualizing-data-in-rviz)) instead of using the joint state and robot state publisher, or create a publisher for `/joint_states` and use `joint_state_publisher` instead of `joint_state_publisher_gui` (creating a joint controller for visualizing).
+
+You may close the files as we will now be exploring a much more sophisticated robot.
+
+### Tutorial 3: Gazebo and a Four Wheel Robot
+
+In this tutorial, we explore basic simulations. A full installation of ROS comes with an open source simulator called [Gazebo](http://gazebosim.org/) (source code on [GitHub](https://github.com/osrf/gazebo)) which enables simulating robots. We explore how to create and control a four wheel robot (with sensors mounted on it) and get real time data from the simulation to visualize in RViz.
+
+This tutorial uses the following resources of this package
+
+| S. No. | File / Node name | Purpose | Notes |
+| :--- | :--- | :---: | :---- |
+| 1 | [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) | XACRO file for visualization | A simple version of the four wheel robot. No sensors, only the robot with four wheels. |
+
+#### Part 1: Simple Four Wheel Robot and Gazebo World
+
+Creating a simple four wheel robot (only the base) using XACRO and visualizing it in RViz is explored in this part. Run the following command
+
+```bash
+roslaunch basic_robotics t3_viz_robot_xacro.launch
+```
+
+This will create the `RViz` and `joint_state_publisher_gui` GUIs as shown below
+
+![Simple four wheel robot in RViz](./media/pic15.png)
+
+Gazebo is a simulator (it has its own physics engine, simulating things like gravity, mechanics, etc.) that is widely used and comes with a full ROS installation. We now prepare a "world" in which we will simulate the four wheel robot (similar to one which is shown above).
 
 ## Launch Files
 
@@ -680,6 +716,36 @@ This will produce an output like following
 
 ![Check URDF output](./media/pic10.png)
 
+## XACRO Files
+
+The file format stands for *XML Macro* (XACRO). It is used to shorten and modularize big URDF files.
+
+### Simple Four Wheel Bot for Tutorial 3
+
+| Field | Value |
+| :---- | :---- |
+| Final URDF generated | [simple_fwb.urdf](./urdf/simple_fwb.urdf) |
+| Main XACRO file | [urdf/simple_fwb.xacro](./urdf/simple_fwb.xacro) |
+| Included XACRO files | [fwb_parameters.xacro](./urdf/fwb_parameters.xacro), [fwb_macros.xacro](./urdf/fwb_macros.xacro) |
+
+A four wheel robot for [tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot).The file descriptions are as follows
+
+| File Name | Description |
+| :--- | :--- |
+| [urdf/fwb_parameters.xacro](./urdf/fwb_parameters.xacro) | Parameters for the four wheel robot |
+| [urdf/fwb_macros.xacro](./urdf/fwb_macros.xacro) | Macros (functions that can be substituted when called) for the four wheel robot |
+| [urdf/simple_fwb.xacro](./urdf/simple_fwb.xacro) | A simple version of the four wheel robot as a XACRO file |
+| [urdf/simple_fwb.urdf](./urdf/simple_fwb.urdf) | URDF generated from the XACRO file `simple_fwb.xacro` |
+
+To generate the `URDF` file from the `XACRO` file, use the following command
+
+```bash
+roscd basic_robotics/urdf/
+xacro simple_fwb.xacro > simple_fwb.urdf
+```
+
+The `xacro` command generates a URDF using a XACRO file. It also includes values from the `<xacro:include ...>` in the given XACRO file.
+
 ## Reference
 
 - [RViz on roswiki](https://wiki.ros.org/rviz)
@@ -687,3 +753,4 @@ This will produce an output like following
     - Built in [Display Types](https://wiki.ros.org/rviz/DisplayTypes)
 - [RViz introduction YouTube](https://www.youtube.com/watch?v=i--Sd4xH9ZE&feature=emb_logo)
 - [URDF on roswiki](https://wiki.ros.org/urdf)
+    - [XACRO on roswiki](https://wiki.ros.org/xacro)

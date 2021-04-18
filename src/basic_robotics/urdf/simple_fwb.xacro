@@ -43,11 +43,11 @@
         m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Front Left -->
     <xacro:add_wheel lname="fr_wheel" jname="fr_wheel_joint" 
         sx="${body_sx/2}" sy="${-(body_sy + wheel_h)/2}" sz="${-body_sz/2}"
-        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Front Left -->
+        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Front Right -->
     <xacro:add_wheel lname="hl_wheel" jname="hl_wheel_joint" 
         sx="${-body_sx/2}" sy="${(body_sy + wheel_h)/2}" sz="${-body_sz/2}"
-        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Front Left -->
+        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Hind Left -->
     <xacro:add_wheel lname="hr_wheel" jname="hr_wheel_joint" 
         sx="${-body_sx/2}" sy="${-(body_sy + wheel_h)/2}" sz="${-body_sz/2}"
-        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Front Left -->
+        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Hind Right -->
 </robot>
