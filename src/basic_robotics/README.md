@@ -15,12 +15,13 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Part 1: Visualizing a single link](#part-1-visualizing-a-single-link)
             - [Part 2: Jogging a two link manipulator](#part-2-jogging-a-two-link-manipulator)
         - [Tutorial 3: Gazebo and a Four Wheel Robot](#tutorial-3-gazebo-and-a-four-wheel-robot)
-            - [Part 1: Simple Four Wheel Robot and Gazebo World](#part-1-simple-four-wheel-robot-and-gazebo-world)
+            - [Part 1: Simple Four Wheel Robot in a Gazebo World](#part-1-simple-four-wheel-robot-in-a-gazebo-world)
     - [Launch Files](#launch-files)
         - [Launch C++ for Tutorial 1](#launch-c-for-tutorial-1)
         - [Launch Python for Tutorial 1](#launch-python-for-tutorial-1)
         - [Launch single link for Tutorial 2](#launch-single-link-for-tutorial-2)
         - [Visualize Jogging URDF robot for Tutorial 2](#visualize-jogging-urdf-robot-for-tutorial-2)
+        - [Visualize and jog a URDF for Tutorial 3](#visualize-and-jog-a-urdf-for-tutorial-3)
     - [C++ Nodes](#c-nodes)
         - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
             - [Building](#building)
@@ -42,12 +43,15 @@ Basic Robotics related software provided in ROS. This package includes a brief o
     - [RViz configuration files](#rviz-configuration-files)
         - [LaserScan and TF for Tutorial 1](#laserscan-and-tf-for-tutorial-1)
         - [RobotDescription and TF for Tutorial 2](#robotdescription-and-tf-for-tutorial-2)
+        - [RobotDescription and TF for Tutorial 3](#robotdescription-and-tf-for-tutorial-3)
     - [URDF Files](#urdf-files)
         - [Single block for Tutorial 2](#single-block-for-tutorial-2)
         - [Two Blocks for Tutorial 2](#two-blocks-for-tutorial-2)
             - [Checking URDFs](#checking-urdfs)
     - [XACRO Files](#xacro-files)
         - [Simple Four Wheel Bot for Tutorial 3](#simple-four-wheel-bot-for-tutorial-3)
+    - [Gazebo World Files](#gazebo-world-files)
+        - [Four Wheel Bot World for Tutorial 3](#four-wheel-bot-world-for-tutorial-3)
     - [Reference](#reference)
 
 ## Creating this package
@@ -223,20 +227,38 @@ This tutorial uses the following resources of this package
 | S. No. | File / Node name | Purpose | Notes |
 | :--- | :--- | :---: | :---- |
 | 1 | [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) | XACRO file for visualization | A simple version of the four wheel robot. No sensors, only the robot with four wheels. |
+| 2 | [t3_viz_robot_xacro](#visualize-and-jog-a-urdf-for-tutorial-3) | Launch file | Visualize a XACRO file and TF tree. |
+| 3 | [t3_fwb_world.world](#four-wheel-bot-world-for-tutorial-3) | The gazebo world file where the robots are visualized. |
 
-#### Part 1: Simple Four Wheel Robot and Gazebo World
+#### Part 1: Simple Four Wheel Robot in a Gazebo World
 
-Creating a simple four wheel robot (only the base) using XACRO and visualizing it in RViz is explored in this part. Run the following command
+The following steps can be followed (see file names and links for the reference)
 
-```bash
-roslaunch basic_robotics t3_viz_robot_xacro.launch
-```
+1. Create and visualize your robot in RViz
 
-This will create the `RViz` and `joint_state_publisher_gui` GUIs as shown below
+    Create a simple four wheel robot (only the base with wheels) using XACRO and visualizing it in RViz is explored in this part. Run the following command
 
-![Simple four wheel robot in RViz](./media/pic15.png)
+    ```bash
+    roslaunch basic_robotics t3_viz_robot_xacro.launch
+    ```
 
-Gazebo is a simulator (it has its own physics engine, simulating things like gravity, mechanics, etc.) that is widely used and comes with a full ROS installation. We now prepare a "world" in which we will simulate the four wheel robot (similar to one which is shown above).
+    This will create the `RViz` and `joint_state_publisher_gui` GUIs as shown below
+
+    ![Simple four wheel robot in RViz](./media/pic15.png)
+
+2. Create and visualize the Gazebo world
+
+    Run the following commands
+
+    ```bash
+    roscore
+    roscd basic_robotics/world/
+    rosrun gazebo_ros gazebo t3_fwb_world.world
+    ```
+
+    This should launch the gazebo world as shown below
+
+    ![Gazebo world for Tutorial 3 Part 1](./media/pic20.png)
 
 ## Launch Files
 
@@ -284,7 +306,7 @@ Launch a single link on RViz. Includes the [RobotViz_T2.rviz](#robotdescription-
 | Field | Value |
 | :---- | :---- |
 | Name | `t2_urdf_bot_viz` |
-| File | [](./launch/t2_urdf_bot_viz.launch) |
+| File | [launch/t2_urdf_bot_viz.launch](./launch/t2_urdf_bot_viz.launch) |
 
 Launch a URDF robot and visualize it by jogging (moving by rotation or translation, depending on the joint type) different joints. Includes launching the following nodes
 
@@ -292,6 +314,21 @@ Launch a URDF robot and visualize it by jogging (moving by rotation or translati
 2. Node `joint_state_publisher_gui` which will create a GUI for us to jog the joints
 3. Node `robot_state_publisher` which will produce frame transformations on the topic `/tf`
 4. GUI Node `rqt_graph` to see what is happening
+
+### Visualize and jog a URDF for Tutorial 3
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t3_viz_robot_xacro` |
+| File | [launch/t3_viz_robot_xacro.launch](./launch/t3_viz_robot_xacro.launch)
+
+Visualize a robot made using XACRO and jog different joints. Includes launching the following
+
+1. RViz node with the configuration [RobotViz_T3.rviz](#robotdescription-and-tf-for-tutorial-3)
+2. Node `joint_state_publisher_gui` which will create a GUI for us to jog the joints
+3. Node `robot_state_publisher` which will produce frame transformations on the topic `/tf`
+4. GUI node `rqt_graph` to see what is happening
+5. GUI node `rqt_tf_tree` to see the transformation tree (all frames in the topic `/tf`)
 
 ## C++ Nodes
 
@@ -675,6 +712,15 @@ This file is made for Tutorial 2. It is to view a `RobotDescription` (a robot mo
 
 This file may be modified throughout the tutorial.
 
+### RobotDescription and TF for Tutorial 3
+
+| Field | Value |
+| :---- | :---- |
+| Name | `RobotViz_T3.rviz` |
+| File | [rviz/RobotViz_T3.rviz](./rviz/RobotViz_T3.rviz) |
+
+This file follows the same procedure as that for [tutorial 2](#robotdescription-and-tf-for-tutorial-2).
+
 ## URDF Files
 
 These are files created for robot description. The file format stands for *Unified Robot Description Format* (URDF). It provides creation of robot models in XML type files, having hierarchies of their own.
@@ -745,6 +791,49 @@ xacro simple_fwb.xacro > simple_fwb.urdf
 ```
 
 The `xacro` command generates a URDF using a XACRO file. It also includes values from the `<xacro:include ...>` in the given XACRO file.
+
+## Gazebo World Files
+
+Files made for Gazebo worlds in this package.
+
+### Four Wheel Bot World for Tutorial 3
+
+| Field | Value |
+| :---- | :---- |
+| Final World file | [world/t3_fwb_world.world](./world/t3_fwb_world.world) |
+
+A world to test a four wheel robot. To create this file, run the following commands
+
+```bash
+roscore
+rosrun gazebo_ros gazebo t3_fwb_world.world
+```
+
+This will open the gazebo simulator shown below
+
+![Gazebo simulator](./media/pic16.png)
+
+To create this file, the following procedure is followed
+
+1. Add buildings for boundaries. Go to `Edit > Building Editor` for adding a layout
+
+    ![Building layout for T3](./media/pic17.png)
+
+    This lets you add walls to the layout above and create structures. You can double click on  line to edit its features. The end result must look like this (you could add some more features)
+
+    ![Building floor for T3](./media/pic18.png)
+
+    Exit the building editor using `File > Exit Building Editor`  and save it as `building_floor` in the `world/models` folder. After saving, a directory with the same name shows up containing the sdf files.
+
+2. Add models to the editor. Go to `Edit > Model Editor` for adding model parts. Add models, double click on them to inspect
+
+    ![Models on the building floor - T3](./media/pic19.png)
+
+    Save this as `floor_model` in the `world/models` folder. SDF files are saved in this folder.
+
+The model in the end looks like this (saved as `t3_fwb_world.world` in the `world` folder)
+
+![T3 Part 1 Gazebo world](./media/pic20.png)
 
 ## Reference
 

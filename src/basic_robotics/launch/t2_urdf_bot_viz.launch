@@ -16,5 +16,6 @@
         <!-- Package: https://wiki.ros.org/robot_state_publisher -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <!-- rqt_graph GUI -->
+        <!-- This will help us visualize the nodes and the topics -->
     <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph" />
 </launch>
