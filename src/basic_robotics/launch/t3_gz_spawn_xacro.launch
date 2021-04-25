@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spawn a XACRO -->
+<launch>
+    <!-- Arguments -->
+    <!-- XACRO File -->
+    <arg name="xacro_file" default="$(find basic_robotics)/urdf/fwb_gazebo_t3.xacro" doc="Realpath of XACRO file" />
+
+    <!-- Parameters -->
+    <!-- Robot description -->
+    <param name="robot_description" command="xacro $(arg xacro_file)"/>
+
+    <!-- Nodes -->
+    <!-- Spawn model in gazebo -->
+        <!-- 
+            This node spawns a model in gazebo. Know mode about arguments using
+            ```bash
+            rosrun gazebo_ros spawn_model -h
+            ```
+        -->
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" output="screen" 
+        args="-urdf -model fw_bot -param robot_description" />
+</launch>

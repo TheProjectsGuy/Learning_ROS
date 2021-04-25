@@ -70,6 +70,12 @@
                     <cylinder radius="${r}" length="${h}"/>
                 </geometry>
             </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="${r}" length="${h}"/>
+                </geometry>
+            </collision>
         </link>
         <!-- Joint from wheel to body -->
         <joint name="${jname}" type="continuous">

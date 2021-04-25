@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Launch a Gazebo world -->
+<launch>
+    <!-- Arguments -->
+    <!-- Gazebo world file -->
+    <arg name="gz_world" default="$(find basic_robotics)/world/t3_fwb_world.world" doc="The world file for Gazebo"/>
+
+    <!-- Include other launch files -->
+    <!-- Launch: empty_world.launch from gazebo_ros -->
+        <!-- 
+            This launch file launches the 'empty_world.launch' file but with the given arguments.
+            To know more about the contents of this file, run
+            ```bash
+            cat `rospack find gazebo_ros`/launch/empty_world.launch
+            ```
+        -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <!-- Set the world file -->
+        <arg name="world_name" value="$(arg gz_world)" />
+    </include>
+</launch>

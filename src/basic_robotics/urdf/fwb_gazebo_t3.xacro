@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A four wheel robot -->
+<!-- 
+    A four wheel mobile robot made for Tutorial 3 (for being spawned in gazebo)
+-->
+<robot name="fw_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Include other files -->
+    <!-- Include the properties file -->
+    <xacro:include filename="$(find basic_robotics)/urdf/fwb_parameters.xacro" />
+    <!-- Include headers (XACRO macros) file  -->
+    <xacro:include filename="$(find basic_robotics)/urdf/fwb_macros.xacro" />
+    <!-- Include file for Gazebo -->
+    <xacro:include filename="$(find basic_robotics)/urdf/fwb_t3.gazebo" />
+
+    <!-- Main code -->
+    <!-- Main body link -->
+    <link name="body">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <mass value="${body_m}"/>
+            <xacro:inertia_cuboid m="${body_m}" sx="${body_sx}" sy="${body_sy}" sz="${body_sz}" />
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${body_sx} ${body_sy} ${body_sz}"/>
+            </geometry>
+        </visual>
+        <collition>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${body_sx} ${body_sy} ${body_sz}"/>
+            </geometry>
+        </collition>
+    </link>
+    <!-- Attach the wheels -->
+    <xacro:add_wheel lname="fl_wheel" jname="fl_wheel_joint" 
+        sx="${body_sx/2}" sy="${(body_sy + wheel_h)/2}" sz="${-body_sz/2}"
+        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Front Left -->
+    <xacro:add_wheel lname="fr_wheel" jname="fr_wheel_joint" 
+        sx="${body_sx/2}" sy="${-(body_sy + wheel_h)/2}" sz="${-body_sz/2}"
+        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Front Right -->
+    <xacro:add_wheel lname="hl_wheel" jname="hl_wheel_joint" 
+        sx="${-body_sx/2}" sy="${(body_sy + wheel_h)/2}" sz="${-body_sz/2}"
+        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Hind Left -->
+    <xacro:add_wheel lname="hr_wheel" jname="hr_wheel_joint" 
+        sx="${-body_sx/2}" sy="${-(body_sy + wheel_h)/2}" sz="${-body_sz/2}"
+        m="${wheel_m}" r="${wheel_r}" h="${wheel_h}"/>  <!-- Hind Right -->
+</robot>

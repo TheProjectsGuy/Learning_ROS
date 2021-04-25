@@ -15,13 +15,14 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Part 1: Visualizing a single link](#part-1-visualizing-a-single-link)
             - [Part 2: Jogging a two link manipulator](#part-2-jogging-a-two-link-manipulator)
         - [Tutorial 3: Gazebo and a Four Wheel Robot](#tutorial-3-gazebo-and-a-four-wheel-robot)
-            - [Part 1: Simple Four Wheel Robot in a Gazebo World](#part-1-simple-four-wheel-robot-in-a-gazebo-world)
     - [Launch Files](#launch-files)
         - [Launch C++ for Tutorial 1](#launch-c-for-tutorial-1)
         - [Launch Python for Tutorial 1](#launch-python-for-tutorial-1)
         - [Launch single link for Tutorial 2](#launch-single-link-for-tutorial-2)
         - [Visualize Jogging URDF robot for Tutorial 2](#visualize-jogging-urdf-robot-for-tutorial-2)
         - [Visualize and jog a URDF for Tutorial 3](#visualize-and-jog-a-urdf-for-tutorial-3)
+        - [Launch Gazebo World for Tutorial 3](#launch-gazebo-world-for-tutorial-3)
+        - [Spawn a Robot Model in Gazebo for Tutorial 3](#spawn-a-robot-model-in-gazebo-for-tutorial-3)
     - [C++ Nodes](#c-nodes)
         - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
             - [Building](#building)
@@ -50,6 +51,7 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Checking URDFs](#checking-urdfs)
     - [XACRO Files](#xacro-files)
         - [Simple Four Wheel Bot for Tutorial 3](#simple-four-wheel-bot-for-tutorial-3)
+        - [Four Wheel Bot for Gazebo for Tutorial 3](#four-wheel-bot-for-gazebo-for-tutorial-3)
     - [Gazebo World Files](#gazebo-world-files)
         - [Four Wheel Bot World for Tutorial 3](#four-wheel-bot-world-for-tutorial-3)
     - [Reference](#reference)
@@ -226,17 +228,24 @@ This tutorial uses the following resources of this package
 
 | S. No. | File / Node name | Purpose | Notes |
 | :--- | :--- | :---: | :---- |
-| 1 | [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) | XACRO file for visualization | A simple version of the four wheel robot. No sensors, only the robot with four wheels. |
+| 1 | [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) | XACRO file for visualization | A simple version of the four wheel robot. No sensors, gazebo, only the robot with four wheels fixed to the `world`. |
 | 2 | [t3_viz_robot_xacro](#visualize-and-jog-a-urdf-for-tutorial-3) | Launch file | Visualize a XACRO file and TF tree. |
 | 3 | [t3_fwb_world.world](#four-wheel-bot-world-for-tutorial-3) | The gazebo world file where the robots are visualized. |
+| 4 | [t3_viz_robot_xacro.launch](#visualize-and-jog-a-urdf-for-tutorial-3) | The launch file to visualize the robot model in Gazebo |
+| 5 | [t3_gazebo_world.launch](#launch-gazebo-world-for-tutorial-3) | The launch file for the Gazebo world file |
+| 6 | [t3_gz_spawn_xacro.launch](#spawn-a-robot-model-in-gazebo-for-tutorial-3) | The launch file for spawning a URDF in Gazebo |
 
-#### Part 1: Simple Four Wheel Robot in a Gazebo World
+First off, we can start by creating and visualizing a four wheeled robot in RViz. This must be the first step in a robotics application. The following steps can be followed for this purpose (see file names and links for the reference)
 
-The following steps can be followed (see file names and links for the reference)
+1. Create your robot using [XACRO](https://wiki.ros.org/xacro) (which will make writing description code easier)
 
-1. Create and visualize your robot in RViz
+    1. There are many softwares that create a URDF directly from a CAD model. One example is [SolidWorks 3D CAD](https://www.solidworks.com/domain/design-engineering) using a [URDF exporter add-in](http://wiki.ros.org/sw_urdf_exporter). However, for this tutorial, the links are simple `<geometry>` elements. 
+    2. Exporting from SolidWorks is also problematic as we will later add `<gazebo>` to the mix (you'll have to manually edit that long URDF generated). A better practice may be to import meshes of the links (for `<visual>` and `<collision>`) and get proper values for `<inertia>` from the CAD software.
+    3. Currently, we won't have any _sensors_ mounted on the robot (we'll explore that in later tutorials)
 
-    Create a simple four wheel robot (only the base with wheels) using XACRO and visualizing it in RViz is explored in this part. Run the following command
+    The file thus created is [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3). Note that this file has nothing for Gazebo yet and that there is a fixed link from `world` (a dummy link) and `body` (the body link).
+
+2. Visualize your robot in RViz. Run the following command
 
     ```bash
     roslaunch basic_robotics t3_viz_robot_xacro.launch
@@ -246,7 +255,10 @@ The following steps can be followed (see file names and links for the reference)
 
     ![Simple four wheel robot in RViz](./media/pic15.png)
 
-2. Create and visualize the Gazebo world
+Now, we can create a world for Gazebo simulation. This is the robot environment. It contains buildings (usually walls, boundaries, windows, floors, etc.) and models (objects like tables, chairs, pretty much any physical object that you need in the scene).
+
+1. Create the [t3_fwb_world.world](#four-wheel-bot-world-for-tutorial-3) file (the Gazebo world for the simulation environment)
+2. Visualize the Gazebo world
 
     Run the following commands
 
@@ -259,6 +271,47 @@ The following steps can be followed (see file names and links for the reference)
     This should launch the gazebo world as shown below
 
     ![Gazebo world for Tutorial 3 Part 1](./media/pic20.png)
+
+Now, make your robot Gazebo ready, that is, create `<gazebo>` tags for the links and joints. The usual practice to do this is to create a `.gazebo` file and `<xacro:include ...>` it in your `.xacro` file. This way, things are less cluttered and everything Gazebo related is in one file. Note that though the extension is `.gazebo`, it is mainly to distinguish. The file is still an XML file (XACRO file) and all XACRO features can be used after `xmlns:xacro` is added to the `<robot>` in the file.
+
+1. Create the [fwb_t3.gazebo](./urdf/fwb_t3.gazebo) file
+2. Add `<gazebo>` for the robot, different links and joints
+3. Add a `<plugin>` for the robot `<gazebo>`. As this is a four wheeled robot (skid steer drive), we use the [SkidSteerDrive](http://gazebosim.org/tutorials?tut=ros_gzplugins&cat=connect_ros#SkidSteeringDrive) plugin for that. If our robot were a two wheeled robot with a castor, it'd be called a Differential drive robot and we'd use the [DifferentialDrive](http://gazebosim.org/tutorials?tut=ros_gzplugins&cat=connect_ros#DifferentialDrive) plugin for the robot.
+4. Include this file in the main `XACRO` file. Remember to not have a fixed dummy to the `world` link, else the robot will be a fixed one (immobile, as the base will be immovable). For this purpose, a separate [fwb_gazebo_t3.xacro](./urdf/fwb_gazebo_t3.xacro) file has been created.
+
+Now, you can _spawn_ the robot in Gazebo using the following commands
+
+```bash
+roslaunch basic_robotics t3_gazebo_world.launch
+roslaunch basic_robotics t3_gz_spawn_xacro.launch
+```
+
+Run the second launch after the Gazebo GUI (node name `/gazebo_gui`) fully loads. The second launch will spawn the robot in the gazebo environment. The robot must look like this in the environment.
+
+![Robot in Gazebo for Tutorial 3](./media/pic21.png)
+
+List the topics using `rostopic list`. You must see `/cmd_vel` as one. You could control the robot by publishing values directly on the topic using something like
+
+```bash
+rostopic pub /robot1/cmd_vel geometry_msgs/Twist "linear:
+  x: 1.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.2"
+```
+
+But, there is a package that allows teleoperation through the keyboard called [teleop_twist_keyboard](https://wiki.ros.org/teleop_twist_keyboard). Run it using
+
+```bash
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+```
+
+You can then control the robot using the keyboard like shown below
+
+![Robot control through turtle teleoperation](./media/pic22.png)
 
 ## Launch Files
 
@@ -329,6 +382,33 @@ Visualize a robot made using XACRO and jog different joints. Includes launching 
 3. Node `robot_state_publisher` which will produce frame transformations on the topic `/tf`
 4. GUI node `rqt_graph` to see what is happening
 5. GUI node `rqt_tf_tree` to see the transformation tree (all frames in the topic `/tf`)
+
+### Launch Gazebo World for Tutorial 3
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t3_gazebo_world` |
+| File | [launch/t3_gazebo_world.launch](./launch/t3_gazebo_world.launch) |
+
+Launches the Gazebo world for tutorial 3. Includes launching the following
+
+1. Includes the `empty_world.launch` file in `gazebo_ros` package
+2. Uses a `gz_world` argument for the `.world` file
+
+The `empty_world.launch` file launches `gzserver` (as node name `gazebo`) and `gzclient` (as node name `gazebo_gui`).
+
+### Spawn a Robot Model in Gazebo for Tutorial 3
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t3_gz_spawn_xacro` |
+| File | [./launch/t3_gz_spawn_xacro.launch](./launch/t3_gz_spawn_xacro.launch) |
+
+Launches a single node that calls `/gazebo/spawn_urdf_model` service (type `gazebo_msgs/SpawnModel`). Has the following nodes
+
+1. Node to spawn a robot URDF model in gazebo using `spawn_model` node of `gazebo_ros` package
+
+The node will get URDF from a ROS parameter
 
 ## C++ Nodes
 
@@ -790,7 +870,31 @@ roscd basic_robotics/urdf/
 xacro simple_fwb.xacro > simple_fwb.urdf
 ```
 
-The `xacro` command generates a URDF using a XACRO file. It also includes values from the `<xacro:include ...>` in the given XACRO file.
+The `xacro` command generates a URDF using a XACRO file. It also includes values from the `<xacro:include ...>` in the given XACRO file. You can verify that URDF using
+
+```bash
+check_urdf simple_fwb.urdf
+```
+
+### Four Wheel Bot for Gazebo for Tutorial 3
+
+| Field | Value |
+| :---- | :---- |
+| Main XACRO file | [fwb_gazebo_t3.xacro](./urdf/fwb_gazebo_t3.xacro) |
+| Included XACRO files | [fwb_parameters.xacro](./urdf/fwb_parameters.xacro), [fwb_macros.xacro](./urdf/fwb_macros.xacro), [fwb_t3.gazebo](./urdf/fwb_t3.gazebo) |
+
+A four wheel robot in Gazebo for [Tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot). This is a more sophisticated version of the [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) file above. The file descriptions are much the same, here are the additional ones
+
+| File Name | Description |
+| :--- | :--- |
+| [urdf/fwb_t3.gazebo](./urdf/fwb_t3.gazebo) | A Gazebo file containing `<gazebo>` for links and joints. Contains the plugin for Skid Steer Drive |
+
+To generate and verify the `URDF` from the `XACRO` file, use the following commands
+
+```bash
+xacro fwb_gazebo_t3.xacro > fwb_gazebo_t3.urdf
+gz sdf -p fwb_gazebo_t3.urdf
+```
 
 ## Gazebo World Files
 
