@@ -15,6 +15,7 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Part 1: Visualizing a single link](#part-1-visualizing-a-single-link)
             - [Part 2: Jogging a two link manipulator](#part-2-jogging-a-two-link-manipulator)
         - [Tutorial 3: Gazebo and a Four Wheel Robot](#tutorial-3-gazebo-and-a-four-wheel-robot)
+        - [Tutorial 4: Sensors in Gazebo](#tutorial-4-sensors-in-gazebo)
     - [Launch Files](#launch-files)
         - [Launch C++ for Tutorial 1](#launch-c-for-tutorial-1)
         - [Launch Python for Tutorial 1](#launch-python-for-tutorial-1)
@@ -230,10 +231,10 @@ This tutorial uses the following resources of this package
 | :--- | :--- | :---: | :---- |
 | 1 | [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) | XACRO file for visualization | A simple version of the four wheel robot. No sensors, gazebo, only the robot with four wheels fixed to the `world`. |
 | 2 | [t3_viz_robot_xacro](#visualize-and-jog-a-urdf-for-tutorial-3) | Launch file | Visualize a XACRO file and TF tree. |
-| 3 | [t3_fwb_world.world](#four-wheel-bot-world-for-tutorial-3) | The gazebo world file where the robots are visualized. |
-| 4 | [t3_viz_robot_xacro.launch](#visualize-and-jog-a-urdf-for-tutorial-3) | The launch file to visualize the robot model in Gazebo |
-| 5 | [t3_gazebo_world.launch](#launch-gazebo-world-for-tutorial-3) | The launch file for the Gazebo world file |
-| 6 | [t3_gz_spawn_xacro.launch](#spawn-a-robot-model-in-gazebo-for-tutorial-3) | The launch file for spawning a URDF in Gazebo |
+| 3 | [t3_fwb_world.world](#four-wheel-bot-world-for-tutorial-3) | Gazebo World | The gazebo world file where the robots are visualized. |
+| 4 | [t3_viz_robot_xacro.launch](#visualize-and-jog-a-urdf-for-tutorial-3) | Launch file (XACRO in RViz) | The launch file to visualize the XACRO robot model in RViz |
+| 5 | [t3_gazebo_world.launch](#launch-gazebo-world-for-tutorial-3) | Launch file (Gazebo world) | The launch file for the Gazebo world file |
+| 6 | [t3_gz_spawn_xacro.launch](#spawn-a-robot-model-in-gazebo-for-tutorial-3) | Launch file (Spawn robot in Gazebo) | The launch file for spawning a XACRO robot description in Gazebo |
 
 First off, we can start by creating and visualizing a four wheeled robot in RViz. This must be the first step in a robotics application. The following steps can be followed for this purpose (see file names and links for the reference)
 
@@ -312,6 +313,10 @@ rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 You can then control the robot using the keyboard like shown below
 
 ![Robot control through turtle teleoperation](./media/pic22.png)
+
+### Tutorial 4: Sensors in Gazebo
+
+
 
 ## Launch Files
 
