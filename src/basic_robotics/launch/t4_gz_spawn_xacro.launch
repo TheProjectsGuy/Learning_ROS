@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spawn a XACRO -->
+<launch>
+    <!-- Arguments -->
+    <!-- XACRO File -->
+    <arg name="xacro_file" default="$(find basic_robotics)/urdf/fwb_gazebo_t4.xacro" doc="Realpath of XACRO file" />
+
+    <!-- Include the tutorial 3 launch file for spawning XACRO files -->
+    <include file="$(find basic_robotics)/launch/t3_gz_spawn_xacro.launch">
+        <arg name="xacro_file" value="$(arg xacro_file)"/>
+    </include>
+</launch>

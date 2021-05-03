@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Open Gazebo with a world (same one as in tutorial 3) -->
+<launch>
+    <!-- Include the launch file for the world (as in Tutorial 3) -->
+    <include file="$(find basic_robotics)/launch/t3_gazebo_world.launch" />
+</launch>

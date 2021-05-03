@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    All tags for the LiDAR link and plugin. The LiDAR used here is mainly a Laser Scanner.
+-->
+<robot name="fw_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Include the parameters file -->
+    <xacro:include filename="$(find basic_robotics)/urdf/fwb_parameters_t4.xacro" />
+    <!-- Include the MACROS -->
+    <xacro:include filename="$(find basic_robotics)/urdf/fwb_macros.xacro" />
+
+    <!-- The <link> tag for the lidar -->
+    <link name="lidar_link">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <mass value="${lidar_m}" />
+            <xacro:inertia_cuboid m="${lidar_m}" sx="${lidar_sx}" sy="${lidar_sy}" sz="${lidar_sz}" />
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <box size="${lidar_sx} ${lidar_sy} ${lidar_sz}" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <box size="${lidar_sx} ${lidar_sy} ${lidar_sz}" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- The <joint> for the lidar -->
+    <joint name="lidar_joint" type="fixed">
+        <origin xyz="${(body_sx+lidar_sx)/2} 0.0 ${(-body_sz+lidar_sz)/2}" />
+        <parent link="body" />
+        <child link="lidar_link" />
+    </joint>
+    <!-- The <gazebo> tag for the LiDAR -->
+    <gazebo reference="lidar_link">
+        <!-- The <sensor> for LiDAR -->
+            <!--
+                Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#link_sensor
+                Parsing code: https://github.com/osrf/sdformat/blob/sdf11/src/Sensor.cc
+            -->
+        <sensor type="gpu_ray" name="lidar_1">
+            <!-- Update rate -->
+            <update_rate>30.0</update_rate>
+            <!-- Visualize the sensor -->
+            <visualize>true</visualize>
+            <!-- Description about the <ray> -->
+                <!-- 
+                    In code, <lidar> and <ray> are considered one and the same (see the code
+                    parsing reference). Here, and most often (as the physical working suggests),
+                    we use <ray> as that's what a LiDAR is: it uses rays to map a field.
+
+                    Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_ray
+                    Parsing code: https://github.com/osrf/sdformat/blob/sdf11/src/Lidar.cc
+                -->
+            <ray>
+                <!-- Set the <scan> properties -->
+                    <!-- 
+                        Horizontal and vertical scan components. Specify angle range using
+                        <min_angle> to <max_angle> (all angles in radians). Specify <sample>
+                        with the number of samples to be recorded in the range, you could
+                        specify <resolution> too
+                        
+                        Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#ray_scan
+                    -->
+                <scan>
+                    <horizontal>
+                        <samples>${lidar_ang_samples}</samples>
+                        <min_angle>${lidar_ang_min}</min_angle>
+                        <max_angle>${lidar_ang_max}</max_angle>
+                    </horizontal>
+                </scan>
+                <!-- Set the <range> properties -->
+                    <!-- 
+                        10 cm <min> to 30 m <max> with 1 cm <resolution>
+
+                        Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#ray_range
+                    -->
+                <range>
+                    <min>0.10</min>
+                    <max>30.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <!-- Set the <noise> properties -->
+                    <!-- 
+                        Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#lidar_noise
+                    -->
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <!-- Load <plugin> for the LiDAR -->
+            <plugin name="lidar_1_plugin" filename="libgazebo_ros_gpu_laser.so">
+                <!-- Frame name -->
+                <frameName>lidar_link</frameName>
+                <!-- Topic name for the data -->
+                <topicName>lidar_1/sensor_data</topicName>
+            </plugin>
+        </sensor>
+    </gazebo>
+</robot>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- General <gazebo> tags for the robot -->
+<robot name="fw_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Include parameters (for the robot) -->
+    <xacro:include filename="$(find basic_robotics)/urdf/fwb_parameters_t4.xacro" />
+
+    <!-- 
+        Main Gazebo tag
+
+        Tag reference: http://gazebosim.org/tutorials?tut=ros_urdf&cat=connect_ros#%3Cgazebo%3Eelementforthetag
+    -->
+    <gazebo>
+        <static>false</static>
+        <!-- Plugin for Skid Steer Drive -->
+            <!-- 
+                Skid Steer Drive is a four wheel drive (NOT an ackreman steering drive)
+                - The <plugin> is used to load various values into the node (gazebo) for this purpose.
+                - Each plugin creates a unique ros::NodeHandle
+                - Check the `Load` function in the C++ source file for the code that is executed for the parsed tags
+                - It interacts directly with the physics engine in gazebo
+
+                Reference: http://gazebosim.org/tutorials?tut=ros_gzplugins&cat=connect_ros#SkidSteeringDrive
+                Source code (.so): https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_plugins/src/gazebo_ros_skid_steer_drive.cpp
+                Header file: https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_plugins/include/gazebo_plugins/gazebo_ros_skid_steer_drive.h
+                Path (.so on local system): /opt/ros/noetic/lib/libgazebo_ros_skid_steer_drive.so
+            -->
+        <plugin name="ss_drive_plugin" filename="libgazebo_ros_skid_steer_drive.so">
+            <!-- Update rate for controls (default 100 Hz) -->
+            <updateRate>100.0</updateRate>
+            <!-- Namespace for the ros::NodeHandle (a 'prefix' for all topics and other ROS end things for this plugin) -->
+                <!-- This can be used to distinguish the topics and services spcifically for this plugin -->
+            <robotNamespace>/</robotNamespace>  <!-- Default "/" -->
+            <!-- Front left wheel joint name for the physics::JointPtr (default "left_front_joint") -->
+            <leftFrontJoint>fl_wheel_joint</leftFrontJoint>
+            <!-- Front right wheel joint name for the physics::JointPtr (default "right_front_joint") -->
+            <rightFrontJoint>fr_wheel_joint</rightFrontJoint>
+            <!-- Hind left wheel joint name for the physics::JointPtr (default "left_rear_joint") -->
+            <leftRearJoint>hl_wheel_joint</leftRearJoint>
+            <!-- Hind right wheel joint name for the physics::JointPtr (default "right_rear_joint") -->
+            <rightRearJoint>hr_wheel_joint</rightRearJoint>
+            <!-- Wheel separation (b/w left and right wheels, must be identical for front and hind) (default 0.4 m) -->
+            <wheelSeparation>${(body_sy + wheel_h)}</wheelSeparation>
+            <!-- Wheel diameter (each wheel has the same diameter) (default 0.15 m) -->
+            <wheelDiameter>${(2 * wheel_r)}</wheelDiameter>
+            <!-- Base frame name (link name) for publishing odometry (default "base_footprint") -->
+            <robotBaseFrame>body</robotBaseFrame>
+            <!-- Maximum torque of the wheels (default 5.0 Nm) -->
+            <torque>20</torque>
+            <!-- Topic name for commanding geometry_msgs/Twist (default "cmd_vel", distinct in robotNamespace) -->
+            <commandTopic>cmd_vel</commandTopic>
+            <!-- Broadcast the transformation for odometry (from odom frame to base frame) (default false) -->
+                <!--
+                    Some tags for odometry (position of robot in world) that you can use
+                    - <odometryTopic> : Topic name for odometry (message type nav_msgs/Odometry) (default "odom" in robot namespace)
+                    - <odometryFrame> : Frame name for odometry in the transformation tree (default "/odom")
+                    - <covariance_x> : Covariance for odometry (along X axis translation) (default 0.0001 m)
+                    - <covariance_y> : Covariance for odometry (along Y axis translation) (default 0.0001 m)
+                    - <covariance_yaw> : Covariance for odometry (along Z axis rotation) (default 0.01 rad)
+                -->
+            <broadcastTF>true</broadcastTF>
+        </plugin>
+    </gazebo>
+
+    <!-- 
+        Gazebo tags for individual <link> elements in the XACRO / URDF (using reference)
+        
+        Reference: http://gazebosim.org/tutorials?tut=ros_urdf&cat=connect_ros#Links
+        Tags for links: http://gazebosim.org/tutorials?tut=ros_urdf&cat=connect_ros#%3Cgazebo%3EElementsForLinks
+    -->
+    <!-- Main body -->
+    <gazebo reference="body">
+        <!-- Material tag for rendering material -->
+            <!-- Default list: https://github.com/osrf/gazebo/blob/master/media/materials/scripts/gazebo.material -->
+        <material>Gazebo/Orange</material>
+    </gazebo>
+    <!-- Front left wheel -->
+    <gazebo reference="fl_wheel">
+        <mu1>0.1</mu1>
+        <mu2>0.1</mu2>
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <!-- Front right wheel -->
+    <gazebo reference="fr_wheel">
+        <mu1>0.1</mu1>
+        <mu2>0.1</mu2>
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <!-- Hind left wheel -->
+    <gazebo reference="hl_wheel">
+        <mu1>0.1</mu1>
+        <mu2>0.1</mu2>
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <!-- Hind right wheel -->
+    <gazebo reference="hr_wheel">
+        <mu1>0.1</mu1>
+        <mu2>0.1</mu2>
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <!-- 
+        Gazebo tags for individual <joint> elements in the XACRO / URDF (using reference)
+        
+        Reference: http://gazebosim.org/tutorials?tut=ros_urdf&cat=connect_ros#Joints
+    -->
+    <!-- Front left wheel joint -->
+    <gazebo reference="fl_wheel_joint">
+        <provideFeedback>true</provideFeedback>
+    </gazebo>
+    <!-- Front right wheel joint -->
+    <gazebo reference="fr_wheel_joint">
+        <provideFeedback>true</provideFeedback>
+    </gazebo>
+    <!-- Hind left wheel joint -->
+    <gazebo reference="hl_wheel_joint">
+        <provideFeedback>true</provideFeedback>
+    </gazebo>
+    <!-- Hind right wheel joint -->
+    <gazebo reference="hr_wheel_joint">
+        <provideFeedback>true</provideFeedback>
+    </gazebo>
+
+
+</robot>

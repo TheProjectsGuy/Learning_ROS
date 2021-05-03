@@ -24,6 +24,8 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Visualize and jog a URDF for Tutorial 3](#visualize-and-jog-a-urdf-for-tutorial-3)
         - [Launch Gazebo World for Tutorial 3](#launch-gazebo-world-for-tutorial-3)
         - [Spawn a Robot Model in Gazebo for Tutorial 3](#spawn-a-robot-model-in-gazebo-for-tutorial-3)
+        - [Launch Gazebo World for Tutorial 4](#launch-gazebo-world-for-tutorial-4)
+        - [Spawn Robot Model for Tutorial 4](#spawn-robot-model-for-tutorial-4)
     - [C++ Nodes](#c-nodes)
         - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
             - [Building](#building)
@@ -53,6 +55,7 @@ Basic Robotics related software provided in ROS. This package includes a brief o
     - [XACRO Files](#xacro-files)
         - [Simple Four Wheel Bot for Tutorial 3](#simple-four-wheel-bot-for-tutorial-3)
         - [Four Wheel Bot for Gazebo for Tutorial 3](#four-wheel-bot-for-gazebo-for-tutorial-3)
+        - [Four Wheel Bot for Gazebo for Tutorial 4](#four-wheel-bot-for-gazebo-for-tutorial-4)
     - [Gazebo World Files](#gazebo-world-files)
         - [Four Wheel Bot World for Tutorial 3](#four-wheel-bot-world-for-tutorial-3)
     - [Reference](#reference)
@@ -230,11 +233,10 @@ This tutorial uses the following resources of this package
 | S. No. | File / Node name | Purpose | Notes |
 | :--- | :--- | :---: | :---- |
 | 1 | [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) | XACRO file for visualization | A simple version of the four wheel robot. No sensors, gazebo, only the robot with four wheels fixed to the `world`. |
-| 2 | [t3_viz_robot_xacro](#visualize-and-jog-a-urdf-for-tutorial-3) | Launch file | Visualize a XACRO file and TF tree. |
-| 3 | [t3_fwb_world.world](#four-wheel-bot-world-for-tutorial-3) | Gazebo World | The gazebo world file where the robots are visualized. |
-| 4 | [t3_viz_robot_xacro.launch](#visualize-and-jog-a-urdf-for-tutorial-3) | Launch file (XACRO in RViz) | The launch file to visualize the XACRO robot model in RViz |
-| 5 | [t3_gazebo_world.launch](#launch-gazebo-world-for-tutorial-3) | Launch file (Gazebo world) | The launch file for the Gazebo world file |
-| 6 | [t3_gz_spawn_xacro.launch](#spawn-a-robot-model-in-gazebo-for-tutorial-3) | Launch file (Spawn robot in Gazebo) | The launch file for spawning a XACRO robot description in Gazebo |
+| 2 | [t3_fwb_world.world](#four-wheel-bot-world-for-tutorial-3) | Gazebo World | The gazebo world file where the robots are visualized. |
+| 3 | [t3_viz_robot_xacro.launch](#visualize-and-jog-a-urdf-for-tutorial-3) | Launch file (XACRO in RViz) | The launch file to visualize the XACRO robot model in RViz |
+| 4 | [t3_gazebo_world.launch](#launch-gazebo-world-for-tutorial-3) | Launch file (Gazebo world) | The launch file for the Gazebo world file |
+| 5 | [t3_gz_spawn_xacro.launch](#spawn-a-robot-model-in-gazebo-for-tutorial-3) | Launch file (Spawn robot in Gazebo) | The launch file for spawning a XACRO robot description in Gazebo |
 
 First off, we can start by creating and visualizing a four wheeled robot in RViz. This must be the first step in a robotics application. The following steps can be followed for this purpose (see file names and links for the reference)
 
@@ -316,7 +318,38 @@ You can then control the robot using the keyboard like shown below
 
 ### Tutorial 4: Sensors in Gazebo
 
+In this tutorial, we explore adding basic sensors in Gazebo robot models. We explore adding a camera and a laser scanner (LiDAR) to the robot from [tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot).
 
+This tutorial uses the following resources of this package
+
+| S. No. | File / Node name | Purpose | Notes |
+| :--- | :--- | :---: | :---- |
+| 1 | [fwb_gazebo_t4.xacro](#four-wheel-bot-for-gazebo-for-tutorial-4) | XACRO File | Robot description in XACRO, gazebo plugin tags, etc. |
+| 2 | [t4_gazebo_world.launch](#launch-gazebo-world-for-tutorial-4) | Launch file | Launches the Gazebo world |
+| 3 | [t4_gz_spawn_xacro.launch](#spawn-robot-model-for-tutorial-4) | Launch file | Spawns the XACRO file above in the Gazebo world |
+
+Borrowing the XACRO from [tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot), add the following for each sensor
+
+1. A `<link>` containing the `<inertia>`, `<visual>` and `<collision>` properties. If using CAD files, it is suggested to use simpler meshes for `<collision>` (as that is what is used by the simulator), `<visual>` can be more detailed as it is only what is rendered once in simulation.
+2. A `<joint>` for each sensor. Usually most of them are defined as `fixed` joint relative to the base.
+3. A `<sensor>` [tag](http://sdformat.org/spec?ver=1.8&elem=sensor) defining the properties of the particular sensor and the [plugin](http://gazebosim.org/tutorials?tut=ros_gzplugins&cat=connect_ros#Pluginsavailableingazebo_plugins) (which will handle all ROS related details of the sensor).
+
+To inspect the robot in simulation, run the following commands
+
+```bash
+roslaunch basic_robotics t4_gazebo_world.launch
+roslaunch basic_robotics t4_gz_spawn_xacro.launch
+```
+
+You can control the robot using
+
+```bash
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+```
+
+This will show the following in the gazebo GUI
+
+![Gazebo window](./media/pic23.png)
 
 ## Launch Files
 
@@ -414,6 +447,24 @@ Launches a single node that calls `/gazebo/spawn_urdf_model` service (type `gaze
 1. Node to spawn a robot URDF model in gazebo using `spawn_model` node of `gazebo_ros` package
 
 The node will get URDF from a ROS parameter
+
+### Launch Gazebo World for Tutorial 4
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t4_gazebo_world` |
+| File | [launch/t4_gazebo_world.launch](./launch/t4_gazebo_world.launch) |
+
+Launches the gazebo world for tutorial 4. Simply includes the [t3_gazebo_world](#launch-gazebo-world-for-tutorial-3) launch file.
+
+### Spawn Robot Model for Tutorial 4
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t4_gz_spawn_xacro` |
+| File | [launch/t4_gz_spawn_xacro.launch](./launch/t4_gz_spawn_xacro.launch) |
+
+Spawns the robot model (in XACRO) in the gazebo world. Includes the [t3_gz_spawn_xacro](#spawn-a-robot-model-in-gazebo-for-tutorial-3) launch file, but with the XACRO for [tutorial 4](#tutorial-4-sensors-in-gazebo).
 
 ## C++ Nodes
 
@@ -888,7 +939,7 @@ check_urdf simple_fwb.urdf
 | Main XACRO file | [fwb_gazebo_t3.xacro](./urdf/fwb_gazebo_t3.xacro) |
 | Included XACRO files | [fwb_parameters.xacro](./urdf/fwb_parameters.xacro), [fwb_macros.xacro](./urdf/fwb_macros.xacro), [fwb_t3.gazebo](./urdf/fwb_t3.gazebo) |
 
-A four wheel robot in Gazebo for [Tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot). This is a more sophisticated version of the [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) file above. The file descriptions are much the same, here are the additional ones
+A four wheel robot in Gazebo for [Tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot). This is a more sophisticated version of the [simple_fwb.xacro](#simple-four-wheel-bot-for-tutorial-3) file above. The file descriptions are much the same, here are the additional files
 
 | File Name | Description |
 | :--- | :--- |
@@ -900,6 +951,15 @@ To generate and verify the `URDF` from the `XACRO` file, use the following comma
 xacro fwb_gazebo_t3.xacro > fwb_gazebo_t3.urdf
 gz sdf -p fwb_gazebo_t3.urdf
 ```
+
+### Four Wheel Bot for Gazebo for Tutorial 4
+
+| Field | Value |
+| :---- | :---- |
+| Main XACRO File | [urdf/fwb_gazebo_t4.xacro](./urdf/fwb_gazebo_t4.xacro) |
+| Included files | [urdf/fwb_parameters_t4.xacro](./urdf/fwb_parameters_t4.xacro), [urdf/fwb_macros.xacro](./urdf/fwb_macros.xacro), [urdf/fwb_t4_general.gazebo](./urdf/fwb_t4_general.gazebo), [urdf/fwb_camera_t4.xacro](./urdf/fwb_camera_t4.xacro), [urdf/fwb_lidar_t4.xacro](./urdf/fwb_lidar_t4.xacro) |
+
+A four wheel robot with a camera and a LiDAR (LaserScanner) sensor mounted. This mostly is derived from [fwb_gazebo_t3.xacro](#four-wheel-bot-for-gazebo-for-tutorial-3), but with additional `<plugin>` and `<sensor>` tags. There are additional parameters for the camera and laser scanner.
 
 ## Gazebo World Files
 

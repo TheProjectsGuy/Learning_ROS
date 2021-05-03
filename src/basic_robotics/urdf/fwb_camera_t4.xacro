@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    All the tags for the camera link and the plugin
+-->
+<robot name="fw_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Include the parameters file -->
+    <xacro:include filename="$(find basic_robotics)/urdf/fwb_parameters_t4.xacro" />
+    <!-- Include the MACROs -->
+    <xacro:include filename="$(find basic_robotics)/urdf/fwb_macros.xacro" />
+
+    <!-- The <link> tag for the camera -->
+        <!-- 
+            This is for the camera link
+        -->
+    <link name="camera_link">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <mass value="${camera_m}" />
+            <xacro:inertia_cuboid m="${camera_m}" sx="${camera_sx}" sy="${camera_sy}" sz="${camera_sz}" />
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <box size="${camera_sx} ${camera_sy} ${camera_sz}" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <box size="${camera_sx} ${camera_sy} ${camera_sz}" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- The <joint> for the camera link -->
+    <joint name="camera_joint" type="fixed">
+        <origin xyz="${(body_sx-camera_sx)/2} 0.0 ${(body_sz+camera_sz)/2}"/>
+        <parent link="body" />
+        <child link="camera_link" />
+    </joint>
+    <!-- The <gazebo> tag for the camera link -->
+    <gazebo reference="camera_link">
+        <!-- Add a <sensor> in SDF -->
+            <!-- 
+                A <sensor> is used to specify a sensor in Gazebo (SDF) [1]. This one should not be confused
+                with the <sensor> in URDF [2]. The 'type' is a "camera" (Reference: [3]) and the 'name' must
+                be a unique identifier among all the models in the simulation. The source code that parses
+                this tag in the SDF repository is in [4].
+                
+                [1]: http://sdformat.org/spec?ver=1.8&elem=sensor
+                [2] (Not): https://wiki.ros.org/urdf/XML/sensor
+                [3]: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_camera
+                [4]: https://github.com/osrf/sdformat/blob/sdf11/src/Sensor.cc
+            -->
+        <sensor type="camera" name="cam_1">
+            <!-- Set the update rate -->
+                <!-- 
+                    The update rate (in Hz). If left, the sensor will refresh data every cycle.
+
+                    Reference: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_update_rate
+                -->
+            <update_rate>30.0</update_rate>
+            <!-- The <camera> for the sensor -->
+                <!-- 
+                    This must correspond to the 'type' in the <sensor> above. The 'name' could be the same
+                    as in <sensor> or something else.
+                    
+                    Reference: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_camera
+                    Parsing code: https://github.com/osrf/sdformat/blob/sdf11/src/Camera.cc
+                -->
+            <camera name="cam_1_head">
+                <!-- Horizontal Field of View -->
+                    <!-- 
+                        The horizontal field of view for the camera. Tag reference can be found at [1].
+
+                        Wikipedia: https://en.wikipedia.org/wiki/Angle_of_view
+                        [1]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_horizontal_fov
+                    -->
+                <horizontal_fov>${camera_hfov}</horizontal_fov>
+                <!-- Description of the image -->
+                    <!-- 
+                        The image size and description
+
+                        Reference: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_image
+                        Parsing code: https://github.com/osrf/sdformat/blob/sdf11/src/Camera.cc
+                    -->
+                <image>
+                    <width>${camera_im_width}</width>
+                    <height>${camera_im_height}</height>
+                    <format>R8G8B8</format>
+                </image>
+                <!-- Clip the viewing range (near and far) -->
+                    <!-- 
+                        Reference: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_clip
+                    -->
+                <clip>
+                    <near>0.01</near>   <!-- Beginning of view (m) -->
+                    <far>300</far>  <!-- End of view (m) -->
+                </clip>
+                <!-- Add simulated camera paraemters -->
+                    <!-- 
+                        Parameters like camera noise [1], distortion [2], lens [3] and visibility mask [4] can
+                        be applied to make the camera as realistic as possible. However, these parameters may
+                        stress the hardware (most of noise is applied pixelwise)
+
+                        [1]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_noise
+                        [2]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_distortion
+                        [3]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_lens
+                        [4]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_visibility_mask
+                    -->
+                <noise>
+                    <type>gaussian</type>   <!-- Gaussian noise -->
+                    <mean>0.0</mean>    <!-- Mean value of noise -->
+                    <stddev>0.007</stddev>  <!-- Standard deviation -->
+                </noise>
+            </camera>
+            <!-- Load plugin for the camera -->
+                <!-- 
+                    The <camera> was to load camera paraemters (properties). This is for loading the plugin (for ROS).
+                    
+                    SDF Tag: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_plugin
+                    Source code (.so file): https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_plugins/src/gazebo_ros_camera.cpp
+                    Source code (class GazeboRosCameraUtils): https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_plugins/src/gazebo_ros_camera_utils.cpp
+                -->
+            <plugin name="cam_1_plugin" filename="libgazebo_ros_camera.so">
+                <!-- Update rate for publishing data -->
+                    <!-- 
+                        Camera information is published on a topic of message type 'sensor_msgs/CameraInfo' and
+                        camera images will be published on a topic of message type 'sensor_msgs/Image'. If this
+                        value is set to 0.0, the <update_rate> from the <sensor> is used.
+                    -->
+                <updateRate>0.0</updateRate>
+                <!-- Camera name (node handler suffix) -->
+                <cameraName>fwb_robot/cam_1</cameraName>
+                <!-- Topic name for the camera images -->
+                <imageTopicName>image_raw</imageTopicName>
+                <!-- Topic name for the camera information -->
+                <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+                <!-- Frame name for the camera -->
+                <frameName>camera_link</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+</robot>
