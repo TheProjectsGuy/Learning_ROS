@@ -26,6 +26,7 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Spawn a Robot Model in Gazebo for Tutorial 3](#spawn-a-robot-model-in-gazebo-for-tutorial-3)
         - [Launch Gazebo World for Tutorial 4](#launch-gazebo-world-for-tutorial-4)
         - [Spawn Robot Model for Tutorial 4](#spawn-robot-model-for-tutorial-4)
+        - [Visualize robot and data for Tutorial 4](#visualize-robot-and-data-for-tutorial-4)
     - [C++ Nodes](#c-nodes)
         - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
             - [Building](#building)
@@ -44,10 +45,14 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Running](#running-3)
         - [Marker and Static TF Publisher (Python) for Tutorial 1](#marker-and-static-tf-publisher-python-for-tutorial-1)
             - [Building and Running](#building-and-running-1)
+        - [Robot Visualization (Python) for Tutorial 4](#robot-visualization-python-for-tutorial-4)
+    - [Configuration files](#configuration-files)
+        - [Gazebo to Robot configurations for Tutorial 4](#gazebo-to-robot-configurations-for-tutorial-4)
     - [RViz configuration files](#rviz-configuration-files)
         - [LaserScan and TF for Tutorial 1](#laserscan-and-tf-for-tutorial-1)
         - [RobotDescription and TF for Tutorial 2](#robotdescription-and-tf-for-tutorial-2)
         - [RobotDescription and TF for Tutorial 3](#robotdescription-and-tf-for-tutorial-3)
+        - [Robot visualization with sensor and TF for Tutorial 4](#robot-visualization-with-sensor-and-tf-for-tutorial-4)
     - [URDF Files](#urdf-files)
         - [Single block for Tutorial 2](#single-block-for-tutorial-2)
         - [Two Blocks for Tutorial 2](#two-blocks-for-tutorial-2)
@@ -242,7 +247,7 @@ First off, we can start by creating and visualizing a four wheeled robot in RViz
 
 1. Create your robot using [XACRO](https://wiki.ros.org/xacro) (which will make writing description code easier)
 
-    1. There are many softwares that create a URDF directly from a CAD model. One example is [SolidWorks 3D CAD](https://www.solidworks.com/domain/design-engineering) using a [URDF exporter add-in](http://wiki.ros.org/sw_urdf_exporter). However, for this tutorial, the links are simple `<geometry>` elements. 
+    1. There are many softwares that create a URDF directly from a CAD model. One example is [SolidWorks 3D CAD](https://www.solidworks.com/domain/design-engineering) using a [URDF exporter add-in](http://wiki.ros.org/sw_urdf_exporter). However, for this tutorial, the links are simple `<geometry>` elements.
     2. Exporting from SolidWorks is also problematic as we will later add `<gazebo>` to the mix (you'll have to manually edit that long URDF generated). A better practice may be to import meshes of the links (for `<visual>` and `<collision>`) and get proper values for `<inertia>` from the CAD software.
     3. Currently, we won't have any _sensors_ mounted on the robot (we'll explore that in later tutorials)
 
@@ -318,7 +323,7 @@ You can then control the robot using the keyboard like shown below
 
 ### Tutorial 4: Sensors in Gazebo
 
-In this tutorial, we explore adding basic sensors in Gazebo robot models. We explore adding a camera and a laser scanner (LiDAR) to the robot from [tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot).
+In this tutorial, we explore adding basic sensors in Gazebo robot models. We explore adding a camera and a laser scanner (LiDAR) to the robot from [tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot). We also explore how to get the joint states from the robot in Gazebo and demonstrate how to visualize them in RViz.
 
 This tutorial uses the following resources of this package
 
@@ -327,6 +332,8 @@ This tutorial uses the following resources of this package
 | 1 | [fwb_gazebo_t4.xacro](#four-wheel-bot-for-gazebo-for-tutorial-4) | XACRO File | Robot description in XACRO, gazebo plugin tags, etc. |
 | 2 | [t4_gazebo_world.launch](#launch-gazebo-world-for-tutorial-4) | Launch file | Launches the Gazebo world |
 | 3 | [t4_gz_spawn_xacro.launch](#spawn-robot-model-for-tutorial-4) | Launch file | Spawns the XACRO file above in the Gazebo world |
+| 4 | [t4_robot_joints.py](#robot-visualization-python-for-tutorial-4) | Python Node | Node to translate link states from Gazebo to joint states in RViz |
+| 5 | [t4_robot_viz.launch](#visualize-robot-and-data-for-tutorial-4) | Launch file | Visualizes the robot in RViz along with translation of messages |
 
 Borrowing the XACRO from [tutorial 3](#tutorial-3-gazebo-and-a-four-wheel-robot), add the following for each sensor
 
@@ -347,9 +354,25 @@ You can control the robot using
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 ```
 
-This will show the following in the gazebo GUI
+Note that this node only is to publish messages on `/cmd_vel` topic. This will show the following in the gazebo GUI.
 
 ![Gazebo window](./media/pic23.png)
+
+You can visualize everything (the LIDAR scan, camera, robot joint transformations, etc.) using
+
+```bash
+roslaunch basic_robotics t4_robot_viz.launch
+```
+
+This must open an RViz window like shown below
+
+![RViz for visualizing Tutorial 4](./media/pic24.png)
+
+The corresponding Gazebo GUI is as shown below
+
+![Gazebo GUI for Tutorial 4](./media/pic25.png)
+
+Note that the wheels can be seen rotating in the RViz RobotModel as they are made to rotate by the plugin (Skid Steer Drive plugin) in Gazebo. This is done because of the [translation node](#robot-visualization-python-for-tutorial-4).
 
 ## Launch Files
 
@@ -465,6 +488,20 @@ Launches the gazebo world for tutorial 4. Simply includes the [t3_gazebo_world](
 | File | [launch/t4_gz_spawn_xacro.launch](./launch/t4_gz_spawn_xacro.launch) |
 
 Spawns the robot model (in XACRO) in the gazebo world. Includes the [t3_gz_spawn_xacro](#spawn-a-robot-model-in-gazebo-for-tutorial-3) launch file, but with the XACRO for [tutorial 4](#tutorial-4-sensors-in-gazebo).
+
+### Visualize robot and data for Tutorial 4
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t4_robot_viz` |
+| File | [launch/t4_robot_viz.launch](./launch/t4_robot_viz.launch)
+
+Does the following
+
+- Launches `rviz` with configuration [RobotViz_T4.rviz](#robot-visualization-with-sensor-and-tf-for-tutorial-4)
+- Launches nodes `joint_state_publisher` and `robot_state_publisher` for generating `/tf` of the robot for visualizing.
+- Launches node [t4_robot_joints.py](#robot-visualization-python-for-tutorial-4) for translating messages between Gazebo's LinkState and sensor's JointState. This and the `joint_state_publisher` are given the configuration file [t4_gz_robot_lframes.yaml](#gazebo-to-robot-configurations-for-tutorial-4)
+- Defines the `robot_description` parameter in a separate namespace for the `RobotDescription` in RViz. This is for demonstration purposes only.
 
 ## C++ Nodes
 
@@ -801,6 +838,26 @@ In the `package.xml` file, add `<build_depend>`, `<exec_depend>` and `<build_exp
 
 Build the package using `catkin_make` in the workspace directory. This node is included in the [launch file](#launch-python-for-tutorial-1) for [tutorial 1](#tutorial-1-visualizing-data-in-rviz).
 
+### Robot Visualization (Python) for Tutorial 4
+
+| Filed | Value |
+| :--- | :---- |
+| Name | `robot_joint_translator` |
+| File | [scripts/t4_robot_joints.py](./scripts/t4_robot_joints.py) |
+
+Gazebo publishes information about links in the simulation on topic `/gazebo/link_states` (information on models is published on `/gazebo/model_states`). Link transformations are inferred from these. The position of the robot is derived from `/tf` between `dummy` and `odom` frames. The original configurations of the wheels are passed to the node. The node calculates the change in orientation of the wheels and publishes the `sensor_msgs/JointState` message to the `joint_state_publisher`.
+
+## Configuration files
+
+### Gazebo to Robot configurations for Tutorial 4
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t4_gz_robot_lframes.yaml` |
+| File | [configs/t4_gz_robot_lframes.yaml](./configs/t4_gz_robot_lframes.yaml) |
+
+Configurations for the `joint_state_publisher` and the [t4_robot_joints.py](#robot-visualization-python-for-tutorial-4) node. Specifies the topic where JointStates will be delivered, zero positions and gazebo link names for joints to be translated.
+
 ## RViz configuration files
 
 ### LaserScan and TF for Tutorial 1
@@ -856,6 +913,15 @@ This file may be modified throughout the tutorial.
 | File | [rviz/RobotViz_T3.rviz](./rviz/RobotViz_T3.rviz) |
 
 This file follows the same procedure as that for [tutorial 2](#robotdescription-and-tf-for-tutorial-2).
+
+### Robot visualization with sensor and TF for Tutorial 4
+
+| Field | Value |
+| :---- | :---- |
+| Name | `RobotViz_T4.rviz` |
+| File | [rviz/RobotViz_T4.rviz](./rviz/RobotViz_T4.rviz)
+
+This file is to visualize lidar data (LaserScan), camera image, transformations (both odometry and robot, separately) and robot description in RViz.
 
 ## URDF Files
 
@@ -959,7 +1025,7 @@ gz sdf -p fwb_gazebo_t3.urdf
 | Main XACRO File | [urdf/fwb_gazebo_t4.xacro](./urdf/fwb_gazebo_t4.xacro) |
 | Included files | [urdf/fwb_parameters_t4.xacro](./urdf/fwb_parameters_t4.xacro), [urdf/fwb_macros.xacro](./urdf/fwb_macros.xacro), [urdf/fwb_t4_general.gazebo](./urdf/fwb_t4_general.gazebo), [urdf/fwb_camera_t4.xacro](./urdf/fwb_camera_t4.xacro), [urdf/fwb_lidar_t4.xacro](./urdf/fwb_lidar_t4.xacro) |
 
-A four wheel robot with a camera and a LiDAR (LaserScanner) sensor mounted. This mostly is derived from [fwb_gazebo_t3.xacro](#four-wheel-bot-for-gazebo-for-tutorial-3), but with additional `<plugin>` and `<sensor>` tags. There are additional parameters for the camera and laser scanner.
+A four wheel robot with a camera and a LiDAR (LaserScanner) sensor mounted. This mostly is derived from [fwb_gazebo_t3.xacro](#four-wheel-bot-for-gazebo-for-tutorial-3), but with additional `<plugin>` and `<sensor>` tags. There are additional parameters for the camera and laser scanner.The robot also starts with a dummy link for KDL to parse (`robot_state_publisher` needs it). Because of this, the `<plugin>` for SkidSteerDrive has `dummy` as the `<robotBaseFrame>` (first link of the robot is the dummy with no inertia).
 
 ## Gazebo World Files
 

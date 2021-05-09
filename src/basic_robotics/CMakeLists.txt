@@ -178,6 +178,7 @@ catkin_install_python(PROGRAMS
   scripts/t1_laser_scan_publisher.py
   scripts/t1_tf_publisher.py
   scripts/t1_markers_publisher.py
+  scripts/t4_robot_joints.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

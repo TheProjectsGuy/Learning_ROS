@@ -1,0 +1,41 @@
+# A configuration file for Tutorial 4 pertaining to robot link frames
+# - The file contains configurations to parse frames from topic
+#   `/gazebo/link_states` and allow them to be perceived as joint states
+# - The file also contains configurations for the joint_state_publisher
+#   that then allows the robot to be rendered
+#
+
+# Configurations for the joint_state_publisher
+source_list:
+  - "fwb_gz_msgs"
+
+# Configurations for translation
+gz_translation:
+  # Translation rate
+  rate: 80  # 80 Hz
+  # Names in '/gazebo/link_states' (mapped to joints as JointState)
+  map:
+    # Details about the front left wheel
+    fl_wheel_joint:
+      # [Px, Py, Pz, Qx, Qy, Qz, Qw] for the zero position transform
+      zero: [0.272, 0.2725, -0.130, -0.707106, 0, 0, 0.707106]
+      # Name in '/gazebo/link_states' to lookup
+      gz_name: "fw_bot::fl_wheel"
+    # Details about the front right wheel
+    fr_wheel_joint:
+      # [Px, Py, Pz, Qx, Qy, Qz, Qw] for the zero position transform
+      zero: [0.272, -0.2725, -0.130, -0.707106, 0, 0, 0.707106]
+      # Name in '/gazebo/link_states' to lookup
+      gz_name: "fw_bot::fr_wheel"
+    # Details about the hind left wheel
+    hl_wheel_joint:
+      # [Px, Py, Pz, Qx, Qy, Qz, Qw] for the zero position transform
+      zero: [-0.272, 0.2725, -0.130, -0.707106, 0, 0, 0.707106]
+      # Name in '/gazebo/link_states' to lookup
+      gz_name: "fw_bot::hl_wheel"
+    # Details about the hind right wheel
+    hr_wheel_joint:
+      # [Px, Py, Pz, Qx, Qy, Qz, Qw] for the zero position transform
+      zero: [-0.272, -0.2725, -0.130, -0.707106, 0, 0, 0.707106]
+      # Name in '/gazebo/link_states' to lookup
+      gz_name: "fw_bot::hr_wheel"

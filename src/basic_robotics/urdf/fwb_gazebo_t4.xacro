@@ -17,6 +17,16 @@
     <xacro:include filename="$(find basic_robotics)/urdf/fwb_lidar_t4.xacro" />
 
     <!-- Main code -->
+    <link name="dummy">
+        <!-- 
+            This is a dummy link for KDL to parse the URDF. Basically, a
+            root link with <inertia> is not supported by KDL [1] (a library
+            used by robot_state_publisher). Reference at [2]
+
+            [1]: https://www.orocos.org/kdl.html
+            [2]: https://answers.ros.org/question/192817/error-msg-the-root-link_base-has-an-inertia-specified-in-the-urdf-but-kdl/
+        -->
+    </link>
     <!-- Main body link -->
     <link name="body">
         <inertial>
@@ -37,6 +47,12 @@
             </geometry>
         </collition>
     </link>
+    <!-- Attach the dummy link -->
+    <joint name="dummy_body_fixed" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="dummy" />
+        <child link="body" />
+    </joint>
     <!-- Attach the wheels -->
     <xacro:add_wheel lname="fl_wheel" jname="fl_wheel_joint" 
         sx="${body_sx/2}" sy="${(body_sy + wheel_h)/2}" sz="${-body_sz/2}"

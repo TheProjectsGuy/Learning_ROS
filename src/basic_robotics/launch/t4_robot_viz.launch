@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Visualize the robot using RViz. Also visualizes the motion and sensor data -->
+<!-- 
+    Launch this file after launching t4_gazebo_world.launch and
+    t4_gz_spawn_xacro.launch, as
+        - This is to visualize the data generated from the robot
+            (so it has to exist first)
+        - The `/robot_description` parameter will then be loaded
+-->
+<launch>
+    <!-- Arguments -->
+    <!-- RViz configuration file -->
+    <arg name="rviz_config" default="$(find basic_robotics)/rviz/RobotViz_T4.rviz" 
+        doc="Fullpath (with extension) to the .rviz configuration file" />
+    <!-- Namespace for launch -->
+    <arg name="ns" default="/fwbot/viz/" doc="Namespace for the nodes in this launch" />
+    <!-- Robot description -->
+    <arg name="xacro_file" default="$(find basic_robotics)/urdf/fwb_gazebo_t4.xacro"
+        doc="Fullpath (with extension) to the .xacro file for robot description" />
+
+    <!-- A group for namespacing -->
+    <group ns="$(arg ns)">
+        <!-- Parameters -->
+        <!-- Robot Description: Only for RViz (not robot and joint state publisher) -->
+        <param name="robot_description" command="xacro $(arg xacro_file)" />
+
+        <!-- Nodes -->
+        <!-- RViz (with config) -->
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" required="true" />
+        <!-- Joint state publisher (for /joint_states)-->
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+            <!-- Node parameters -->
+            <rosparam command="load" file="$(find basic_robotics)/configs/t4_gz_robot_lframes.yaml" />
+        </node>
+        <!-- Robot state publisher -->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+        <!-- Node to translate gazebo_msgs/LinkStates to sensor_msgs/JointState -->
+        <node name="gazebo_js_translator" pkg="basic_robotics" type="t4_robot_joints.py" required="true">
+            <!-- Parameters -->
+            <rosparam command="load" file="$(find basic_robotics)/configs/t4_gz_robot_lframes.yaml" />
+        </node>
+    </group>
+</launch>

@@ -43,21 +43,21 @@
             <!-- Wheel diameter (each wheel has the same diameter) (default 0.15 m) -->
             <wheelDiameter>${(2 * wheel_r)}</wheelDiameter>
             <!-- Base frame name (link name) for publishing odometry (default "base_footprint") -->
-            <robotBaseFrame>body</robotBaseFrame>
+            <robotBaseFrame>dummy</robotBaseFrame>  <!-- Dummy link (for transformation tree to be maintained) -->
             <!-- Maximum torque of the wheels (default 5.0 Nm) -->
             <torque>20</torque>
             <!-- Topic name for commanding geometry_msgs/Twist (default "cmd_vel", distinct in robotNamespace) -->
             <commandTopic>cmd_vel</commandTopic>
             <!-- Broadcast the transformation for odometry (from odom frame to base frame) (default false) -->
+            <broadcastTF>true</broadcastTF>
                 <!--
-                    Some tags for odometry (position of robot in world) that you can use
+                    Some other tags for odometry (position of robot in world) that you can use
                     - <odometryTopic> : Topic name for odometry (message type nav_msgs/Odometry) (default "odom" in robot namespace)
                     - <odometryFrame> : Frame name for odometry in the transformation tree (default "/odom")
                     - <covariance_x> : Covariance for odometry (along X axis translation) (default 0.0001 m)
                     - <covariance_y> : Covariance for odometry (along Y axis translation) (default 0.0001 m)
                     - <covariance_yaw> : Covariance for odometry (along Z axis rotation) (default 0.01 rad)
                 -->
-            <broadcastTF>true</broadcastTF>
         </plugin>
     </gazebo>
 

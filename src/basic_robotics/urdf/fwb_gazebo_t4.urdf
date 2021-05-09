@@ -8,8 +8,8 @@
     A four wheel mobile robot made for Tutorial 3 (for being spawned in gazebo)
 -->
 <robot name="fw_robot">
-  <!-- Wheel height (m) -->
-  <!-- Wheel height (m) -->
+  <!-- LaserScanner sampled in angle readings (integer) -->
+  <!-- LaserScanner sampled in angle readings (integer) -->
   <!-- 
         Main Gazebo tag
 
@@ -124,7 +124,249 @@
   <gazebo reference="hr_wheel_joint">
     <provideFeedback>true</provideFeedback>
   </gazebo>
+  <!-- LaserScanner sampled in angle readings (integer) -->
+  <!-- The <link> tag for the camera -->
+  <!-- 
+            This is for the camera link
+        -->
+  <link name="camera_link">
+    <inertial>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.06"/>
+      <inertia ixx="2.8124999999999996e-05" ixy="0.0" ixz="0.0" iyy="1.9124999999999997e-05" iyz="0.0" izz="1.1249999999999997e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="0.015 0.045 0.06"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="0.015 0.045 0.06"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- The <joint> for the camera link -->
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="0.2645 0.0 0.16"/>
+    <parent link="body"/>
+    <child link="camera_link"/>
+  </joint>
+  <!-- The <gazebo> tag for the camera link -->
+  <gazebo reference="camera_link">
+    <!-- Add a <sensor> in SDF -->
+    <!-- 
+                A <sensor> is used to specify a sensor in Gazebo (SDF) [1]. This one should not be confused
+                with the <sensor> in URDF [2]. The 'type' is a "camera" (Reference: [3]) and the 'name' must
+                be a unique identifier among all the models in the simulation. The source code that parses
+                this tag in the SDF repository is in [4].
+                
+                [1]: http://sdformat.org/spec?ver=1.8&elem=sensor
+                [2] (Not): https://wiki.ros.org/urdf/XML/sensor
+                [3]: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_camera
+                [4]: https://github.com/osrf/sdformat/blob/sdf11/src/Sensor.cc
+            -->
+    <sensor name="cam_1" type="camera">
+      <!-- Set the update rate -->
+      <!-- 
+                    The update rate (in Hz). If left, the sensor will refresh data every cycle.
+
+                    Reference: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_update_rate
+                -->
+      <update_rate>30.0</update_rate>
+      <!-- The <camera> for the sensor -->
+      <!-- 
+                    This must correspond to the 'type' in the <sensor> above. The 'name' could be the same
+                    as in <sensor> or something else.
+                    
+                    Reference: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_camera
+                    Parsing code: https://github.com/osrf/sdformat/blob/sdf11/src/Camera.cc
+                -->
+      <camera name="cam_1_head">
+        <!-- Horizontal Field of View -->
+        <!-- 
+                        The horizontal field of view for the camera. Tag reference can be found at [1].
+
+                        Wikipedia: https://en.wikipedia.org/wiki/Angle_of_view
+                        [1]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_horizontal_fov
+                    -->
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <!-- Description of the image -->
+        <!-- 
+                        The image size and description
+
+                        Reference: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_image
+                        Parsing code: https://github.com/osrf/sdformat/blob/sdf11/src/Camera.cc
+                    -->
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <!-- Clip the viewing range (near and far) -->
+        <!-- 
+                        Reference: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_clip
+                    -->
+        <clip>
+          <near>0.01</near>
+          <!-- Beginning of view (m) -->
+          <far>300</far>
+          <!-- End of view (m) -->
+        </clip>
+        <!-- Add simulated camera paraemters -->
+        <!-- 
+                        Parameters like camera noise [1], distortion [2], lens [3] and visibility mask [4] can
+                        be applied to make the camera as realistic as possible. However, these parameters may
+                        stress the hardware (most of noise is applied pixelwise)
+
+                        [1]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_noise
+                        [2]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_distortion
+                        [3]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_lens
+                        [4]: http://sdformat.org/spec?ver=1.8&elem=sensor#camera_visibility_mask
+                    -->
+        <noise>
+          <type>gaussian</type>
+          <!-- Gaussian noise -->
+          <mean>0.0</mean>
+          <!-- Mean value of noise -->
+          <stddev>0.007</stddev>
+          <!-- Standard deviation -->
+        </noise>
+      </camera>
+      <!-- Load plugin for the camera -->
+      <!-- 
+                    The <camera> was to load camera paraemters (properties). This is for loading the plugin (for ROS).
+                    
+                    SDF Tag: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_plugin
+                    Source code (.so file): https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_plugins/src/gazebo_ros_camera.cpp
+                    Source code (class GazeboRosCameraUtils): https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_plugins/src/gazebo_ros_camera_utils.cpp
+                -->
+      <plugin filename="libgazebo_ros_camera.so" name="cam_1_plugin">
+        <!-- Update rate for publishing data -->
+        <!-- 
+                        Camera information is published on a topic of message type 'sensor_msgs/CameraInfo' and
+                        camera images will be published on a topic of message type 'sensor_msgs/Image'. If this
+                        value is set to 0.0, the <update_rate> from the <sensor> is used.
+                    -->
+        <updateRate>0.0</updateRate>
+        <!-- Camera name (node handler suffix) -->
+        <cameraName>fwb_robot/cam_1</cameraName>
+        <!-- Topic name for the camera images -->
+        <imageTopicName>image_raw</imageTopicName>
+        <!-- Topic name for the camera information -->
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <!-- Frame name for the camera -->
+        <frameName>camera_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- LaserScanner sampled in angle readings (integer) -->
+  <!-- The <link> tag for the lidar -->
+  <link name="lidar_link">
+    <inertial>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.12"/>
+      <inertia ixx="7.4e-05" ixy="0.0" ixz="0.0" iyy="7.4e-05" iyz="0.0" izz="5e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="0.05 0.05 0.07"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="0.05 0.05 0.07"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- The <joint> for the lidar -->
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="0.29700000000000004 0.0 -0.095"/>
+    <parent link="body"/>
+    <child link="lidar_link"/>
+  </joint>
+  <!-- The <gazebo> tag for the LiDAR -->
+  <gazebo reference="lidar_link">
+    <!-- The <sensor> for LiDAR -->
+    <!--
+                Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#link_sensor
+                Parsing code: https://github.com/osrf/sdformat/blob/sdf11/src/Sensor.cc
+            -->
+    <sensor name="lidar_1" type="gpu_ray">
+      <!-- Update rate -->
+      <update_rate>30.0</update_rate>
+      <!-- Visualize the sensor -->
+      <visualize>true</visualize>
+      <!-- Description about the <ray> -->
+      <!-- 
+                    In code, <lidar> and <ray> are considered one and the same (see the code
+                    parsing reference). Here, and most often (as the physical working suggests),
+                    we use <ray> as that's what a LiDAR is: it uses rays to map a field.
+
+                    Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_ray
+                    Parsing code: https://github.com/osrf/sdformat/blob/sdf11/src/Lidar.cc
+                -->
+      <ray>
+        <!-- Set the <scan> properties -->
+        <!-- 
+                        Horizontal and vertical scan components. Specify angle range using
+                        <min_angle> to <max_angle> (all angles in radians). Specify <sample>
+                        with the number of samples to be recorded in the range, you could
+                        specify <resolution> too
+                        
+                        Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#ray_scan
+                    -->
+        <scan>
+          <horizontal>
+            <samples>200</samples>
+            <min_angle>-0.8726646259971648</min_angle>
+            <max_angle>0.8726646259971648</max_angle>
+          </horizontal>
+        </scan>
+        <!-- Set the <range> properties -->
+        <!-- 
+                        10 cm <min> to 30 m <max> with 1 cm <resolution>
+
+                        Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#ray_range
+                    -->
+        <range>
+          <min>0.10</min>
+          <max>30.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <!-- Set the <noise> properties -->
+        <!-- 
+                        Ref: http://sdformat.org/spec?ver=1.8&elem=sensor#lidar_noise
+                    -->
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <!-- Load <plugin> for the LiDAR -->
+      <plugin filename="libgazebo_ros_gpu_laser.so" name="lidar_1_plugin">
+        <!-- Frame name -->
+        <frameName>lidar_link</frameName>
+        <!-- Topic name for the data -->
+        <topicName>lidar_1/sensor_data</topicName>
+      </plugin>
+    </sensor>
+  </gazebo>
   <!-- Main code -->
+  <link name="dummy">
+    <!-- 
+            This is a dummy link for KDL to parse the URDF. Basically, a
+            root link with <inertia> is not supported by KDL [1] (a library
+            used by robot_state_publisher)
+
+            [1]:https://www.orocos.org/kdl.html
+        -->
+  </link>
   <!-- Main body link -->
   <link name="body">
     <inertial>
@@ -145,6 +387,12 @@
       </geometry>
     </collition>
   </link>
+  <!-- Attach the dummy link -->
+  <joint name="dummy_body_fixed" type="fixed">
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <parent link="dummy"/>
+    <child link="body"/>
+  </joint>
   <!-- Link -->
   <link name="fl_wheel">
     <inertial>
