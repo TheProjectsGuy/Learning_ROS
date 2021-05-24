@@ -16,6 +16,7 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Part 2: Jogging a two link manipulator](#part-2-jogging-a-two-link-manipulator)
         - [Tutorial 3: Gazebo and a Four Wheel Robot](#tutorial-3-gazebo-and-a-four-wheel-robot)
         - [Tutorial 4: Sensors in Gazebo](#tutorial-4-sensors-in-gazebo)
+        - [Tutorial 5: Simple 1R Robot](#tutorial-5-simple-1r-robot)
     - [Launch Files](#launch-files)
         - [Launch C++ for Tutorial 1](#launch-c-for-tutorial-1)
         - [Launch Python for Tutorial 1](#launch-python-for-tutorial-1)
@@ -36,12 +37,15 @@ Basic Robotics related software provided in ROS. This package includes a brief o
             - [Running](#running-1)
         - [Marker and Static TF Publisher (C++) for Tutorial 1](#marker-and-static-tf-publisher-c-for-tutorial-1)
             - [Building and Running](#building-and-running)
+    - [Gazebo Plugins](#gazebo-plugins)
+        - [Single Link Robot Controller for Tutorial 5](#single-link-robot-controller-for-tutorial-5)
+            - [Building](#building-2)
     - [Python Nodes](#python-nodes)
         - [Laser Scan Publisher (Python) for Tutorial 1](#laser-scan-publisher-python-for-tutorial-1)
-            - [Building](#building-2)
+            - [Building](#building-3)
             - [Running](#running-2)
         - [TF Publisher (Python) for Tutorial 1](#tf-publisher-python-for-tutorial-1)
-            - [Building](#building-3)
+            - [Building](#building-4)
             - [Running](#running-3)
         - [Marker and Static TF Publisher (Python) for Tutorial 1](#marker-and-static-tf-publisher-python-for-tutorial-1)
             - [Building and Running](#building-and-running-1)
@@ -374,6 +378,8 @@ The corresponding Gazebo GUI is as shown below
 
 Note that the wheels can be seen rotating in the RViz RobotModel as they are made to rotate by the plugin (Skid Steer Drive plugin) in Gazebo. This is done because of the [translation node](#robot-visualization-python-for-tutorial-4).
 
+### Tutorial 5: Simple 1R Robot
+
 ## Launch Files
 
 ### Launch C++ for Tutorial 1
@@ -670,6 +676,176 @@ In the `package.xml` file, add `<build_depend>`, `<exec_depend>` and `<build_exp
 
 Build the package using `catkin_make` in the workspace directory. This node is included in the [launch file](#launch-c-for-tutorial-1) for [tutorial 1](#tutorial-1-visualizing-data-in-rviz).
 
+## Gazebo Plugins
+
+### Single Link Robot Controller for Tutorial 5
+
+| Field | Value |
+| :---- | :---- |
+| Name | `libgazebo_ros_slbot_controller.so` |
+| Header file | [gazebo_ros_slbot_controller.h](./include/gazebo_plugins/gazebo_ros_slbot_controller.h) |
+| Source code | [gazebo_ros_slbot_controller.cpp](./src/gazebo_ros_slbot_controller.cpp)
+
+This is a Gazebo plugin created to control the single link (single revolute joint) robot demonstrated in [Tutorial 5](#tutorial-5-simple-1r-robot). A plugin is an extension to the Gazebo node that is handled by the gazebo server. Usually, plugins are kept in a separate package, but they can be merged with other things (like here).
+
+#### Building
+
+In your `package.xml`, do the following
+
+1. Add `gazebo_ros` dependency
+
+    ```xml
+    <build_depend>gazebo_ros</build_depend>
+    <build_export_depend>gazebo_ros</build_export_depend>
+    <exec_depend>gazebo_ros</exec_depend>
+    ```
+
+    This will be needed for the parent classes (and for Gazebo integration)
+
+2. In the `<export> ... </export>` section, that is present just before the `</package>` (insert if missing), a `<gazebo_ros>` is to be added
+
+    The section should become
+
+    ```xml
+    <export>
+        <!-- Other tools can request additional information be placed here -->
+        <gazebo_ros plugin_path="${prefix}/../../lib" gazebo_media_path="${prefix}" />
+    </export>
+    ```
+
+    The `plugin_path` is actually pointing to the place the library's `.so` file will be placed. It will allow `filename` in `<plugin>` to use only its base name (not the full path which may differ based on system).
+
+In your `CMakeLists.txt`, add the following
+
+1. We'll be using C++17, and to force that, add the following after `project(...)`
+
+    Add the c++17 as a compile option
+
+    ```makefile
+    add_compile_options(-std=c++17)
+    ```
+
+    This will ensure that C++17 standards are used when compiling (requirement for Gazebo)
+
+2. Add `gazebo_ros` to `find_package(catkin REQUIRED COMPONENTS` list for showing dependency during build
+3. Add `gazebo` system dependency. Just after the `find_package` function above, add another function as shown below (there must be a comment section dedicated to it)
+
+    ```makefile
+    find_package(gazebo REQUIRED)
+    ```
+
+    This will ensure that the system has Gazebo installed before building the packages.
+
+4. Add `include_directories` in the section named `catkin specific configuration` (you may have to create a new section just after the header)
+
+    ```makefile
+    # Include directories required for build
+    include_directories(include
+    ${Boost_INCLUDE_DIR} 
+    ${catkin_INCLUDE_DIRS} 
+    ${GAZEBO_INCLUDE_DIRS}
+    )
+    ```
+
+    This will include the header files for boost, catkin and gazebo when building the library. Note that these are only header files, not source code. This is usually the `/opt/ros/noetic/include/gazebo_plugins/` folder.
+
+    Usually, the source code is shared as `.so` in installations. To _link_ that, you'll have to add another similar section for `link_directories`.
+
+    ```makefile
+    # Link the directories for Gazebo library
+    link_directories(${GAZEBO_LIBRARY_DIRS})
+    ```
+
+    This will include the `.so` directories for Gazebo. This is usually the `/opt/ros/noetic/lib` folder.
+
+5. Add the library to the `catkin_package` function in the section `catkin specific configuration`
+
+    First, add the `INCLUDE_DIRS include` line. Then, add `LIBRARIES` and then the `roscpp` under `DEPENDS`. The function must look somewhat like this
+
+    ```makefile
+    catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES
+        gazebo_ros_slbot_controller
+    CATKIN_DEPENDS
+        roscpp
+        rospy 
+        std_msgs 
+        sensor_msgs 
+        tf2 
+        tf2_ros 
+        geometry_msgs 
+        visualization_msgs
+    DEPENDS
+        roscpp
+    )
+    ```
+
+    Note that
+
+    - The `INCLUDE` is important as the library is actually consisting of declarations in a separate header file (in the `include` folder).
+    - `LIBRARIES` is given a list of libraries that this package is generating. The one we're dealing with is `gazebo_ros_slbot_controller` and will be saved as `libgazebo_ros_slbot_controller` in the `devel/lib` folder of workspace.
+    - `DEPENDS` is just for system dependencies.
+    - `CATKIN_DEPENDS` is the same from previous tutorials (not actually needed here).
+
+6. In the `Build` section, include the `include` folder
+
+    ```makefile
+    include_directories(
+        include
+        ${catkin_INCLUDE_DIRS}
+    )
+    ```
+
+    This will include the folder for adding library
+
+7. Add the library using `add_library` function
+
+    ```makefile
+    add_library(gazebo_ros_slbot_controller
+        src/gazebo_ros_slbot_controller.cpp
+    )
+    ```
+
+    This will create the `gazebo_ros_slbot_controller` library (as the `libgazebo_ros_slbot_controller.so` file)
+
+8. You can link catkin libraries using
+
+    ```makefile
+    target_link_libraries(gazebo_ros_slbot_controller ${catkin_LIBRARIES})
+    ```
+
+9. Install the targets for the library
+
+    ```makefile
+    install(TARGETS
+        gazebo_ros_slbot_controller
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    )
+    ```
+
+    This will install the `gazebo_ros_slbot_controller` library to its correct destination. More information on variables [here](https://docs.ros.org/en/jade/api/catkin/html/user_guide/variables.html).
+
+10. Install the C++ header files to the appropriate folder
+
+    ```bash
+    install(
+        DIRECTORY include/gazebo_plugins
+        DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/gazebo_plugins
+    )
+    ```
+
+    This simply sets the include path
+
+After this, save and run `catkin_make` in the workspace directory. You must see a `libgazebo_ros_slbot_controller.so` in `devel/lib/` directory in workspace. This piece of code is run by Gazebo, when `<plugin>` is encountered in `<gazebo> ... </gazebo>`. For example, this would call the `Load` function (check source code)
+
+```xml
+<gazebo>
+    <plugin name="slbot_controller" filename="libgazebo_ros_slbot_controller.so" />
+</gazebo>
+```
+
 ## Python Nodes
 
 ### Laser Scan Publisher (Python) for Tutorial 1
@@ -846,6 +1022,8 @@ Build the package using `catkin_make` in the workspace directory. This node is i
 | File | [scripts/t4_robot_joints.py](./scripts/t4_robot_joints.py) |
 
 Gazebo publishes information about links in the simulation on topic `/gazebo/link_states` (information on models is published on `/gazebo/model_states`). Link transformations are inferred from these. The position of the robot is derived from `/tf` between `dummy` and `odom` frames. The original configurations of the wheels are passed to the node. The node calculates the change in orientation of the wheels and publishes the `sensor_msgs/JointState` message to the `joint_state_publisher`.
+
+In the `CMakeLists.txt` file, in `catkin_install_python` function, add `scripts/t4_robot_joints.py` line (for installing the script).
 
 ## Configuration files
 
@@ -1078,3 +1256,5 @@ The model in the end looks like this (saved as `t3_fwb_world.world` in the `worl
 - [RViz introduction YouTube](https://www.youtube.com/watch?v=i--Sd4xH9ZE&feature=emb_logo)
 - [URDF on roswiki](https://wiki.ros.org/urdf)
     - [XACRO on roswiki](https://wiki.ros.org/xacro)
+- [ROS Plugins for Gazebo](http://gazebosim.org/tutorials?tut=ros_plugins&cat=connect_ros)
+    - ROS agnostic introduction to [plugins](http://gazebosim.org/tutorials?cat=write_plugin)

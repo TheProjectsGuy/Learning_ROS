@@ -3,6 +3,7 @@ project(basic_robotics)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
+add_compile_options(-std=c++17)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -16,11 +17,12 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   visualization_msgs
+  gazebo_ros
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
+find_package(gazebo REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -101,6 +103,16 @@ find_package(catkin REQUIRED COMPONENTS
 ###################################
 ## catkin specific configuration ##
 ###################################
+
+# Include directories required for build
+include_directories(include
+  ${Boost_INCLUDE_DIR} 
+  ${catkin_INCLUDE_DIRS} 
+  ${GAZEBO_INCLUDE_DIRS}
+)
+# Link the directories for Gazebo library
+link_directories(${GAZEBO_LIBRARY_DIRS})
+
 ## The catkin_package macro generates cmake config files for your package
 ## Declare things to be passed to dependent projects
 ## INCLUDE_DIRS: uncomment this if your package contains header files
@@ -108,10 +120,20 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES basic_robotics
-  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs tf2 tf2_ros geometry_msgs visualization_msgs
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES
+    gazebo_ros_slbot_controller
+  CATKIN_DEPENDS
+    roscpp
+    rospy 
+    std_msgs 
+    sensor_msgs 
+    tf2 
+    tf2_ros 
+    geometry_msgs 
+    visualization_msgs
+  DEPENDS
+    roscpp
 )
 
 ###########
@@ -121,7 +143,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -129,6 +151,9 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/basic_robotics.cpp
 # )
+add_library(gazebo_ros_slbot_controller
+  src/gazebo_ros_slbot_controller.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -160,6 +185,7 @@ add_executable(t1_markers_publisher src/t1_markers_publilsher.cpp)
 target_link_libraries(t1_laser_scan_pub ${catkin_LIBRARIES})
 target_link_libraries(t1_tf_broadcaster ${catkin_LIBRARIES})
 target_link_libraries(t1_markers_publisher ${catkin_LIBRARIES})
+target_link_libraries(gazebo_ros_slbot_controller ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -195,6 +221,11 @@ catkin_install_python(PROGRAMS
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 # )
+install(TARGETS
+  gazebo_ros_slbot_controller
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
@@ -202,6 +233,10 @@ catkin_install_python(PROGRAMS
 #   FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
 # )
+install(
+  DIRECTORY include/gazebo_plugins
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/gazebo_plugins
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

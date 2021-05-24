@@ -1,6 +1,7 @@
 """
     The purpose of this file is as follows:
-        1. 
+        1. Read "/gazebo/link_states"
+        2. Publish equivalent transformation on "/tf"
 """
 
 # Import basic modules

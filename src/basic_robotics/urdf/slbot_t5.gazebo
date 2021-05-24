@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The <gazebo> for the single joint -->
+<robot name="sl_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <gazebo>
+        <!-- Plugin for controlling the model and printing information -->
+        <!-- 
+            This is a plugin created in this same package. Refer to the
+            tutorials (ROS specific) [1] for the basic structure. You can
+            also refer to ROS agnostic tutorials [2] for more information.
+
+            [1]: http://gazebosim.org/tutorials?tut=ros_plugins&cat=connect_ros
+            [2]: http://gazebosim.org/tutorials?cat=write_plugin
+        -->
+        <plugin name="slbot_controller" filename="libgazebo_ros_slbot_controller.so">
+            <!-- Namespace for the NodeHandler -->
+            <robotNamespace>sl_robot1</robotNamespace>
+            <!-- Joint Name -->
+            <robotJoint>joint1</robotJoint>
+            <!-- JointState publisher -->
+            <jointStateTopic>joint_states</jointStateTopic>
+            <!-- Rate -->
+            <rate>50</rate>
+        </plugin>
+    </gazebo>
+    <!-- Material properties -->
+    <!-- Base link -->
+    <gazebo reference="base">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+    <!-- Moving link -->
+    <gazebo reference="link1">
+        <material>Gazebo/Red</material>
+    </gazebo>
+</robot>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Visualize the robot and jog it for tutorial 5 -->
+<launch>
+    <!-- Arguments -->
+    <arg name="rviz_config" default="$(find basic_robotics)/rviz/Robot_Viz_T5.rviz"
+        doc="The full path with '.rviz' extension to the RViz configuration file" />
+    <arg name="robot_file" default="$(find basic_robotics)/urdf/slbot_t5.xacro"
+        doc="A .xacro file (realpath with extension) to display" />
+
+    <!-- Paraemters -->
+    <!-- Robot description -->
+    <param name="robot_description" command="xacro $(arg robot_file)" />
+
+    <!-- Nodes -->
+    <!-- RViz node -->
+    <node name="rviz_robot" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" required="true" />
+    <!-- Joint state publisher (GUI) for jogging -->
+    <node name="js_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <!-- Robot state publisher (joint state to /tf) -->
+    <node name="rs_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+</launch>

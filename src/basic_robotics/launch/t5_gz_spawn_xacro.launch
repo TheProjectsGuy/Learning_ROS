@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spawn a XACRO in Gazebo -->
+<launch>
+    <!-- Arguments -->
+    <!-- XACRO File -->
+    <arg name="xacro_file" default="$(find basic_robotics)/urdf/slbot_t5.xacro"
+        doc="Realpath of XACRO file" />
+
+    <!-- Parameters -->    
+    <!-- Robot description -->
+    <param name="spawn_description" command="xacro $(arg xacro_file)" />
+
+    <!-- Nodes -->
+    <!-- Spawn the robot -->
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -model sl_robot -param spawn_description" />
+</launch>

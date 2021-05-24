@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A single joint (one movable link) robot -->
+<robot name="sl_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Include other files -->
+    <!-- Macro files -->
+    <xacro:include filename="$(find basic_robotics)/urdf/slbot_t5_macros.xacro" />
+    <!-- Include the gazebo tags -->
+    <xacro:include filename="$(find basic_robotics)/urdf/slbot_t5.gazebo" />
+    <!-- Dummy link -->
+    <link name="world">
+    </link>
+    <!-- Base link -->
+    <xacro:stl_link lname="base" mass="82.74614">
+        <!-- Origin for link -->
+        <origin xyz="-0.06 -0.225 0.0" rpy="0.0 0.0 0.0" />
+        <!-- Mesh for link -->
+        <mesh filename="package://basic_robotics/urdf/meshes/Base_t5.STL" scale="0.001 0.001 0.001" />
+        <!-- Inertia tag -->
+        <inertia ixx="2.746313" ixy="0.0" ixz="0.0"
+                        iyy="1.721184" iyz="0.0"
+                                izz="1.254731" />
+    </xacro:stl_link>
+    <!-- Link1 link -->
+    <xacro:stl_link lname="link1" mass="7.61817">
+        <!-- Origin for link -->
+        <origin xyz="-0.03 -0.06 -0.06" rpy="0.0 0.0 0.0" />
+        <!-- Mesh for link -->
+        <mesh filename="package://basic_robotics/urdf/meshes/Link_t5.STL" scale="0.001 0.001 0.001" />
+        <!-- Inertia tag -->
+        <inertia ixx="0.292031" ixy="0.0" ixz="0.0"
+                        iyy="0.285400" iyz="0.0"
+                                izz="0.011201" />
+    </xacro:stl_link>
+    <!-- Joint for the dummy link -->
+    <joint name="dummy" type="fixed">
+        <parent link="world" />
+        <child link="base" />
+    </joint>
+    <!-- Joint to connect links -->
+    <joint name="joint1" type="revolute">
+        <parent link="base"/>
+        <child link="link1"/>
+        <origin xyz="0.0 0.0 0.25" rpy="0.0 0.0 0.0"/>
+        <axis xyz="1.0 0.0 0.0"/>
+        <limit lower="-1.570796" upper="1.570796" velocity="10" effort="10" />
+    </joint>
+</robot>

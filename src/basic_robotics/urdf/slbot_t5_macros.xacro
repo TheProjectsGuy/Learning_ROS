@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains macros for the single link robot -->
+<robot name="sl_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Add a link -->
+    <!-- 
+        Creates a <link> object from an STL file. The
+        <visual> and <collision> are the same.
+        
+        Parameters:
+            - lname: Link name
+            - mass: Mass of link
+            - *origin: The <origin> for visual and collision
+            - *mesh: The <mesh> for visual and collision
+            - *inertia: The <inertia>, 3D moment of inertia
+        
+        Returns:
+            - <link> element
+    -->
+    <xacro:macro name="stl_link" params="lname mass *origin *mesh *inertia">
+        <!-- Main <link> element -->
+        <link name="${lname}">
+            <!-- Visual: appearance -->
+            <visual>
+                <!-- Origin of the visual mesh -->
+                <xacro:insert_block name="origin" />
+                <geometry>
+                    <!-- Mesh file -->
+                    <xacro:insert_block name="mesh" />
+                </geometry>
+            </visual>
+            <!-- Collision: physics -->
+            <collision>
+                <!-- Origin of the visual mesh -->
+                <xacro:insert_block name="origin" />
+                <geometry>
+                    <!-- Mesh file -->
+                    <xacro:insert_block name="mesh" />
+                </geometry>
+            </collision>
+            <!-- Inertia: 3D moment of inertia -->
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <mass value="${mass}" />
+                <!-- Inertial tensor -->
+                <xacro:insert_block name="inertia" />
+            </inertial>
+        </link>
+    </xacro:macro>
+</robot>
