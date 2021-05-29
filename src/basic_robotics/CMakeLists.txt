@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   visualization_msgs
   gazebo_ros
+  control_toolbox
 )
 
 ## System dependencies are found with CMake's conventions
@@ -125,12 +126,13 @@ catkin_package(
     gazebo_ros_slbot_controller
   CATKIN_DEPENDS
     roscpp
-    rospy 
-    std_msgs 
-    sensor_msgs 
-    tf2 
-    tf2_ros 
-    geometry_msgs 
+    rospy
+    std_msgs
+    control_toolbox
+    sensor_msgs
+    tf2
+    tf2_ros
+    geometry_msgs
     visualization_msgs
   DEPENDS
     roscpp

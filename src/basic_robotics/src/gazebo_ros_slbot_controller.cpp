@@ -11,8 +11,6 @@
  * more information on header files and contents.
  * 
  * // TODO: PID Controller, set gains through service callback
- *  and set the setpoint through subscription to a ROS Topic.
- *  Implement the setpoint (target) subscriber first.
  * 
  * 
  * [1]: https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_plugins/include/gazebo_plugins/gazebo_ros_template.h
@@ -28,6 +26,8 @@
 // Header file for publishing sensor_msgs/JointState
 #include <sensor_msgs/JointState.h>
 
+#define DEG_TO_RAD(x) (((M_PI)/(180.0))*(x))
+
 using namespace std;
 
 namespace gazebo {
@@ -42,10 +42,27 @@ namespace gazebo {
 
     // Constructor
     GazeboRosSlbotController::GazeboRosSlbotController() {
+        this->is_alive = true;
+        // Initial controller properties
+        this->controller.kp = 10.0;
+        this->controller.kd = 2.0;
+        this->controller.desired_pos = DEG_TO_RAD(0.0);    // Set point to 0 in the beginning
     }
 
     // Destructor
     GazeboRosSlbotController::~GazeboRosSlbotController() {
+        this->is_alive = false;
+        // Clear the disable the callback queue
+        /*
+         * Clears all callbacks in the queue [1] and then
+         * disable the queue (so that more callbacks are 
+         * no longer possible) [2]
+         * 
+         * [1]: http://docs.ros.org/en/latest/api/roscpp/html/classros_1_1CallbackQueue.html#ab960789600b6a6d775249347c234019a
+         * [2]: http://docs.ros.org/en/latest/api/roscpp/html/classros_1_1CallbackQueue.html#acca1c15e2498f0020ec1afc8b6b1709e
+         */
+        this->queue_.clear();
+        this->queue_.disable();
         // Delete NodeHandler pointer
         delete this->_nh;
     }
@@ -147,6 +164,26 @@ namespace gazebo {
         }
         this->params.update_period_sec = 1.0 / this->params.rate_hz;
         this->params.last_update_time = this->world->SimTime(); // Current time for last update
+        // Joint target (topic to subscribe)
+        this->params.jtarget_topic = "cmd_position";
+        if (!_sdf->HasElement("jointTargetTopic")) {
+            ROS_INFO_NAMED("slbot", "GazeboSlbotController Plugin (ns = %s) missing <jointTargetTopic>. Defaults to \"%s\"",
+                this->robot_namespace.c_str(), this->params.jtarget_topic.c_str());
+        } else {
+            this->params.jtarget_topic = _sdf->GetElement("jointTargetTopic")->Get<string>();
+            ROS_INFO_NAMED("slbot", "GazeboSlbotController Plugin (ns = %s) joint target topic set to \"%s\"",
+                this->robot_namespace.c_str(), this->params.jtarget_topic.c_str());
+        }
+        // Controller gains
+        this->params.cgains_srv = "set_pid_srv";
+        if (!_sdf->HasElement("controllerService")) {
+            ROS_INFO_NAMED("slbot", "GazeboSlbotController Plugin (ns = %s) missing <controllerService>. Defaults to \"%s\"",
+                this->robot_namespace.c_str(), this->params.cgains_srv.c_str());
+        } else {
+            this->params.cgains_srv = _sdf->GetElement("controllerService")->Get<string>();
+            ROS_INFO_NAMED("slbot", "GazeboSlbotController Plugin (ns = %s) PID controller service server set to \"%s\"",
+                this->robot_namespace.c_str(), this->params.cgains_srv.c_str());
+        }
         // ---- End: Parse the SDF ----
 
         // ---- Begin: Setup things specific to this plugin ----
@@ -166,6 +203,54 @@ namespace gazebo {
         // Set up publisher to publish joint angles from model
         this->joint_angle_publisher_ = this->_nh->advertise<sensor_msgs::JointState>(
             this->params.js_topic, 1);
+        // Subscriber for new joint positions
+        /*
+         * Here, we'll first create a SubscribeOptions object [1]
+         * which will directly be passed to the subscribe method
+         * of the node handler. The SubscribeOptions is created
+         * using a static 'create' method [2]. The first argument
+         * is the topic name, second is queue size, third is the 
+         * callback. Fourth is the tracked object (if it is destroyed,
+         * the callback won't execute), set to Void here (unused).
+         * The fifth argument is the callback queue pointer. The
+         * subscriber object is just given the options [3].
+         * 
+         * [1]: http://docs.ros.org/en/latest/api/roscpp/html/structros_1_1SubscribeOptions.html
+         * [2]: http://docs.ros.org/en/latest/api/roscpp/html/structros_1_1SubscribeOptions.html#a502d3ce4b47623bb6e3834f6748e4074
+         * [3]: http://docs.ros.org/en/latest/api/roscpp/html/classros_1_1NodeHandle.html#a3b8e4b07d397119cd5c5e4439b170cbc
+         */
+        ros::SubscribeOptions so = ros::SubscribeOptions::create<std_msgs::Float64>(this->params.jtarget_topic, 1,
+            boost::bind(&GazeboRosSlbotController::SetNewTarget, this, _1), ros::VoidPtr(), &this->queue_);
+        this->new_joint_pos_subscriber_ = this->_nh->subscribe(so);
+        // Advertise the service server
+        /*
+         * Here, an AdvertiseServiceOptions object is used [1].
+         * The create method is used to generate this object [2].
+         * The advertiseService function is then passed this
+         * object [3]. The first argument is the service name,
+         * the second is the callback function, third is the
+         * tracked object and the fourth is the callback queue
+         * pointer.
+         * 
+         * [1]: http://docs.ros.org/en/latest/api/roscpp/html/structros_1_1AdvertiseServiceOptions.html
+         * [2]: http://docs.ros.org/en/latest/api/roscpp/html/structros_1_1AdvertiseServiceOptions.html#a3cb2c69387686bc2c8a80c0a98fa0720
+         * [3]: http://docs.ros.org/en/latest/api/roscpp/html/classros_1_1NodeHandle.html#ae659319707eb40e8ef302763f7d632da
+         */
+        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<control_toolbox::SetPidGains>(
+            this->params.cgains_srv, boost::bind(&GazeboRosSlbotController::SetController, this, _1, _2),
+            ros::VoidPtr(), &this->queue_);
+        this->set_pid_gains_server_ = this->_nh->advertiseService(aso);
+        // Start callback thread
+        /*
+         * A thread that is run in parallel. This thread only listens
+         * to callbacks for this plugin. Boost library's thread [1]
+         * implementation is used here. The QueueThread method will
+         * be run in a parallel thread.
+         * 
+         * [1]: https://www.boost.org/doc/libs/1_76_0/doc/html/thread.html
+         */
+        this->callback_queue_thread_ = boost::thread(
+            boost::bind(&GazeboRosSlbotController::QueueThread, this));
         // Set the update function
         /*
          * We basically want to run a function every
@@ -198,29 +283,101 @@ namespace gazebo {
         common::Time curr_time = this->world->SimTime();
         if ((curr_time - this->params.last_update_time).Double() > this->params.update_period_sec) {
             // ---- Update the child (according to the rate) ----
-            // Get joint angle
-            /*
-             * Get the joint angle in Gazebo simulation.
-             * This is retrieved from the JointPtr which
-             * was obtained from ModelPtr. Position function
-             * gets the floating point value [1], which is
-             * rotation in radians or translation in meters
-             * 
-             * [1]: https://osrf-distributions.s3.amazonaws.com/gazebo/api/dev/classgazebo_1_1physics_1_1Joint.html#a1e48139677005b6702c8c00832710da2
-             */
-            double jangle_rad = this->joint->Position(0);
-            // Update the publishing message
-            this->params.js_msg.header.seq += 1;
-            this->params.js_msg.header.stamp = ros::Time::now();    // Messages in ROS time
-            this->params.js_msg.name.clear();
-            this->params.js_msg.name.push_back(this->params.joint_name);
-            this->params.js_msg.position.clear();
-            this->params.js_msg.position.push_back(jangle_rad);
-            // Publish the message (for joint angle)
-            this->joint_angle_publisher_.publish(this->params.js_msg);  // Publish
-            // ---- Child updated ----
-            // Update the last updated time
-            this->params.last_update_time += common::Time(this->params.update_period_sec);
+            this->PublishJointAngle();  // Joint angle published
+            this->ControllerLoop(); // PID controller
         }
+    }
+
+    // Publish joint angle
+    void GazeboRosSlbotController::PublishJointAngle() {
+        // Get joint angle
+        /*
+         * Get the joint angle in Gazebo simulation.
+         * This is retrieved from the JointPtr which
+         * was obtained from ModelPtr. Position function
+         * gets the floating point value [1], which is
+         * rotation in radians or translation in meters
+         * 
+         * [1]: https://osrf-distributions.s3.amazonaws.com/gazebo/api/dev/classgazebo_1_1physics_1_1Joint.html#a1e48139677005b6702c8c00832710da2
+         */
+        double jangle_rad = this->joint->Position(0);
+        // Update the publishing message
+        this->params.js_msg.header.seq += 1;
+        this->params.js_msg.header.stamp = ros::Time::now();    // Messages in ROS time
+        this->params.js_msg.name.clear();
+        this->params.js_msg.name.push_back(this->params.joint_name);
+        this->params.js_msg.position.clear();
+        this->params.js_msg.position.push_back(jangle_rad);
+        // Publish the message (for joint angle)
+        this->joint_angle_publisher_.publish(this->params.js_msg);  // Publish
+        // ---- Child updated ----
+        // Update the last updated time
+        this->params.last_update_time += common::Time(this->params.update_period_sec);
+    }
+
+    // Controller loop for the joint
+    void GazeboRosSlbotController::ControllerLoop() {
+        // Lock the mutex (scoped lock)
+        /*
+         * This will allow the lock to be enabled
+         * throughout the scope of this function.
+         * The scoped lock [1] persists throughout
+         * the scope of declaration.
+         * 
+         * [1]: https://www.boost.org/doc/libs/1_76_0/doc/html/thread/synchronization.html
+         * [2]: https://www.boost.org/doc/libs/1_31_0/libs/thread/doc/mutex.html
+         */
+        boost::mutex::scoped_lock(this->controller.lock);
+        // PID controller
+        double curr_pos = this->joint->Position(0); // Current position
+        // Applied torque
+        double error = (curr_pos - this->controller.desired_pos);
+        double kp_part = -this->controller.kp * (error);
+        double kd_part = -this->controller.kd * (this->joint->GetVelocity(0));
+        double applied_torque = kp_part + kd_part;
+        this->joint->SetForce(0, applied_torque);   // Apply torque
+    }
+
+    // Callback queue thread
+    void GazeboRosSlbotController::QueueThread() {
+        double timeout = 0.01;
+        while (this->is_alive && this->_nh->ok()) {
+            // Call callbacks on the queue
+            /*
+             * The callAvailable function [1] is used to call the
+             * queued callbacks. It is given a WallDuration [2] as 
+             * timeout, in case execution of this thread isn't held
+             * for long.
+             * 
+             * [1]: http://docs.ros.org/en/latest/api/roscpp/html/classros_1_1CallbackQueue.html#a82c2abb2c11a7bf90e7ee46625e24eeb
+             * [2]: http://docs.ros.org/en/latest/api/rostime/html/classros_1_1WallDuration.html
+             */
+            this->queue_.callAvailable(ros::WallDuration(timeout));
+        }
+    }
+
+    // New position callback
+    void GazeboRosSlbotController::SetNewTarget(const std_msgs::Float64::ConstPtr& npos) {
+        // Lock the mutex for this callback
+        boost::mutex::scoped_lock(this->controller.lock);
+        this->controller.desired_pos = npos->data;
+    }
+
+    // Set controller parameters (service server)
+    bool GazeboRosSlbotController::SetController(
+            control_toolbox::SetPidGainsRequest &req, 
+            control_toolbox::SetPidGainsResponse &res) {
+        // Verify that the request is valid
+        if (req.d < 0) {    // Damping shouldn't be negative
+            return false;
+        }
+        // Lock the mutex for the service server
+        boost::mutex::scoped_lock(this->controller.lock);
+        // Set the parameters
+        this->controller.kp = req.p;
+        this->controller.kd = req.d;
+        ROS_INFO_NAMED("slbot", "GazeboSlbotController Plugin (ns = %s) Controller gains: P = %f, D = %f",
+            this->robot_namespace.c_str(), this->controller.kp, this->controller.kd);
+        return true;
     }
 }

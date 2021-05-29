@@ -6,6 +6,8 @@
         doc="The full path with '.rviz' extension to the RViz configuration file" />
     <arg name="robot_file" default="$(find basic_robotics)/urdf/slbot_t5.xacro"
         doc="A .xacro file (realpath with extension) to display" />
+    <arg name="use_gui" default="false"
+        doc="Use GUI to control or visualize through a sensor_msgs/JointState topic" />
 
     <!-- Paraemters -->
     <!-- Robot description -->
@@ -14,8 +16,22 @@
     <!-- Nodes -->
     <!-- RViz node -->
     <node name="rviz_robot" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" required="true" />
-    <!-- Joint state publisher (GUI) for jogging -->
-    <node name="js_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
     <!-- Robot state publisher (joint state to /tf) -->
     <node name="rs_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <!-- If 'use_gui' -->
+    <group if="$(arg use_gui)">
+        <!-- Joint state publisher (GUI) for jogging -->
+        <node name="js_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    </group>
+    <!-- Unless 'use_gui' -->
+    <group unless="$(arg use_gui)">
+        <!-- Joint state publisher (for visualizing) -->
+        <node name="js_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+            <!-- 
+                Reference: https://wiki.ros.org/joint_state_publisher#Parameters
+            -->
+            <rosparam command="load" file="$(find basic_robotics)/configs/t5_sim_configs.yaml" />
+        </node>
+    </group>
+    
 </launch>

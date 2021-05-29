@@ -28,6 +28,9 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Launch Gazebo World for Tutorial 4](#launch-gazebo-world-for-tutorial-4)
         - [Spawn Robot Model for Tutorial 4](#spawn-robot-model-for-tutorial-4)
         - [Visualize robot and data for Tutorial 4](#visualize-robot-and-data-for-tutorial-4)
+        - [Gazebo world for Tutorial 5](#gazebo-world-for-tutorial-5)
+        - [Spawn robot in Gazebo for Tutorial 5](#spawn-robot-in-gazebo-for-tutorial-5)
+        - [Visualize robot for Tutorial 5](#visualize-robot-for-tutorial-5)
     - [C++ Nodes](#c-nodes)
         - [Laser Scan Publisher (C++) for Tutorial 1](#laser-scan-publisher-c-for-tutorial-1)
             - [Building](#building)
@@ -52,11 +55,13 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Robot Visualization (Python) for Tutorial 4](#robot-visualization-python-for-tutorial-4)
     - [Configuration files](#configuration-files)
         - [Gazebo to Robot configurations for Tutorial 4](#gazebo-to-robot-configurations-for-tutorial-4)
+        - [Configurations for Tutorial 5](#configurations-for-tutorial-5)
     - [RViz configuration files](#rviz-configuration-files)
         - [LaserScan and TF for Tutorial 1](#laserscan-and-tf-for-tutorial-1)
         - [RobotDescription and TF for Tutorial 2](#robotdescription-and-tf-for-tutorial-2)
         - [RobotDescription and TF for Tutorial 3](#robotdescription-and-tf-for-tutorial-3)
         - [Robot visualization with sensor and TF for Tutorial 4](#robot-visualization-with-sensor-and-tf-for-tutorial-4)
+        - [Robot visualization for Tutorial 5](#robot-visualization-for-tutorial-5)
     - [URDF Files](#urdf-files)
         - [Single block for Tutorial 2](#single-block-for-tutorial-2)
         - [Two Blocks for Tutorial 2](#two-blocks-for-tutorial-2)
@@ -65,6 +70,7 @@ Basic Robotics related software provided in ROS. This package includes a brief o
         - [Simple Four Wheel Bot for Tutorial 3](#simple-four-wheel-bot-for-tutorial-3)
         - [Four Wheel Bot for Gazebo for Tutorial 3](#four-wheel-bot-for-gazebo-for-tutorial-3)
         - [Four Wheel Bot for Gazebo for Tutorial 4](#four-wheel-bot-for-gazebo-for-tutorial-4)
+        - [Single link robot for Tutorial 5](#single-link-robot-for-tutorial-5)
     - [Gazebo World Files](#gazebo-world-files)
         - [Four Wheel Bot World for Tutorial 3](#four-wheel-bot-world-for-tutorial-3)
     - [Reference](#reference)
@@ -94,6 +100,8 @@ Short tutorials included in this package made to cover essential concepts. They 
 | 2 | [Visualizing data in RViz](#tutorial-1-visualizing-data-in-rviz) | Visualize `TF`, `Marker` and `LaserScan` using dummy publishers |
 | 3 | [Building and Visualizing Robot Models](#tutorial-2-building-and-visualizing-robot-models) | Building a simple robot using `URDF`, then visualizing it in RViz using `RobotModel` |
 | 4 | [Gazebo and a Four Wheel Robot](#tutorial-3-gazebo-and-a-four-wheel-robot) | Creating a four wheel robot and simulating it in Gazebo |
+| 5 | [Sensors in Gazebo](#tutorial-4-sensors-in-gazebo) | Adding sensors and visualizing them in RViz |
+| 6 | [Single Joint robot in Gazebo](#tutorial-5-simple-1r-robot) | Creating a custom plugin for controlling a 1R robot in Gazebo |
 
 ### Tutorial 0: Getting Started with RViz
 
@@ -380,6 +388,74 @@ Note that the wheels can be seen rotating in the RViz RobotModel as they are mad
 
 ### Tutorial 5: Simple 1R Robot
 
+[Plugins in Gazebo](http://gazebosim.org/tutorials?cat=write_plugin) allow you to control finer aspects of your model. Gazebo also offers [ROS APIs for custom plugins](http://gazebosim.org/tutorials?tut=ros_gzplugins&cat=connect_ros). In this tutorial, we create a single joint robot which we control using a custom C++ plugin. The controller is a simple PD controller. We also visualize the robot in RViz.
+
+This tutorial uses the following resources of this package
+
+| S. No. | File / Node name | Purpose | Notes |
+| :--- | :--- | :---: | :---- |
+| 1 | [slbot_t5.xacro](#single-link-robot-for-tutorial-5) | XACRO file | Robot description in XACRO and the gazebo tags for the plugin created |
+| 2 | [t5_gazebo_world.launch](#gazebo-world-for-tutorial-5) | Launch file | Launch file for Gazebo world |
+| 3 | [t5_gz_spawn_xacro.launch](#spawn-robot-in-gazebo-for-tutorial-5) | Launch file | Launch file to spawn the robot in Gazebo |
+| 4 | [t5_viz_robot.launch](#visualize-robot-for-tutorial-5) | Launch file | Launch file for visualizing the robot |
+| 5 | [libgazebo_ros_slbot_controller](#single-link-robot-for-tutorial-5) | Gazebo plugin | Custom made Gazebo plugin for PD control of a single axis joint (the robot in this tutorial) |
+
+To inspect the robot in this tutorial, run
+
+```bash
+roslaunch basic_robotics t5_viz_robot.launch use_gui:=true
+```
+
+This should open RViz with the GUI for jogging the robot link shown below
+
+![Visualize and jog robot for Tutorial 5](./media/pic26.png)
+
+Close this launch and launch the following commands
+
+```bash
+roscore
+roslaunch basic_robotics t5_gazebo_world.launch
+roslaunch basic_robotics t5_gz_spawn_xacro.launch
+```
+
+This should create the following mode in the gazebo world
+
+![Robot Model in Gazebo](./media/pic27.png)
+
+Get the services and topics using
+
+```bash
+rosservice list
+rostopic list
+```
+
+You must see service `/sl_robot1/set_pid` and topics `/sl_robot1/cmd_pos` and `/sl_robot1/joint_states`. The service is to tune PID constants for the robot. The first topic is to send the command positions (target positions) and the second topic is published by the plugin (for visualizing joint angles). This is the better way of visualizing joint angles.
+
+Try running
+
+```bash
+roslaunch basic_robotics t5_viz_robot.launch
+rqt_graph
+```
+
+Note that now, the GUI isn't there. The `rqt_graph` shows Gazebo sending the JointStates to a joint state publisher which then sends it to a robot state publisher. The robot state publisher publishes the `/tf` transformations. You can give the robot target positions using
+
+```bash
+rostopic pub /sl_robot1/cmd_pos std_msgs/Float64 "data: 0.785398" -1
+```
+
+You can adjust the PID constants using
+
+```bash
+rosservice call /sl_robot1/set_pid "{p: 50.0, i: 0.0, d: 15.0, i_clamp: 0.0, antiwindup: false}"
+```
+
+Here are the outputs of a random configuration (windows shown side by side)
+
+![Side by side simulation and visualization](./media/pic28.png)
+
+Here, the simulation and visualization are happening sided by side.
+
 ## Launch Files
 
 ### Launch C++ for Tutorial 1
@@ -508,6 +584,37 @@ Does the following
 - Launches nodes `joint_state_publisher` and `robot_state_publisher` for generating `/tf` of the robot for visualizing.
 - Launches node [t4_robot_joints.py](#robot-visualization-python-for-tutorial-4) for translating messages between Gazebo's LinkState and sensor's JointState. This and the `joint_state_publisher` are given the configuration file [t4_gz_robot_lframes.yaml](#gazebo-to-robot-configurations-for-tutorial-4)
 - Defines the `robot_description` parameter in a separate namespace for the `RobotDescription` in RViz. This is for demonstration purposes only.
+
+### Gazebo world for Tutorial 5
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t5_gazebo_world` |
+| File | [launch/t5_gazebo_world.launch](./launch/t5_gazebo_world.launch) |
+
+Simply includes the `empty_world.launch` file for the Gazebo world.
+
+### Spawn robot in Gazebo for Tutorial 5
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t5_gz_spawn_xacro` |
+| File | [launch/t5_gz_spawn_xacro.launch](./launch/t5_gz_spawn_xacro.launch) |
+
+Spawns the robot in the gazebo world for [tutorial 5](#tutorial-5-simple-1r-robot).
+
+### Visualize robot for Tutorial 5
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t5_viz_robot` |
+| File | [launch/t5_viz_robot.launch](./launch/t5_viz_robot.launch) |
+
+Does the following
+
+- Launches `rviz` with configuration [Robot_Viz_T5.rviz](#robot-visualization-for-tutorial-5)
+- Launches node `robot_state_publisher`
+- Launches node `joint_state_publisher_gui` or `joint_state_publisher` (depending on the `use_gui` argument)
 
 ## C++ Nodes
 
@@ -700,7 +807,7 @@ In your `package.xml`, do the following
     <exec_depend>gazebo_ros</exec_depend>
     ```
 
-    This will be needed for the parent classes (and for Gazebo integration)
+    This will be needed for the parent classes (and for Gazebo integration). Add the same tags for all package dependencies, like `std_msgs` and `control_toolbox`.
 
 2. In the `<export> ... </export>` section, that is present just before the `</package>` (insert if missing), a `<gazebo_ros>` is to be added
 
@@ -727,7 +834,7 @@ In your `CMakeLists.txt`, add the following
 
     This will ensure that C++17 standards are used when compiling (requirement for Gazebo)
 
-2. Add `gazebo_ros` to `find_package(catkin REQUIRED COMPONENTS` list for showing dependency during build
+2. Add `gazebo_ros` (and other dependent packages) to `find_package(catkin REQUIRED COMPONENTS` list for showing dependency during build
 3. Add `gazebo` system dependency. Just after the `find_package` function above, add another function as shown below (there must be a comment section dedicated to it)
 
     ```makefile
@@ -1036,6 +1143,15 @@ In the `CMakeLists.txt` file, in `catkin_install_python` function, add `scripts/
 
 Configurations for the `joint_state_publisher` and the [t4_robot_joints.py](#robot-visualization-python-for-tutorial-4) node. Specifies the topic where JointStates will be delivered, zero positions and gazebo link names for joints to be translated.
 
+### Configurations for Tutorial 5
+
+| Field | Value |
+| :---- | :---- |
+| Name | `t5_sim_configs.yaml` |
+| File | [configs/t5_sim_configs.yaml](./configs/t5_sim_configs.yaml) |
+
+Configurations for the `joint_state_publisher` node for tutorial 5. It contains the `sources_list` for the robot's joint feedback (through the plugin).
+
 ## RViz configuration files
 
 ### LaserScan and TF for Tutorial 1
@@ -1097,9 +1213,18 @@ This file follows the same procedure as that for [tutorial 2](#robotdescription-
 | Field | Value |
 | :---- | :---- |
 | Name | `RobotViz_T4.rviz` |
-| File | [rviz/RobotViz_T4.rviz](./rviz/RobotViz_T4.rviz)
+| File | [rviz/RobotViz_T4.rviz](./rviz/RobotViz_T4.rviz) |
 
 This file is to visualize lidar data (LaserScan), camera image, transformations (both odometry and robot, separately) and robot description in RViz.
+
+### Robot visualization for Tutorial 5
+
+| Field | Value |
+| :---- | :---- |
+| Name | `Robot_Viz_T5.rviz` |
+| File | [rviz/Robot_Viz_T5.rviz](./rviz/Robot_Viz_T5.rviz) |
+
+This file is to visualize the single link robot and is created to visualize using the `joint_state_publisher_gui` or the `joint_state_publisher` with `source_list` for getting joint states.
 
 ## URDF Files
 
@@ -1204,6 +1329,15 @@ gz sdf -p fwb_gazebo_t3.urdf
 | Included files | [urdf/fwb_parameters_t4.xacro](./urdf/fwb_parameters_t4.xacro), [urdf/fwb_macros.xacro](./urdf/fwb_macros.xacro), [urdf/fwb_t4_general.gazebo](./urdf/fwb_t4_general.gazebo), [urdf/fwb_camera_t4.xacro](./urdf/fwb_camera_t4.xacro), [urdf/fwb_lidar_t4.xacro](./urdf/fwb_lidar_t4.xacro) |
 
 A four wheel robot with a camera and a LiDAR (LaserScanner) sensor mounted. This mostly is derived from [fwb_gazebo_t3.xacro](#four-wheel-bot-for-gazebo-for-tutorial-3), but with additional `<plugin>` and `<sensor>` tags. There are additional parameters for the camera and laser scanner.The robot also starts with a dummy link for KDL to parse (`robot_state_publisher` needs it). Because of this, the `<plugin>` for SkidSteerDrive has `dummy` as the `<robotBaseFrame>` (first link of the robot is the dummy with no inertia).
+
+### Single link robot for Tutorial 5
+
+| Field | Value |
+| :---- | :---- |
+| Main XACRO File | [urdf/slbot_t5.urdf](./urdf/slbot_t5.urdf) |
+| Included files | [slbot_t5_macros.xacro](./urdf/slbot_t5_macros.xacro), [slbot_t5.gazebo](./urdf/slbot_t5.gazebo) |
+
+A single link robot that includes the plugin which is custom made for [tutorial 5](#tutorial-5-simple-1r-robot). The `<plugin>` is mapped to the custom plugin created. The macro also shows how to import STL meshes into your robot model.
 
 ## Gazebo World Files
 

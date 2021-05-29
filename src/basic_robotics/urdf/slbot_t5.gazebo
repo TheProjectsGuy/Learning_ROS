@@ -19,7 +19,11 @@
             <!-- JointState publisher -->
             <jointStateTopic>joint_states</jointStateTopic>
             <!-- Rate -->
-            <rate>50</rate>
+            <rate>100</rate>
+            <!-- Topic for joint angle target (std_msgs/Float64) -->
+            <jointTargetTopic>cmd_pos</jointTargetTopic>
+            <!-- Servicec for setting PID controller gains -->
+            <controllerService>set_pid</controllerService>
         </plugin>
     </gazebo>
     <!-- Material properties -->

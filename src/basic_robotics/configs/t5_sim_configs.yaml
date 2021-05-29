@@ -1,0 +1,3 @@
+# Sources list for the joint_state_publisher
+source_list:
+  - /sl_robot1/joint_states
